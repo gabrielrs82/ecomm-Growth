@@ -8,7 +8,7 @@
   <rect width="680" height="320" fill="url(#glow11)" rx="16" style="stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
 
   <!-- E-COMM -->
-  <text x="170" y="128" text-anchor="start" font-family="Inter, sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#888888" style="fill:rgb(136, 136, 136);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:72px;font-weight:800;text-anchor:start;dominant-baseline:auto">E-COMM</text>
+  <text x="170" y="128" text-anchor="start" font-family="Inter, sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#ffffff" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:72px;font-weight:800;text-anchor:start;dominant-baseline:auto">E-COMM</text>
 
   <!-- Círculo check mais à direita -->
   <g transform="translate(520, 101)" style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
@@ -20,6 +20,6 @@
   <text x="340" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="96" font-weight="900" letter-spacing="-3" fill="none" stroke="#c8da42" stroke-width="2.5" style="fill:none;stroke:rgb(200, 218, 66);color:rgb(255, 255, 255);stroke-width:2.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:96px;font-weight:900;text-anchor:middle;dominant-baseline:auto">GROWTH</text>
 
   <!-- FOCADA EM RESULTADO -->
-  <text x="340" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" letter-spacing="6" fill="#555555" style="fill:rgb(85, 85, 85);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:22px;font-weight:700;text-anchor:middle;dominant-baseline:auto">FOCADA EM RESULTADO</text>
+  <text x="340" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" letter-spacing="6" fill="#ffffff" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:22px;font-weight:700;text-anchor:middle;dominant-baseline:auto">FOCADA EM RESULTADO</text>
 
 </svg>
