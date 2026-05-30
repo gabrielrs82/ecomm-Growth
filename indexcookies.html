@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Política de Cookies — Ecomm Growth</title>
+  <meta name="description" content="Política de Cookies da Ecomm Growth. Saiba como usamos os cookies para melhorar sua experiência de navegação."/>
+
+  <!-- ── GOOGLE FONTS ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <style>
+    /* ════════════════════════════════════════════════════════════
+       DESIGN TOKENS — ECOMM GROWTH
+    ════════════════════════════════════════════════════════════ */
+    :root {
+      --color-primary:        #c8da42;
+      --color-primary-light:  #daea70;
+      --color-primary-dark:   #a0b030;
+      --color-black:          #000000;
+      --color-surface:        #0a0a0a;
+      --color-surface-2:      #111111;
+      --color-surface-3:      #1a1a1a;
+      --color-accent:         #925352;
+      --color-accent-light:   #b56a69;
+      --color-text-primary:   #ffffff;
+      --color-text-secondary: rgba(255,255,255,0.6);
+      --color-text-muted:     rgba(255,255,255,0.3);
+      --color-border:         rgba(255,255,255,0.08);
+      --radius-md:   12px;
+      --radius-lg:   20px;
+      --radius-full: 9999px;
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       RESET & GLOBAL
+    ════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-black);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    ::selection { background: rgba(200,218,66,0.25); color: #fff; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--color-black); }
+    ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 4px; }
+
+    /* ════════════════════════════════════════════════════════════
+       TOP PROGRESS BAR
+    ════════════════════════════════════════════════════════════ */
+    #top-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+      box-shadow: 0 0 10px var(--color-primary);
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       BACKGROUND GRID LINES
+    ════════════════════════════════════════════════════════════ */
+    .grid-lines {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      max-width: 1280px;
+      margin: 0 auto;
+      left: 0; right: 0;
+      opacity: 0.35;
+    }
+    .grid-col {
+      flex: 1;
+      border-left: 1px solid rgba(255,255,255,0.04);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .grid-col:last-child { border-right: 1px solid rgba(255,255,255,0.04); }
+
+    /* ════════════════════════════════════════════════════════════
+       NAV
+    ════════════════════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 110px;
+      padding: 0 clamp(20px, 5vw, 40px);
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: height 0.5s var(--ease-smooth),
+                  background 0.5s var(--ease-smooth),
+                  backdrop-filter 0.5s var(--ease-smooth),
+                  border-color 0.5s var(--ease-smooth);
+    }
+    .nav-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .nav.is-scrolled {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: var(--color-border);
+      height: 92px;
+    }
+    .nav-logo {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 24px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+      box-shadow: 0 0 25px rgba(200,218,66,0.25), 0 8px 40px rgba(200,218,66,0.1);
+      transition: transform 0.3s var(--ease-smooth),
+                  box-shadow 0.3s var(--ease-smooth),
+                  padding 0.5s var(--ease-smooth);
+      text-decoration: none;
+      user-select: none;
+    }
+    .nav.is-scrolled .nav-logo {
+      padding: 6px 20px;
+    }
+    .nav-logo::before {
+      content: ''; position: absolute; inset: -100%;
+      width: 300%; height: 300%; left: -100%; top: -100%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+      animation: spin-conic 3s linear infinite;
+    }
+    .nav-logo::after {
+      content: ''; position: absolute; inset: 1px; border-radius: var(--radius-full);
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); z-index: 0;
+    }
+    .nav-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(200,218,66,0.45), 0 8px 40px rgba(200,218,66,0.2);
+    }
+    .nav-logo img {
+      height: 76px;
+      width: auto;
+      display: block;
+      position: relative;
+      z-index: 10;
+      transition: transform 0.3s var(--ease-smooth), height 0.5s var(--ease-smooth);
+    }
+    .nav.is-scrolled .nav-logo img {
+      height: 60px;
+    }
+    .nav-logo:hover img {
+      transform: scale(1.02);
+    }
+    
+    @media (max-width: 480px) {
+      .nav { height: 88px; }
+      .nav.is-scrolled { height: 76px; }
+      .nav-logo img { height: 52px; }
+      .nav.is-scrolled .nav-logo img { height: 44px; }
+      .nav-logo { padding: 6px 14px; }
+      .nav.is-scrolled .nav-logo { padding: 4px 10px; }
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    @media (max-width: 860px) { .nav-links { display: none; } }
+    .nav-link {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      text-decoration: none; padding-bottom: 2px;
+      position: relative; transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px; background: var(--color-primary);
+      transition: width 0.3s var(--ease-smooth);
+    }
+    .nav-link:hover { color: var(--color-primary); }
+    .nav-link:hover::after { width: 100%; }
+
+    @keyframes spin-conic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .btn-brand {
+      position: relative; display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 24px; border-radius: var(--radius-full);
+      font-size: 0.88rem; font-weight: 500; letter-spacing: -0.01em; color: #fff;
+      cursor: pointer; overflow: hidden; isolation: isolate; border: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+      box-shadow: 0 0 25px rgba(200,218,66,0.25), 0 8px 40px rgba(200,218,66,0.1);
+      transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+    }
+    .btn-brand::before {
+      content: ''; position: absolute; inset: -100%;
+      width: 300%; height: 300%; left: -100%; top: -100%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+      animation: spin-conic 3s linear infinite;
+    }
+    .btn-brand::after {
+      content: ''; position: absolute; inset: 1px; border-radius: var(--radius-full);
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); z-index: 0;
+    }
+    .btn-brand:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(200,218,66,0.45), 0 8px 40px rgba(200,218,66,0.2); }
+    .btn-inner { position: relative; z-index: 10; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+    .btn-icon {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(200,218,66,0.3);
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .btn-brand:hover .btn-icon { transform: scale(1.1); }
+    .btn-arrow {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .btn-brand:hover .btn-arrow { transform: translateX(2px); }
+
+    /* ════════════════════════════════════════════════════════════
+       DOBRA 8: CTA & FOOTER
+    ════════════════════════════════════════════════════════════ */
+    .cta-footer-section {
+      background: var(--color-black);
+      border-top: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-footer-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 300px;
+      background: radial-gradient(ellipse at center, rgba(146,83,82,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: clamp(80px, 10vh, 120px) clamp(24px, 5vw, 72px) 40px;
+    }
+    .cta-box {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto clamp(80px, 10vh, 120px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(200,218,66,0.08);
+      border: 1px solid rgba(200,218,66,0.18);
+      border-radius: var(--radius-full);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 24px;
+    }
+    .cta-box h2 {
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 40px;
+    }
+    .cta-box h2 em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--color-primary);
+    }
+    .btn-giant {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 48px;
+      border-radius: var(--radius-full);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+      box-shadow: 0 0 35px rgba(200,218,66,0.3), 0 8px 40px rgba(200,218,66,0.15);
+      transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+      text-decoration: none;
+    }
+    .btn-giant::before {
+      content: '';
+      position: absolute;
+      inset: -100%;
+      width: 300%;
+      height: 300%;
+      left: -100%;
+      top: -100%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+      animation: spin-conic 3s linear infinite;
+    }
+    .btn-giant::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: var(--radius-full);
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 0;
+    }
+    .btn-giant:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 60px rgba(200,218,66,0.55), 0 8px 40px rgba(200,218,66,0.25);
+    }
+    .btn-giant .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(200,218,66,0.4);
+      transition: transform 0.3s var(--ease-smooth);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .btn-giant:hover .btn-icon {
+      transform: scale(1.15);
+    }
+    .btn-giant span:not(.btn-icon):not(.btn-arrow) {
+      position: relative;
+      z-index: 10;
+    }
+    .btn-giant .btn-arrow {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s var(--ease-smooth);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .btn-giant:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 48px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 60px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    @media (max-width: 800px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+    .footer-brand-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      text-decoration: none;
+    }
+    .footer-brand-desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+      max-width: 280px;
+    }
+    .footer-col h4 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-link {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+      width: fit-content;
+    }
+    .footer-link:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 0.72rem;
+      color: var(--color-text-muted);
+      font-family: 'Space Mono', monospace;
+    }
+    @media (max-width: 600px) {
+      .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s var(--ease-smooth);
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      background: rgba(200,218,66,0.1);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    .social-btn svg {
+      width: 16px; height: 16px; fill: var(--color-text-secondary);
+      transition: fill 0.3s;
+    }
+    .social-btn:hover svg { fill: var(--color-primary); }
+
+    /* ════════════════════════════════════════════════════════════
+       LEGAL CONTENT PAGES
+    ════════════════════════════════════════════════════════════ */
+    .legal-container {
+      max-width: 800px;
+      margin: 160px auto 80px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .legal-card {
+      background: rgba(10, 10, 10, 0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: clamp(32px, 6vw, 60px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .legal-card::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      right: -150px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(200,218,66,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .legal-header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 24px;
+    }
+    
+    .legal-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+    
+    .legal-subtitle {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .legal-content h2, .legal-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-top: 36px;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    
+    .legal-content p {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--color-text-secondary);
+      margin-bottom: 20px;
+    }
+    
+    .legal-content ul {
+      margin-left: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .legal-content li {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      line-height: 1.75;
+    }
+    
+    .legal-content strong {
+      color: #fff;
+    }
+    
+    .legal-content hr {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+      margin: 40px 0;
+    }
+    
+    .legal-content a {
+      color: var(--color-primary);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--color-primary);
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .legal-content a:hover {
+      color: var(--color-primary-light);
+      border-bottom-style: solid;
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP PROGRESS BAR -->
+<div id="top-progress" role="progressbar" aria-hidden="true"></div>
+
+<!-- BACKGROUND GRID -->
+<div class="grid-lines" aria-hidden="true">
+  <div class="grid-col"></div>
+  <div class="grid-col"></div>
+  <div class="grid-col"></div>
+  <div class="grid-col"></div>
+  <div class="grid-col"></div>
+</div>
+
+<header>
+  <nav class="nav" id="main-nav" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="Ecomm Growth — Início">
+        <img src="Assets/ecomm_growth_logo_transparente.svg" alt="Ecomm Growth Logo" />
+      </a>
+
+      <div class="nav-links" role="list">
+        <a href="index.html#projetos" class="nav-link" role="listitem" target="_blank" rel="noopener">Projetos</a>
+        <a href="index.html#servicos" class="nav-link" role="listitem" target="_blank" rel="noopener">Serviços</a>
+        <a href="index.html#nos" class="nav-link" role="listitem" target="_blank" rel="noopener">Sobre Nós</a>
+        <a href="blog.html" class="nav-link" role="listitem" target="_blank" rel="noopener">Blog</a>
+      </div>
+
+      <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+        <button class="btn-brand" id="nav-cta" type="button" aria-label="Vamos Juntos">
+          <span class="btn-inner">
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
+            <span>Vamos Juntos</span>
+            <span class="btn-arrow" aria-hidden="true">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </span>
+        </button>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="legal-container">
+    <article class="legal-card">
+      <div class="legal-header">
+        <h1 class="legal-title">Política de Cookies</h1>
+        <p class="legal-subtitle">Última atualização: 08 de outubro de 2025</p>
+      </div>
+      <div class="legal-content">
+        <p>Nosso site utiliza cookies para melhorar a experiência de navegação e oferecer conteúdo relevante.</p>
+        
+        <h3>1. O que são Cookies?</h3>
+        <p>Cookies são pequenos arquivos armazenados no dispositivo do usuário que ajudam a reconhecer preferências e interações com o site.</p>
+        
+        <h3>2. Tipos de Cookies Utilizados</h3>
+        <ul>
+          <li><strong>Essenciais:</strong> necessários para o funcionamento do site.</li>
+          <li><strong>Analíticos:</strong> ajudam a entender o comportamento dos visitantes (ex.: Google Analytics).</li>
+          <li><strong>De marketing:</strong> utilizados para personalizar anúncios e campanhas (ex.: Meta Pixel, Google Ads).</li>
+        </ul>
+        
+        <h3>3. Gerenciamento de Cookies</h3>
+        <p>O usuário pode configurar seu navegador para recusar ou excluir cookies. No entanto, isso pode afetar a funcionalidade do site.</p>
+        
+        <h3>4. Consentimento</h3>
+        <p>Ao continuar navegando em <strong><a href="index.html">https://ecommgrowth.online/</a></strong>, o usuário concorda com o uso de cookies conforme descrito nesta política.</p>
+        
+        <hr/>
+        
+        <h2>💬 <strong>Política de Comentários</strong></h2>
+        <p>A <strong>Ecomm Growth</strong> incentiva o compartilhamento de ideias e opiniões construtivas em suas publicações. No entanto, para manter um ambiente saudável e respeitoso, adotamos as seguintes diretrizes:</p>
+        
+        <h3>1. Moderação</h3>
+        <p>Os comentários podem ser revisados antes ou após a publicação. A <strong>Ecomm Growth</strong> se reserva o direito de remover qualquer conteúdo que:</p>
+        <ul>
+          <li>Contenha linguagem ofensiva, discriminatória ou ilegal;</li>
+          <li>Promova produtos, serviços ou links de terceiros sem autorização;</li>
+          <li>Divulgue informações pessoais ou confidenciais;</li>
+          <li>Desrespeite outros usuários ou a marca.</li>
+        </ul>
+        
+        <h3>2. Responsabilidade</h3>
+        <p>O conteúdo dos comentários é de inteira responsabilidade de seus autores, não refletindo necessariamente a opinião da <strong>Ecomm Growth</strong>.</p>
+        
+        <h3>3. Coleta de Dados</h3>
+        <p>Ao comentar, o usuário pode fornecer nome, e-mail e site (opcional). Esses dados são utilizados apenas para identificação e não são divulgados a terceiros.</p>
+        
+        <h3>4. Contato</h3>
+        <p>Em caso de dúvidas ou solicitações relacionadas aos comentários, entre em contato:<br>📩 <strong><a href="mailto:contato@ecommgrowth.online">contato@ecommgrowth.online</a></strong></p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       DOBRA 8: CTA & FOOTER
+  ════════════════════════════════════════ -->
+  <section class="cta-footer-section">
+    <div class="cta-footer-inner">
+      <div class="cta-box">
+        <span class="cta-badge">Aceleração Comercial</span>
+        <h2>Quer acelerar suas <br><em>vendas imobiliárias?</em></h2>
+        <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-giant">
+          <span class="btn-inner">
+            <span class="btn-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
+            <span>Vamos Juntos</span>
+            <span class="btn-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </span>
+        </a>
+      </div>
+
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <a href="index.html" class="footer-logo">
+            <img src="Assets/ecomm_growth_logo_transparente.svg" alt="Ecomm Growth Logo" style="height: 120px; width: auto;" />
+          </a>
+          <p class="footer-brand-desc">
+            Especialistas no Mercado Imobiliário, 100% focados em desenvolver, ativar e principalmente aumentar as vendas de corretores e incorporadoras.
+          </p>
+          <div class="footer-socials" style="display: flex; gap: 12px; margin-top: 16px;">
+            <a href="https://www.linkedin.com/in/gabrielrsantana/?locale=pt-BR" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/gabrielsantannaa_/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0 3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/gabriel.r.santana/" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@gabrielsantannaa" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <div class="footer-links">
+            <a href="index.html#servicos" class="footer-link" target="_blank" rel="noopener">Serviços</a>
+            <a href="index.html#projetos" class="footer-link" target="_blank" rel="noopener">Projetos</a>
+            <a href="index.html#nos" class="footer-link" target="_blank" rel="noopener">Sobre nós</a>
+            <a href="blog.html" class="footer-link" target="_blank" rel="noopener">Blog</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Nossos Serviços</h4>
+          <div class="footer-links">
+            <a href="index.html#servicos" class="footer-link" target="_blank" rel="noopener">Estrutura e Planejamento</a>
+            <a href="index.html#servicos" class="footer-link" target="_blank" rel="noopener">Análise CRO</a>
+            <a href="index.html#servicos" class="footer-link" target="_blank" rel="noopener">Email Marketing</a>
+            <a href="index.html#servicos" class="footer-link" target="_blank" rel="noopener">Data Science</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Páginas</h4>
+          <div class="footer-links">
+            <a href="indexcookies.html" class="footer-link">Política de Cookies</a>
+            <a href="indexprivacidade.html" class="footer-link" target="_blank" rel="noopener">Política de Privacidade</a>
+            <a href="indexuso.html" class="footer-link" target="_blank" rel="noopener">Termos de Uso</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>Copyright 2017-2026 © E-comm Growth — 32.301.353/0001-18</span>
+        <span>Made with Excellence</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  /* ─────────────────────────────────────────────────────────────
+     1. GSAP + LENIS SETUP
+  ───────────────────────────────────────────────────────────── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lenis = new Lenis({
+    duration:        1.4,
+    easing:          (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation:     'vertical',
+    smoothWheel:     true,
+    touchMultiplier: 2,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  /* ─────────────────────────────────────────────────────────────
+     2. ELEMENT REFS
+  ───────────────────────────────────────────────────────────── */
+  const nav         = document.getElementById('main-nav');
+  const topBar      = document.getElementById('top-progress');
+
+  /* ─────────────────────────────────────────────────────────────
+     3. NAV + TOP BAR
+  ───────────────────────────────────────────────────────────── */
+  lenis.on('scroll', ({ scroll, limit }) => {
+    nav.classList.toggle('is-scrolled', scroll > 60);
+    topBar.style.width = ((scroll / limit) * 100) + '%';
+  });
+
+  // Entry animation for legal page elements
+  gsap.from('.legal-card', {
+    opacity: 0,
+    y: 40,
+    duration: 1.2,
+    ease: 'power3.out',
+    delay: 0.2
+  });
+
+  gsap.from('.cta-box > *', {
+    opacity: 0, y: 30, stagger: 0.15, duration: 1.1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.cta-footer-section', start: 'top 85%' }
+  });
+</script>
+
+</body>
+</html>

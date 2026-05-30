@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marketing Digital para Imobiliárias e Incorporadoras — Ecomm Growth</title>
+  <meta name="description" content="Marketing Digital para Imobiliárias e Incorporadoras que Querem Vender com Previsibilidade"/>
+
+  <!-- ── GOOGLE FONTS ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  CDN LIBRARIES                                               ║
+    ║                                                              ║
+    ║  1. GSAP 3 + ScrollTrigger                                   ║
+    ║     Entry animations, scroll progress mapping (no scrub),   ║
+    ║     post-hero reveals.                                       ║
+    ║                                                              ║
+    ║  2. Lenis                                                    ║
+    ║     Momentum smooth-scroll, drives GSAP ticker.             ║
+    ║                                                              ║
+    ║  VIDEO RENDERING STACK (native Web APIs, no extra lib):      ║
+    ║  • <canvas> 2D — paints decoded frames synchronously        ║
+    ║  • requestVideoFrameCallback — fires exactly when a frame   ║
+    ║    is ready for the compositor (no tearing / blank frames)  ║
+    ║  • Seek queue — only one seek in-flight at a time;          ║
+    ║    latest scroll position always wins                        ║
+    ╚══════════════════════════════════════════════════════════════╝
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <style>
+    /* ════════════════════════════════════════════════════════════
+       DESIGN TOKENS — ECOMM GROWTH
+    ════════════════════════════════════════════════════════════ */
+    :root {
+      --color-primary:        #c8da42;
+      --color-primary-light:  #daea70;
+      --color-primary-dark:   #a0b030;
+      --color-black:          #000000;
+      --color-surface:        #0a0a0a;
+      --color-surface-2:      #111111;
+      --color-surface-3:      #1a1a1a;
+      --color-accent:         #925352;
+      --color-accent-light:   #b56a69;
+      --color-text-primary:   #ffffff;
+      --color-text-secondary: rgba(255,255,255,0.6);
+      --color-text-muted:     rgba(255,255,255,0.3);
+      --color-border:         rgba(255,255,255,0.08);
+      --radius-md:   12px;
+      --radius-lg:   20px;
+      --radius-full: 9999px;
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       RESET & GLOBAL
+    ════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-black);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    ::selection { background: rgba(200,218,66,0.25); color: #fff; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--color-black); }
+    ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 4px; }
+
+    /* ════════════════════════════════════════════════════════════
+       TOP PROGRESS BAR
+    ════════════════════════════════════════════════════════════ */
+    #top-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+      box-shadow: 0 0 10px var(--color-primary);
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       BACKGROUND GRID LINES + BEAMS
+    ════════════════════════════════════════════════════════════ */
+    .grid-lines {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      max-width: 1280px;
+      margin: 0 auto;
+      left: 0; right: 0;
+      opacity: 0.35;
+    }
+    .grid-col {
+      flex: 1;
+      border-left: 1px solid rgba(255,255,255,0.04);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .grid-col:last-child { border-right: 1px solid rgba(255,255,255,0.04); }
+    .grid-beam {
+      position: absolute;
+      top: 0; left: -1px;
+      width: 1px; height: 200px;
+      background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+    }
+    @keyframes beam-fall {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(200vh); opacity: 0; }
+    }
+    .beam-1 { animation: beam-fall 6s linear infinite; }
+    .beam-2 { animation: beam-fall 8s linear infinite 2s; }
+    .beam-3 { animation: beam-fall 5s linear infinite 4s; }
+
+    /* ════════════════════════════════════════════════════════════
+       NAV
+    ════════════════════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 110px; /* default large height to fit logo */
+      padding: 0 clamp(20px, 5vw, 40px);
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: height 0.5s var(--ease-smooth),
+                  background 0.5s var(--ease-smooth),
+                  backdrop-filter 0.5s var(--ease-smooth),
+                  border-color 0.5s var(--ease-smooth);
+    }
+    .nav-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .nav.is-scrolled {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: var(--color-border);
+      height: 92px; /* compact height on scroll */
+    }
+    .nav-logo {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 24px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+      box-shadow: 0 0 25px rgba(200,218,66,0.25), 0 8px 40px rgba(200,218,66,0.1);
+      transition: transform 0.3s var(--ease-smooth),
+                  box-shadow 0.3s var(--ease-smooth),
+                  padding 0.5s var(--ease-smooth);
+      text-decoration: none;
+      user-select: none;
+    }
+    .nav.is-scrolled .nav-logo {
+      padding: 6px 20px;
+    }
+    .nav-logo::before {
+      content: ''; position: absolute; inset: -100%;
+      width: 300%; height: 300%; left: -100%; top: -100%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+      animation: spin-conic 3s linear infinite;
+    }
+    .nav-logo::after {
+      content: ''; position: absolute; inset: 1px; border-radius: var(--radius-full);
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); z-index: 0;
+    }
+    .nav-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(200,218,66,0.45), 0 8px 40px rgba(200,218,66,0.2);
+    }
+    .nav-logo img {
+      height: 76px; /* default large height */
+      width: auto;
+      display: block;
+      position: relative;
+      z-index: 10;
+      transition: transform 0.3s var(--ease-smooth), height 0.5s var(--ease-smooth);
+    }
+    .nav.is-scrolled .nav-logo img {
+      height: 60px; /* shrink slightly on scroll */
+    }
+    .nav-logo:hover img {
+      transform: scale(1.02);
+    }
+    .logo-bar-a { height: 18px; background: var(--color-primary); }
+    .logo-bar-b { height: 11px; background: var(--color-accent); }
+    .logo-bar-c { height: 18px; background: var(--color-primary); }
+    .nav-logo:hover .logo-bar-a { height: 22px; }
+    .nav-logo:hover .logo-bar-b { height: 16px; }
+    .nav-logo:hover .logo-bar-c { height: 20px; }
+    .logo-text { font-size: 0.92rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+    .logo-text em { font-style: normal; color: var(--color-primary); }
+
+    /* Mobile overrides for navbar responsiveness */
+    @media (max-width: 480px) {
+      .nav {
+        height: 88px;
+      }
+      .nav.is-scrolled {
+        height: 76px;
+      }
+      .nav-logo img {
+        height: 52px;
+      }
+      .nav.is-scrolled .nav-logo img {
+        height: 44px;
+      }
+      .nav-logo {
+        padding: 6px 14px;
+      }
+      .nav.is-scrolled .nav-logo {
+        padding: 4px 10px;
+      }
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    @media (max-width: 860px) { .nav-links { display: none; } }
+    .nav-link {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      text-decoration: none; padding-bottom: 2px;
+      position: relative; transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px; background: var(--color-primary);
+      transition: width 0.3s var(--ease-smooth);
+    }
+    .nav-link:hover { color: var(--color-primary); }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── BTN BRAND ── */
+    @keyframes spin-conic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .btn-brand {
+      position: relative; display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 24px; border-radius: var(--radius-full);
+      font-size: 0.88rem; font-weight: 500; letter-spacing: -0.01em; color: #fff;
+      cursor: pointer; overflow: hidden; isolation: isolate; border: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+      box-shadow: 0 0 25px rgba(200,218,66,0.25), 0 8px 40px rgba(200,218,66,0.1);
+      transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+    }
+    .btn-brand::before {
+      content: ''; position: absolute; inset: -100%;
+      width: 300%; height: 300%; left: -100%; top: -100%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+      animation: spin-conic 3s linear infinite;
+    }
+    .btn-brand::after {
+      content: ''; position: absolute; inset: 1px; border-radius: var(--radius-full);
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); z-index: 0;
+    }
+    .btn-brand:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(200,218,66,0.45), 0 8px 40px rgba(200,218,66,0.2); }
+    .btn-inner { position: relative; z-index: 10; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+    .btn-icon {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(200,218,66,0.3);
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .btn-brand:hover .btn-icon { transform: scale(1.1); }
+    .btn-arrow {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .btn-brand:hover .btn-arrow { transform: translateX(2px); }
+
+    /* Solid buttons */
+    .btn-solid {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: var(--radius-full);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; border: none; cursor: pointer;
+      transition: all 0.25s var(--ease-smooth);
+    }
+    .btn-primary {
+      background: var(--color-primary); color: var(--color-black);
+      box-shadow: 0 4px 20px rgba(200,218,66,0.3);
+    }
+    .btn-primary:hover { background: var(--color-primary-light); transform: scale(1.04); box-shadow: 0 8px 30px rgba(200,218,66,0.45); }
+
+    /* ════════════════════════════════════════════════════════════
+       VIDEO SCRUB — CANVAS RENDERING
+       ─────────────────────────────────────────────────────────
+       Architecture:
+         #scrub-section  ← 600vh tall scroll container
+           .sticky-frame ← sticky 100vh, clips everything
+             #hero-canvas← full-coverage canvas (video frames painted here)
+             overlays    ← gradient + glow layers
+             .hero-layer ← text, always-visible, LEFT side
+    ════════════════════════════════════════════════════════════ */
+    #scrub-section {
+      position: relative;
+      height: 600vh;
+    }
+
+    .sticky-frame {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--color-surface); /* shown while video loads */
+    }
+
+    /* Canvas fills the frame; video frames are painted here */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+      /* object-fit: cover equivalent is handled in JS drawImage */
+    }
+
+    /* Left-heavy dark gradient — text readability on left side */
+    .vid-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        linear-gradient(to right,  rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.52) 38%, rgba(0,0,0,0.08) 70%, transparent 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 22%, transparent 72%, rgba(0,0,0,0.75) 100%);
+    }
+
+    /* Brand radial glow */
+    .vid-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 60% at 20% 55%, rgba(200,218,66,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 15% 80%, rgba(146,83,82,0.05) 0%, transparent 60%);
+    }
+
+    /* ── LOADING OVERLAY ── */
+    .vid-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 9;
+      background: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity 0.7s var(--ease-smooth);
+    }
+    .vid-loading.hidden { opacity: 0; pointer-events: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 2px solid rgba(200,218,66,0.12);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    /* Buffering progress bar */
+    .buffer-bar-wrap {
+      width: 160px; height: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .buffer-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: 2px;
+      transition: width 0.3s linear;
+      box-shadow: 0 0 8px var(--color-primary);
+    }
+    .spinner-label {
+      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--color-text-muted);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       HERO TEXT — LEFT ALIGNED, ALWAYS VISIBLE
+    ════════════════════════════════════════════════════════════ */
+    .hero-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      /* Extended width to prevent text wrapping/clipping on larger screens */
+      width: min(800px, 55%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* Top padding clears the nav bar */
+      padding: 114px clamp(24px, 5vw, 72px) 80px;
+      text-align: left;
+      pointer-events: none;
+    }
+    .hero-layer > * { pointer-events: auto; }
+
+    @media (max-width: 760px) {
+      .hero-layer {
+        width: 100%;
+        padding: 114px 24px 120px;
+        justify-content: flex-end;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+      }
+    }
+    @media (max-width: 480px) {
+      .hero-layer {
+        padding-top: 96px;
+      }
+    }
+
+    /* Eyebrow */
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);    opacity: 0.7; }
+      50%  { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(1);    opacity: 0.7; }
+    }
+    .h-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      opacity: 0; /* GSAP entry */
+    }
+    .eyebrow-dot {
+      width: 7px; height: 7px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--color-primary);
+      box-shadow: 0 0 14px var(--color-primary);
+      animation: pulse-ring 2.2s ease-in-out infinite;
+    }
+    .eyebrow-text {
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(200,218,66,0.88);
+    }
+
+    /* H1 */
+    .h-headline {
+      font-size: clamp(2rem, 4vw, 4.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 40px;
+      opacity: 0; /* GSAP entry */
+    }
+    .h-headline .strike {
+      text-decoration: line-through;
+      text-decoration-color: var(--color-accent);
+      text-decoration-thickness: 0.08em;
+    }
+    .h-headline .grad {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      padding-bottom: 0.15em; /* increased padding-bottom to prevent descender (g) crop */
+      margin-bottom: -0.1em;
+    }
+
+    /* Sub */
+    .h-sub {
+      font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+      color: rgba(255,255,255,0.58);
+      max-width: 400px;
+      line-height: 1.72;
+      margin-bottom: 40px;
+      opacity: 0; /* GSAP entry */
+    }
+
+    /* CTA row */
+    .h-ctas {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-start; /* left-aligned */
+      opacity: 0; /* GSAP entry */
+    }
+
+    /* Scroll chapter counter (bottom-left of sticky frame) */
+    .chapter-counter {
+      position: absolute;
+      bottom: 36px;
+      left: clamp(24px, 5vw, 72px);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0; /* GSAP entry */
+    }
+    .chapter-progress-track {
+      width: 80px; height: 1px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 1px;
+      overflow: hidden;
+      position: relative;
+    }
+    .chapter-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--color-primary);
+      box-shadow: 0 0 6px var(--color-primary);
+      border-radius: 1px;
+      transition: width 0.08s linear;
+    }
+    .chapter-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+    .chapter-pct {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--color-primary);
+      letter-spacing: 0.08em;
+      min-width: 32px;
+    }
+
+    /* ── BOTTOM INFO STRIP ── */
+    .vid-strip {
+      position: absolute;
+      bottom: clamp(80px, 12vh, 110px);
+      right: clamp(20px, 4vw, 48px);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      opacity: 0; /* GSAP entry */
+    }
+    .vid-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+    }
+    .vid-pill span {
+      font-size: 0.62rem; font-weight: 600;
+      color: rgba(255,255,255,0.72); letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 16px;
+      background: rgba(200,218,66,0.1);
+      border: 1px solid rgba(200,218,66,0.28);
+      border-radius: var(--radius-full);
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--color-primary);
+    }
+    .badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--color-primary);
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    /* ── SIDE PROGRESS BAR (right edge) ── */
+    .vid-progress {
+      position: absolute;
+      right: 24px; top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; /* GSAP entry */
+    }
+    .vp-label {
+      font-family: 'Space Mono', monospace; font-size: 0.52rem;
+      color: rgba(255,255,255,0.28); writing-mode: vertical-rl;
+      letter-spacing: 0.14em;
+    }
+    .vp-track {
+      width: 2px; height: 100px;
+      background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;
+      position: relative;
+    }
+    .vp-fill {
+      width: 100%; height: 0%;
+      background: linear-gradient(to bottom, var(--color-primary), var(--color-primary-light));
+      border-radius: 2px; position: absolute; top: 0;
+      box-shadow: 0 0 8px var(--color-primary);
+      transition: height 0.08s linear;
+    }
+    @media (max-width: 768px) { .vid-progress { display: none; } }
+
+    /* ── SCROLL HINT ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      opacity: 0; /* GSAP entry */
+      white-space: nowrap;
+      transition: opacity 0.5s var(--ease-smooth);
+    }
+    .hint-label {
+      font-size: 0.56rem; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    .hint-track {
+      width: 1px; height: 48px;
+      background: rgba(255,255,255,0.08); border-radius: 1px; overflow: hidden;
+      position: relative;
+    }
+    @keyframes hint-drop {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(200%); opacity: 0; }
+    }
+    .hint-fill {
+      position: absolute; width: 100%; height: 50%;
+      background: linear-gradient(to bottom, transparent, var(--color-primary));
+      border-radius: 1px; animation: hint-drop 2s ease-in-out infinite;
+      box-shadow: 0 0 6px var(--color-primary);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       MARQUEE
+    ════════════════════════════════════════════════════════════ */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: 14px 0;
+      background: rgba(200,218,66,0.015);
+      position: relative; z-index: 10;
+    }
+    .marquee-inner {
+      display: flex; width: max-content;
+      animation: marquee 26s linear infinite;
+    }
+    .marquee-inner:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 0 40px;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); white-space: nowrap;
+    }
+    .m-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+    .glow-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,218,66,0.35), transparent);
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP PROGRESS BAR -->
+<div id="top-progress" role="progressbar" aria-hidden="true"></div>
+
+<!-- BACKGROUND GRID -->
+<div class="grid-lines" aria-hidden="true">
+  <div class="grid-col"><div class="grid-beam beam-1"></div></div>
+  <div class="grid-col"><div class="grid-beam beam-2"></div></div>
+  <div class="grid-col"></div>
+  <div class="grid-col"><div class="grid-beam beam-3"></div></div>
+  <div class="grid-col"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════ -->
+<header>
+  <nav class="nav" id="main-nav" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="#" class="nav-logo" aria-label="Ecomm Growth — Início">
+        <img src="ecomm_growth_logo_transparente.svg" alt="Ecomm Growth Logo" />
+      </a>
+
+      <div class="nav-links" role="list">
+        <a href="#projetos" class="nav-link" role="listitem">Projetos</a>
+        <a href="#servicos" class="nav-link" role="listitem">Serviços</a>
+        <a href="#nos" class="nav-link" role="listitem">Sobre Nós</a>
+        <a href="../blog.html" class="nav-link" role="listitem" target="_blank" rel="noopener">Blog</a>
+      </div>
+
+      <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+        <button class="btn-brand" id="nav-cta" type="button" aria-label="Vamos Juntos">
+          <span class="btn-inner">
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
+            <span>Vamos Juntos</span>
+            <span class="btn-arrow" aria-hidden="true">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </span>
+        </button>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<!-- ════════════════════════════════════════
+     MAIN
+════════════════════════════════════════ -->
+<main>
+
+  <!-- ══════════════════════════════════════════════════
+       HERO — APPLE SCROLL SCRUB
+       #scrub-section  → 600vh  (scroll travel distance)
+       .sticky-frame   → 100vh  (viewport-locked window)
+       #hero-canvas    → video frames painted here
+       .hero-layer     → text, left-side, always visible
+  ══════════════════════════════════════════════════ -->
+  <section id="scrub-section" aria-label="Hero — vídeo interativo">
+
+    <div class="sticky-frame">
+
+      <!-- Loading / buffering state -->
+      <div class="vid-loading" id="vid-loading">
+        <div class="spinner"></div>
+        <div class="buffer-bar-wrap">
+          <div class="buffer-bar-fill" id="buffer-fill"></div>
+        </div>
+        <span class="spinner-label" id="loading-label">Carregando vídeo…</span>
+      </div>
+
+      <!--
+        CANVAS — all video frames are painted here via drawImage().
+        requestVideoFrameCallback fires only when a decoded frame
+        is ready for the compositor → zero tearing, zero blank frames.
+      -->
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+      <!--
+        VIDEO — hidden; used only as a decode source.
+        preload="auto" → buffer the full file for gapless seeking.
+        We NEVER call .play() — .currentTime is our only control.
+      -->
+      <video
+        id="hero-video"
+        muted
+        preload="auto"
+        playsinline
+        style="position:absolute; width:1px; height:1px; opacity:0.01; pointer-events:none;"
+        aria-hidden="true"
+      >
+        <source src="vídeo_topo.mp4" type="video/mp4"/>
+      </video>
+
+      <!-- Atmospheric overlays -->
+      <div class="vid-overlay" aria-hidden="true"></div>
+      <div class="vid-glow"    aria-hidden="true"></div>
+
+      <!-- ── HERO TEXT — LEFT, ALWAYS VISIBLE ── -->
+      <div class="hero-layer" role="banner">
+
+        <div class="h-eyebrow" id="h-eyebrow">
+          <div class="eyebrow-dot" aria-hidden="true"></div>
+          <span class="eyebrow-text">Mercado Imobiliário</span>
+        </div>
+
+        <h1 class="h-headline" id="h-headline">
+          Agência especializada<br>
+          <span class="grad">no mercado imobiliário</span>
+        </h1>
+
+        <p class="h-sub" id="h-sub">
+          Marketing Digital para Imobiliárias e Incorporadoras que Querem Vender com Previsibilidade
+        </p>
+
+        <div class="h-ctas" id="h-ctas">
+          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration: none;">
+            <button class="btn-solid btn-primary" id="cta-primary" type="button">
+              Vamos Juntos
+            </button>
+          </a>
+          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration: none;">
+            <button class="btn-brand" id="cta-brand" type="button">
+              <span class="btn-inner">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </span>
+                <span>Vamos Juntos</span>
+                <span class="btn-arrow" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </a>
+        </div>
+
+      </div><!-- /.hero-layer -->
+
+      <!-- Chapter / progress counter (bottom-left) -->
+      <div class="chapter-counter" id="chapter-counter">
+        <span class="chapter-label">MERCADO IMOBILIÁRIO</span>
+        <div class="chapter-progress-track">
+          <div class="chapter-progress-fill" id="chap-fill"></div>
+        </div>
+        <span class="chapter-pct" id="chap-pct">0%</span>
+      </div>
+
+      <!-- Info pills (right side, bottom) -->
+      <div class="vid-strip" id="vid-strip" aria-hidden="true">
+        <div class="badge-pill">
+          <span class="badge-dot"></span>
+          Geração de Leads
+        </div>
+        <div class="vid-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,218,66,0.75)" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Médio e Alto Padrão</span>
+        </div>
+        <div class="vid-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span>Seu VGV Maior</span>
+        </div>
+      </div>
+
+      <!-- Vertical progress (right edge) -->
+      <div class="vid-progress" id="vid-progress" aria-hidden="true">
+        <span class="vp-label">SCROLL</span>
+        <div class="vp-track">
+          <div class="vp-fill" id="vp-fill"></div>
+        </div>
+      </div>
+
+      <!-- Scroll hint (centre-bottom, fades once user scrolls) -->
+      <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+        <span class="hint-label">Role para explorar</span>
+        <div class="hint-track"><div class="hint-fill"></div></div>
+      </div>
+
+    </div><!-- /.sticky-frame -->
+  </section>
+
+  <!-- ════════════════════════════════════════
+       MARQUEE STRIP
+  ════════════════════════════════════════ -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-inner">
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Geração de Leads</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Incorporadoras & Imobiliárias</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Médio e Alto Padrão</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Estratégia & Dados</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Tráfego Pago</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Previsibilidade de Vendas</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Conexão Comercial</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Performance Growth</span>
+      <!-- duplicate for seamless loop -->
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Geração de Leads</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Incorporadoras & Imobiliárias</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Médio e Alto Padrão</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Estratégia & Dados</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Tráfego Pago</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Previsibilidade de Vendas</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-primary)"></span>Conexão Comercial</span>
+      <span class="marquee-item"><span class="m-dot" style="background:var(--color-accent)"></span>Performance Growth</span>
+    </div>
+  </div>
+
+
+
+</main>
+
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+  /* ─────────────────────────────────────────────────────────────
+     1. GSAP + LENIS SETUP
+  ───────────────────────────────────────────────────────────── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lenis = new Lenis({
+    duration:        1.4,
+    easing:          (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation:     'vertical',
+    smoothWheel:     true,
+    touchMultiplier: 2,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  /* ─────────────────────────────────────────────────────────────
+     2. ELEMENT REFS
+  ───────────────────────────────────────────────────────────── */
+  const nav         = document.getElementById('main-nav');
+  const topBar      = document.getElementById('top-progress');
+  const scrollHint  = document.getElementById('scroll-hint');
+  const vpFill      = document.getElementById('vp-fill');
+  const chapFill    = document.getElementById('chap-fill');
+  const chapPct     = document.getElementById('chap-pct');
+  const loadingEl   = document.getElementById('vid-loading');
+  const bufferFill  = document.getElementById('buffer-fill');
+  const loadLabel   = document.getElementById('loading-label');
+  const video       = document.getElementById('hero-video');
+  const canvas      = document.getElementById('hero-canvas');
+  const ctx         = canvas.getContext('2d', { alpha: false });
+
+  let entryFinished = false; /* Tracks when the onload animation completes */
+
+  /* ─────────────────────────────────────────────────────────────
+     3. NAV + TOP BAR
+  ───────────────────────────────────────────────────────────── */
+  lenis.on('scroll', ({ scroll, limit }) => {
+    nav.classList.toggle('is-scrolled', scroll > 60);
+    topBar.style.width = ((scroll / limit) * 100) + '%';
+  });
+
+  /* ─────────────────────────────────────────────────────────────
+     4. CANVAS — cover-fit drawImage
+     Mirrors CSS object-fit: cover so the video always fills
+     the canvas without distortion regardless of aspect ratio.
+  ───────────────────────────────────────────────────────────── */
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    drawFrame(); /* repaint after resize */
+  }
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+
+  function drawFrame() {
+    if (video.readyState < 2) return; /* no data yet */
+
+    const vw = canvas.width,  vh = canvas.height;
+    const iw = video.videoWidth, ih = video.videoHeight;
+    if (!iw || !ih) return;
+
+    /* Cover-fit calculation */
+    const scale  = Math.max(vw / iw, vh / ih);
+    const dw     = iw * scale;
+    const dh     = ih * scale;
+    const dx     = (vw - dw) / 2;
+    const dy     = (vh - dh) / 2;
+
+    /* Maintain highest quality scaling on high-DPI canvases */
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    ctx.drawImage(video, dx, dy, dw, dh);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     5. SEEK QUEUE — one seek in-flight at a time
+     ─────────────────────────────────────────────────────────────
+     Why this works better than direct currentTime assignment:
+     • Only one async decode runs at a time → no race conditions
+     • Latest requested time always wins (stale seeks are skipped)
+     • requestVideoFrameCallback paints ONLY when the frame is
+       ready for the compositor → no black/torn frames
+     • Falls back to the 'seeked' event on Firefox
+  ───────────────────────────────────────────────────────────── */
+  let seekInProgress = false;
+  let pendingTime    = null;   /* latest requested time, or null */
+
+  const supportsRVFC = ('requestVideoFrameCallback' in video);
+
+  function processSeek() {
+    /* Nothing queued → we're idle */
+    if (pendingTime === null) {
+      seekInProgress = false;
+      return;
+    }
+
+    const time  = pendingTime;
+    pendingTime = null;
+    /* seekInProgress stays true — we're starting the next seek */
+
+    video.currentTime = time;
+
+    if (supportsRVFC) {
+      /* Chrome / Edge / Safari 15.4+ */
+      video.requestVideoFrameCallback(() => {
+        drawFrame();
+        processSeek(); /* recurse: check if another seek is waiting */
+      });
+    } else {
+      /* Firefox fallback */
+      video.addEventListener('seeked', function onSeeked() {
+        video.removeEventListener('seeked', onSeeked);
+        drawFrame();
+        processSeek();
+      });
+    }
+  }
+
+  /**
+   * Public API: request a seek to `time` seconds.
+   * If a seek is already running, the request is queued (only
+   * the LATEST call wins — intermediate values are dropped).
+   */
+  function seekTo(time) {
+    pendingTime = time;
+    if (!seekInProgress) {
+      seekInProgress = true;
+      processSeek();
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     6. VIDEO SCRUB INIT — runs once metadata is ready
+  ───────────────────────────────────────────────────────────── */
+  function initScrub() {
+    const duration = video.duration;
+    if (!duration || isNaN(duration)) return;
+
+    resizeCanvas();
+    drawFrame(); /* paint frame 0 before scroll starts */
+
+    const playhead = { time: 0 };
+
+    /* GSAP ScrollTrigger timeline with scrub: 1.2 and a time proxy.
+       This provides high-end inertia smoothing to the video seeking
+       and coordinates all fade-in/out transitions seamlessly. */
+    const scrollTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#scrub-section',
+        start:   'top top',
+        end:     'bottom bottom',
+        scrub:   1.2,
+        onUpdate(self) {
+          const pct = self.progress;
+
+          /* Update UI indicators based on raw scroll position for high responsiveness */
+          const pctInt = Math.round(pct * 100);
+          vpFill.style.height   = pctInt + '%';
+          chapFill.style.width  = pctInt + '%';
+          chapPct.textContent   = pctInt + '%';
+
+          /* Fade out scroll hint smoothly based on progress once user scrolls or entry finishes */
+          if (pct > 0 || entryFinished) {
+            scrollHint.style.opacity = Math.max(0, 1 - (pct / 0.05));
+          }
+        }
+      }
+    });
+
+    // 1. Smoothly scrub the video playhead
+    scrollTL.to(playhead, {
+      time: duration,
+      ease: 'none',
+      duration: 1,
+      onUpdate() {
+        seekTo(playhead.time);
+      }
+    }, 0);
+
+    runEntryAnimations();
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     7. VIDEO BUFFERING PROGRESS
+  ───────────────────────────────────────────────────────────── */
+  video.addEventListener('progress', () => {
+    if (!video.duration) return;
+    try {
+      const buf = video.buffered;
+      if (buf.length > 0) {
+        const pct = Math.round((buf.end(buf.length - 1) / video.duration) * 100);
+        bufferFill.style.width = pct + '%';
+        loadLabel.textContent  = `Carregando… ${pct}%`;
+      }
+    } catch (_) {}
+  });
+
+  /* ─────────────────────────────────────────────────────────────
+     8. BOOTSTRAP
+  ───────────────────────────────────────────────────────────── */
+  function bootstrap() {
+    resizeCanvas();
+
+    const onVideoReady = () => {
+      // If readyState is already HAVE_CURRENT_DATA, paint the canvas immediately
+      if (video.readyState >= 2) {
+        drawFrame();
+      }
+
+      // Reset currentTime to 0 to align with the starting point
+      video.currentTime = 0;
+
+      let firstFrameDrawn = false;
+      const onFirstFrame = () => {
+        if (firstFrameDrawn) return;
+        firstFrameDrawn = true;
+        drawFrame();
+        // Hide loader and activate the scroll timeline
+        setTimeout(() => {
+          loadingEl.classList.add('hidden');
+          // Premium zoom-out fade-in reveal for the video canvas
+          gsap.fromTo('#hero-canvas',
+            { opacity: 0, scale: 1.05 },
+            { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }
+          );
+          initScrub();
+        }, 150);
+      };
+
+      if (supportsRVFC) {
+        video.requestVideoFrameCallback(onFirstFrame);
+      } else {
+        video.addEventListener('seeked', onFirstFrame, { once: true });
+      }
+
+      // Safeguard: Force loader removal after 1 second if events fail to fire
+      setTimeout(() => {
+        if (!firstFrameDrawn) {
+          onFirstFrame();
+        }
+      }, 1000);
+    };
+
+    if (video.readyState >= 2) {
+      onVideoReady();
+    } else {
+      video.addEventListener('loadeddata', onVideoReady, { once: true });
+    }
+  }
+
+  if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+    bootstrap();
+  } else {
+    video.addEventListener('loadedmetadata', bootstrap, { once: true });
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     9. ENTRY ANIMATIONS
+     Text is ALWAYS visible — we only do the initial reveal
+     animation. There is NO scroll-out / fade-away for the text.
+  ───────────────────────────────────────────────────────────── */
+  function runEntryAnimations() {
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .fromTo('#h-eyebrow',       { opacity:0, y:26 }, { opacity:1, y:0, duration:0.9 }, 0.30)
+      .fromTo('#h-headline',      { opacity:0, y:40 }, { opacity:1, y:0, duration:1.1 }, 0.50)
+      .fromTo('#h-sub',           { opacity:0, y:24 }, { opacity:1, y:0, duration:0.9 }, 0.75)
+      .fromTo('#h-ctas',          { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8 }, 0.95)
+      .fromTo('#vid-strip',       { opacity:0 },       { opacity:1, duration:1.0 },       1.10)
+      .fromTo('#vid-progress',    { opacity:0 },       { opacity:1, duration:0.9 },       1.25)
+      .fromTo('#chapter-counter', { opacity:0 },       { opacity:1, duration:0.9 },       1.30)
+      .fromTo('#scroll-hint',     { opacity:0 },       { opacity:1, duration:0.9 },       1.55)
+      .call(() => { entryFinished = true; });
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     10. POST-HERO SCROLL REVEALS
+  ───────────────────────────────────────────────────────────── */
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Design System — Ecomm Growth</title>
+<meta name="description" content="Sistema de design oficial Ecomm Growth. Paleta de cores, tipografia, componentes, ícones e padrões de motion."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link crossorigin="" rel="preconnect" href="https://fonts.gstatic.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            primary: '#c8da42',
+            dark:    '#000000',
+            accent:  '#925352',
+          }
+        },
+        fontFamily: {
+          sans:  ['Inter', 'sans-serif'],
+          serif: ['Instrument Serif', 'serif'],
+          mono:  ['Space Mono', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* ══════════════════════════════════════════════
+     DESIGN TOKENS — ECOMM GROWTH BRAND
+  ══════════════════════════════════════════════ */
+  :root {
+    --color-primary:        #c8da42;
+    --color-primary-light:  #daea70;
+    --color-primary-dark:   #a0b030;
+    --color-black:          #000000;
+    --color-surface:        #0a0a0a;
+    --color-surface-2:      #111111;
+    --color-surface-3:      #1a1a1a;
+    --color-accent:         #925352;
+    --color-accent-light:   #b56a69;
+    --color-accent-dark:    #6e3d3c;
+    --color-text-primary:   #ffffff;
+    --color-text-secondary: rgba(255,255,255,0.6);
+    --color-text-muted:     rgba(255,255,255,0.3);
+    --color-border:         rgba(255,255,255,0.08);
+    --radius-sm:  6px;
+    --radius-md:  12px;
+    --radius-lg:  20px;
+    --radius-xl:  32px;
+    --radius-2xl: 48px;
+    --radius-full: 9999px;
+    --duration-fast:   150ms;
+    --duration-base:   300ms;
+    --duration-slow:   600ms;
+    --duration-slower: 1000ms;
+    --ease-smooth: cubic-bezier(0.2,0.8,0.2,1);
+  }
+
+  /* ══════════════════════════════════════════════
+     BASE RESET & GLOBAL
+  ══════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--color-black);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  ::selection { background: rgba(200,218,66,0.25); color: #fff; }
+
+  /* ══════════════════════════════════════════════
+     SCROLLBAR
+  ══════════════════════════════════════════════ */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--color-black); }
+  ::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 4px; }
+
+  /* ══════════════════════════════════════════════
+     ANIMATED GRID COLUMNS (beam effect from exemplo)
+  ══════════════════════════════════════════════ */
+  @keyframes beam-fall-1 {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(200vh); opacity: 0; }
+  }
+  @keyframes beam-fall-2 {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(200vh); opacity: 0; }
+  }
+  @keyframes beam-fall-3 {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(200vh); opacity: 0; }
+  }
+  .animate-beam-1 { animation: beam-fall-1 6s linear infinite; }
+  .animate-beam-2 { animation: beam-fall-2 8s linear infinite 2s; }
+  .animate-beam-3 { animation: beam-fall-3 5s linear infinite 4s; }
+
+  /* ══════════════════════════════════════════════
+     SCROLL REVEAL
+  ══════════════════════════════════════════════ */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    animation: fadeSlideIn 0.9s var(--ease-smooth) both;
+  }
+  .reveal.visible { opacity: 1; }
+
+  /* ══════════════════════════════════════════════
+     MARQUEE
+  ══════════════════════════════════════════════ */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+
+  /* ══════════════════════════════════════════════
+     SPIN CONIC (button glow ring)
+  ══════════════════════════════════════════════ */
+  @keyframes spin-conic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ══════════════════════════════════════════════
+     BUTTON — CUSTOM (ported from exemplo.html)
+  ══════════════════════════════════════════════ */
+  .btn-brand {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+    box-shadow: 0 0 25px rgba(200,218,66,0.25), 0 8px 40px rgba(200,218,66,0.1);
+  }
+  .btn-brand::before {
+    content: '';
+    position: absolute;
+    inset: -100%;
+    width: 300%;
+    height: 300%;
+    left: -100%;
+    top: -100%;
+    background: conic-gradient(from 0deg, transparent 0deg, transparent 80deg, rgba(200,218,66,0.7) 180deg, transparent 280deg, transparent 360deg);
+    animation: spin-conic 3s linear infinite;
+  }
+  .btn-brand::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: var(--radius-full);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 0;
+  }
+  .btn-brand:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(200,218,66,0.45), 0 8px 40px rgba(200,218,66,0.2);
+  }
+  .btn-brand .btn-inner {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .btn-brand .btn-icon {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(200,218,66,0.3);
+    transition: transform 0.3s var(--ease-smooth);
+  }
+  .btn-brand:hover .btn-icon { transform: scale(1.1); }
+  .btn-brand .btn-arrow {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s var(--ease-smooth);
+  }
+  .btn-brand:hover .btn-arrow { transform: translateX(2px); }
+
+  /* Secondary solid buttons */
+  .btn-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s var(--ease-smooth);
+  }
+  .btn-solid-primary {
+    background: var(--color-primary);
+    color: var(--color-black);
+    box-shadow: 0 4px 20px rgba(200,218,66,0.3);
+  }
+  .btn-solid-primary:hover { background: var(--color-primary-light); transform: scale(1.05); box-shadow: 0 8px 30px rgba(200,218,66,0.45); }
+  .btn-solid-dark {
+    background: var(--color-surface-3);
+    color: #fff;
+    border: 1px solid var(--color-border);
+  }
+  .btn-solid-dark:hover { background: #2a2a2a; transform: scale(1.05); }
+  .btn-solid-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid var(--color-border);
+  }
+  .btn-solid-ghost:hover { background: rgba(255,255,255,0.05); color: #fff; transform: scale(1.02); }
+  .btn-solid-accent {
+    background: var(--color-accent);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(146,83,82,0.3);
+  }
+  .btn-solid-accent:hover { background: var(--color-accent-light); transform: scale(1.05); }
+
+  /* ══════════════════════════════════════════════
+     STICKY NAV
+  ══════════════════════════════════════════════ */
+  .ds-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .ds-nav a {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .ds-nav a:hover { color: var(--color-primary); }
+  .ds-nav a.active { color: var(--color-primary); }
+
+  /* ══════════════════════════════════════════════
+     SECTION HEADERS
+  ══════════════════════════════════════════════ */
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  /* ══════════════════════════════════════════════
+     CARDS
+  ══════════════════════════════════════════════ */
+  .ds-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  }
+  .ds-card:hover {
+    border-color: rgba(200,218,66,0.25);
+    box-shadow: 0 0 30px rgba(200,218,66,0.05);
+    transform: translateY(-2px);
+  }
+
+  /* ══════════════════════════════════════════════
+     COLOR SWATCHES
+  ══════════════════════════════════════════════ */
+  .swatch {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  /* ══════════════════════════════════════════════
+     VERTICAL GRID LINES + BEAMS (background motif)
+  ══════════════════════════════════════════════ */
+  .grid-lines {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    left: 0; right: 0;
+    opacity: 0.5;
+  }
+  .grid-col {
+    flex: 1;
+    border-left: 1px solid rgba(255,255,255,0.04);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .grid-col:last-child { border-right: 1px solid rgba(255,255,255,0.04); }
+  .grid-beam {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 1px;
+    height: 200px;
+    background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+  }
+
+  /* ══════════════════════════════════════════════
+     INPUT FIELDS
+  ══════════════════════════════════════════════ */
+  .ds-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: #fff;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .ds-input::placeholder { color: var(--color-text-muted); }
+  .ds-input:focus {
+    border-color: rgba(200,218,66,0.5);
+    box-shadow: 0 0 0 3px rgba(200,218,66,0.08);
+  }
+  .ds-input-error { border-color: rgba(146,83,82,0.6); }
+  .ds-input-error:focus { box-shadow: 0 0 0 3px rgba(146,83,82,0.1); }
+
+  /* ══════════════════════════════════════════════
+     BADGE
+  ══════════════════════════════════════════════ */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .badge-primary { background: rgba(200,218,66,0.12); color: var(--color-primary); border: 1px solid rgba(200,218,66,0.25); }
+  .badge-accent  { background: rgba(146,83,82,0.15);  color: var(--color-accent-light); border: 1px solid rgba(146,83,82,0.3); }
+  .badge-dark    { background: var(--color-surface-3); color: rgba(255,255,255,0.7); border: 1px solid var(--color-border); }
+  .badge-solid   { background: var(--color-primary); color: var(--color-black); }
+
+  /* ══════════════════════════════════════════════
+     TOOLTIP
+  ══════════════════════════════════════════════ */
+  .tooltip-wrap { position: relative; display: inline-block; }
+  .tooltip-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border);
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateX(-50%) translateY(4px);
+    z-index: 200;
+  }
+  .tooltip-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-surface-3);
+  }
+  .tooltip-wrap:hover .tooltip-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ══════════════════════════════════════════════
+     MODAL
+  ══════════════════════════════════════════════ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    max-width: 480px;
+    width: 90%;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.35s var(--ease-smooth);
+    position: relative;
+  }
+  .modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+
+  /* ══════════════════════════════════════════════
+     MOTION DEMO BOXES
+  ══════════════════════════════════════════════ */
+  .motion-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-base) var(--ease-smooth);
+    user-select: none;
+  }
+  .motion-scale:hover   { transform: scale(1.06); border-color: rgba(200,218,66,0.3); color: var(--color-primary); }
+  .motion-lift:hover    { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); border-color: rgba(200,218,66,0.2); }
+  .motion-glow:hover    { box-shadow: 0 0 30px rgba(200,218,66,0.25); border-color: rgba(200,218,66,0.4); color: var(--color-primary); }
+  .motion-rotate:hover  { transform: rotate(3deg) scale(1.04); border-color: rgba(146,83,82,0.4); color: var(--color-accent-light); }
+  .motion-invert:hover  { background: var(--color-primary); color: var(--color-black); border-color: var(--color-primary); font-weight: 700; }
+  .motion-accent:hover  { background: var(--color-accent); color: #fff; border-color: var(--color-accent); box-shadow: 0 8px 30px rgba(146,83,82,0.3); }
+
+  @keyframes pulse-ring {
+    0%   { transform: scale(1); opacity: 0.6; }
+    50%  { transform: scale(1.12); opacity: 0.3; }
+    100% { transform: scale(1); opacity: 0.6; }
+  }
+  .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
+
+  /* ══════════════════════════════════════════════
+     HERO VIDEO PLACEHOLDER GRADIENT
+  ══════════════════════════════════════════════ */
+  .hero-video-bg {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111 40%, #0a0a0a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-video-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 50%, rgba(200,218,66,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(146,83,82,0.08) 0%, transparent 60%);
+  }
+
+  /* ══════════════════════════════════════════════
+     ICONS GRID
+  ══════════════════════════════════════════════ */
+  .icon-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    cursor: default;
+    transition: all 0.25s;
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+  }
+  .icon-cell:hover { border-color: rgba(200,218,66,0.3); color: var(--color-primary); background: rgba(200,218,66,0.04); }
+  .icon-cell svg { transition: transform 0.2s; }
+  .icon-cell:hover svg { transform: scale(1.2); }
+
+  /* ══════════════════════════════════════════════
+     NAVBAR SPECIMEN
+  ══════════════════════════════════════════════ */
+  .specimen-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  /* ══════════════════════════════════════════════
+     STEP INDICATORS
+  ══════════════════════════════════════════════ */
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .step-item.active { background: rgba(200,218,66,0.07); border-color: rgba(200,218,66,0.25); }
+  .step-item:hover:not(.active) { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+  .step-badge {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem; font-weight: 700;
+    background: var(--color-surface-3);
+    color: rgba(255,255,255,0.5);
+    transition: all 0.25s;
+  }
+  .step-item.active .step-badge { background: var(--color-primary); color: var(--color-black); }
+
+  /* ══════════════════════════════════════════════
+     GRADIENT TEXT
+  ══════════════════════════════════════════════ */
+  .text-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-white {
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.5) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ══════════════════════════════════════════════
+     SPEC TABLE ROW
+  ══════════════════════════════════════════════ */
+  .spec-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-align: right;
+    min-width: 90px;
+    line-height: 1.8;
+  }
+
+  /* ══════════════════════════════════════════════
+     HOVER UNDERLINE LINK
+  ══════════════════════════════════════════════ */
+  .hover-link {
+    position: relative;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding-bottom: 2px;
+  }
+  .hover-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--color-primary);
+    transition: width 0.3s var(--ease-smooth);
+  }
+  .hover-link:hover { color: #fff; }
+  .hover-link:hover::after { width: 100%; }
+
+  /* ══════════════════════════════════════════════
+     GLOWING DIVIDER
+  ══════════════════════════════════════════════ */
+  .glow-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,218,66,0.4), transparent);
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     BACKGROUND GRID LINES + BEAMS
+════════════════════════════════════ -->
+<div class="grid-lines" aria-hidden="true">
+  <div class="grid-col">
+    <div class="grid-beam animate-beam-1"></div>
+  </div>
+  <div class="grid-col">
+    <div class="grid-beam animate-beam-2"></div>
+  </div>
+  <div class="grid-col"></div>
+  <div class="grid-col">
+    <div class="grid-beam animate-beam-3"></div>
+  </div>
+  <div class="grid-col"></div>
+</div>
+
+<!-- ════════════════════════════════════
+     STICKY NAVIGATION
+════════════════════════════════════ -->
+<header class="ds-nav" id="top">
+  <nav class="flex items-center justify-between max-w-7xl mx-auto px-6 md:px-10 py-5">
+    <!-- Logo -->
+    <div class="flex items-center gap-3 group cursor-pointer">
+      <div class="flex items-center gap-[3px]">
+        <div class="w-2 h-6 rounded-full transition-all duration-300 group-hover:h-8" style="background:var(--color-primary)"></div>
+        <div class="w-2 h-4 rounded-full transition-all duration-300 group-hover:h-3" style="background:var(--color-accent)"></div>
+        <div class="w-2 h-6 rounded-full transition-all duration-300 group-hover:h-5" style="background:var(--color-primary)"></div>
+      </div>
+      <span class="text-white font-semibold tracking-tight text-sm">Ecomm<span style="color:var(--color-primary)">Growth</span></span>
+    </div>
+    <!-- Nav Links -->
+    <div class="hidden lg:flex items-center gap-7">
+      <a href="#hero"       class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Hero</a>
+      <a href="#typography" class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Tipografia</a>
+      <a href="#colors"     class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Cores</a>
+      <a href="#components" class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Componentes</a>
+      <a href="#motion"     class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Motion</a>
+      <a href="#icons"      class="ds-nav a" style="color:rgba(255,255,255,0.45);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;">Ícones</a>
+    </div>
+    <!-- CTA -->
+    <button class="btn-brand" id="nav-cta" style="padding:10px 18px;font-size:0.8rem;">
+      <div class="btn-inner">
+        <div class="btn-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        </div>
+        <span>Guia Completo</span>
+        <div class="btn-arrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </button>
+  </nav>
+</header>
+
+<!-- ════════════════════════════════════
+  §0 HERO — VIDEO PLACEHOLDER
+════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex flex-col overflow-hidden" style="position:relative;z-index:1;">
+  <!-- Radial glow -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(200,218,66,0.07) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
+
+  <!-- Content grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 pt-28 pb-12 gap-x-4 gap-y-6 items-center max-w-7xl mx-auto w-full px-6 md:px-10 relative" style="z-index:1;">
+
+    <!-- Left text column -->
+    <div class="col-span-1 lg:col-span-6 flex flex-col justify-center" style="animation:fadeSlideIn 1s var(--ease-smooth) 0.1s both;">
+      <!-- Eyebrow -->
+      <div class="inline-flex items-center gap-2 mb-8" style="color:var(--color-primary);">
+        <span style="display:flex;width:8px;height:8px;border-radius:50%;background:var(--color-primary);box-shadow:0 0 10px var(--color-primary);"></span>
+        <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,218,66,0.8);">Sistema de Design 1.0</span>
+      </div>
+      <!-- H1 -->
+      <h1 style="font-size:clamp(3.5rem,8vw,6rem);line-height:0.9;letter-spacing:-0.04em;font-weight:500;color:#fff;margin-bottom:24px;animation:fadeSlideIn 1s var(--ease-smooth) 0.2s both;">
+        Construa com<br>
+        <span class="text-gradient-primary">consistência.</span>
+      </h1>
+      <!-- Body -->
+      <p style="font-size:1.1rem;line-height:1.7;color:rgba(255,255,255,0.6);max-width:480px;margin-bottom:40px;animation:fadeSlideIn 1s var(--ease-smooth) 0.35s both;">
+        O guia de referência completo para cores, tipografia, componentes e padrões de interação da marca Ecomm Growth.
+      </p>
+      <!-- CTA row -->
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;animation:fadeSlideIn 1s var(--ease-smooth) 0.5s both;">
+        <button class="btn-brand" id="hero-cta-main">
+          <div class="btn-inner">
+            <div class="btn-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+            </div>
+            <span style="color:rgba(255,255,255,0.9);font-size:0.9rem;font-weight:500;">Explorar Design System</span>
+            <div class="btn-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+        </button>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:rgba(255,255,255,0.4);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Marca verificada</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right — video placeholder + step items -->
+    <div class="col-span-1 lg:col-span-6 flex flex-col lg:pt-20 h-full items-end justify-center gap-8" style="animation:fadeSlideIn 1.2s var(--ease-smooth) 0.4s both;">
+      <!-- Video hero card -->
+      <div class="hero-video-bg relative w-full max-w-sm aspect-video rounded-2xl overflow-hidden border flex items-center justify-center group" style="border-color:var(--color-border);box-shadow:0 0 60px rgba(200,218,66,0.08);">
+        <!-- Glow blob -->
+        <div style="position:absolute;width:60%;height:60%;border-radius:50%;background:rgba(200,218,66,0.08);filter:blur(40px);top:20%;left:20%;"></div>
+        <!-- Play button -->
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(200,218,66,0.12);border:1px solid rgba(200,218,66,0.3);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all 0.3s;cursor:pointer;" class="group-hover:scale-110 group-hover:bg-[rgba(200,218,66,0.2)]">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--color-primary);margin-left:3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <!-- Label -->
+        <div style="position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:999px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--color-primary);animation:pulse-ring 2s infinite;"></span>
+          <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.8);">Brand Video Placeholder</span>
+        </div>
+        <!-- Corner badge -->
+        <div style="position:absolute;top:12px;right:12px;padding:4px 10px;background:var(--color-primary);color:#000;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:999px;">HD</div>
+      </div>
+      <!-- Step items (interactive) -->
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-w:320px;" id="steps-container">
+        <div class="step-item active" id="step-1" onclick="activateStep(1)">
+          <div class="step-badge" id="sbadge-1">01</div>
+          <span style="font-size:0.85rem;font-weight:500;color:#fff;">Tokens de Marca</span>
+          <svg style="margin-left:auto;color:var(--color-primary);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="step-item" id="step-2" onclick="activateStep(2)">
+          <div class="step-badge" id="sbadge-2">02</div>
+          <span style="font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);">Componentes UI</span>
+          <svg style="margin-left:auto;opacity:0;color:rgba(255,255,255,0.4);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="step-item" id="step-3" onclick="activateStep(3)">
+          <div class="step-badge" id="sbadge-3">03</div>
+          <span style="font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);">Padrões de Motion</span>
+          <svg style="margin-left:auto;opacity:0;color:rgba(255,255,255,0.4);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee strip -->
+  <div style="width:100%;overflow:hidden;border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);padding:12px 0;background:rgba(200,218,66,0.02);position:relative;z-index:1;">
+    <div class="marquee-track" style="gap:48px;">
+      <template id="marquee-tpl">
+        <span style="display:inline-flex;align-items:center;gap:12px;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--color-primary);"></span>
+          Ecomm Growth Design System
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:12px;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--color-accent);"></span>
+          Tipografia & Cores & Componentes
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:12px;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--color-primary);"></span>
+          Motion & Ícones & Layout
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:12px;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);white-space:nowrap;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--color-accent);"></span>
+          Identidade Visual Ecomm Growth
+        </span>
+      </template>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  §1 TIPOGRAFIA
+════════════════════════════════════ -->
+<section id="typography" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:96px 40px;">
+  <div style="margin-bottom:56px;">
+    <p class="section-label">01 — Tipografia</p>
+    <h2 class="section-title">Escala Tipográfica</h2>
+    <p class="section-desc">Hierarquia clara e consistente usando <strong style="color:#fff;">Inter</strong> (sans-serif), <strong style="color:#fff;">Instrument Serif</strong> (editorial) e <strong style="color:#fff;">Space Mono</strong> (código).</p>
+  </div>
+
+  <div>
+    <!-- H1 Display -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Display / H1</p>
+        <p style="font-size:clamp(3rem,7vw,5.5rem);line-height:0.9;letter-spacing:-0.04em;font-weight:500;color:#fff;">Cresça com<br><span class="text-gradient-primary">estratégia.</span></p>
+      </div>
+      <div class="spec-meta">clamp(3rem,7vw,5.5rem)<br>weight 500<br>tracking -0.04em<br>line-height 0.9</div>
+    </div>
+
+    <!-- H2 Section Title -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Section Title / H2</p>
+        <h2 style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:500;letter-spacing:-0.03em;color:#fff;">Escala Tipográfica & Hierarquia</h2>
+      </div>
+      <div class="spec-meta">clamp(1.75rem,3vw,2.5rem)<br>weight 500<br>tracking -0.03em</div>
+    </div>
+
+    <!-- H3 Sub Title -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Sub Title / H3</p>
+        <h3 style="font-size:1.35rem;font-weight:500;letter-spacing:-0.02em;color:#fff;">Componentes de Interface</h3>
+      </div>
+      <div class="spec-meta">1.35rem / 21.6px<br>weight 500</div>
+    </div>
+
+    <!-- Editorial Serif -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Editorial / Serif</p>
+        <p style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3.5rem);font-style:italic;line-height:1.1;color:#fff;">Histórias que<br><span style="color:var(--color-primary);">convertem.</span></p>
+      </div>
+      <div class="spec-meta">Instrument Serif<br>italic<br>clamp(2rem,4vw,3.5rem)</div>
+    </div>
+
+    <!-- Body Large -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Body Large</p>
+        <p style="font-size:1.125rem;line-height:1.75;color:rgba(255,255,255,0.6);max-width:540px;">Transforme visitantes em clientes com estratégias comprovadas de crescimento em e-commerce — baseadas em dados e execução precisa.</p>
+      </div>
+      <div class="spec-meta">1.125rem / 18px<br>weight 400<br>line-height 1.75<br>opacity 60%</div>
+    </div>
+
+    <!-- Body Base -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Body Base</p>
+        <p style="font-size:0.9375rem;line-height:1.7;color:rgba(255,255,255,0.55);">O texto base é usado para parágrafos de conteúdo e descrições em cards e seções do produto.</p>
+      </div>
+      <div class="spec-meta">0.9375rem / 15px<br>weight 400<br>line-height 1.7<br>opacity 55%</div>
+    </div>
+
+    <!-- Label / Caption -->
+    <div class="spec-row">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Label / Caption</p>
+        <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--color-primary);">Seção Label · Eyebrow</p>
+      </div>
+      <div class="spec-meta">0.65rem / 10.4px<br>weight 700<br>tracking 0.25em<br>uppercase</div>
+    </div>
+
+    <!-- Mono -->
+    <div class="spec-row" style="border-bottom:none;">
+      <div style="flex:1;">
+        <p class="section-label" style="margin-bottom:12px;">Monospace / Code</p>
+        <code style="font-family:'Space Mono',monospace;font-size:0.8rem;color:rgba(255,255,255,0.7);background:var(--color-surface);padding:12px 20px;border-radius:8px;border:1px solid var(--color-border);display:inline-block;">--color-primary: #c8da42;</code>
+      </div>
+      <div class="spec-meta">Space Mono<br>0.8rem / 12.8px<br>weight 400</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider" style="max-width:1280px;margin:0 auto;"></div>
+
+<!-- ════════════════════════════════════
+  §2 CORES
+════════════════════════════════════ -->
+<section id="colors" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:96px 40px;">
+  <div style="margin-bottom:56px;">
+    <p class="section-label">02 — Cores</p>
+    <h2 class="section-title">Paleta da Marca</h2>
+    <p class="section-desc">Três pilares cromáticos — amarelo-limão, preto absoluto e vinho rosado — usados em papéis semânticos específicos.</p>
+  </div>
+
+  <!-- Primary palette row -->
+  <div style="margin-bottom:48px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:20px;letter-spacing:-0.01em;">Cores Primárias da Marca</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;">
+      <!-- #c8da42 -->
+      <div>
+        <div class="swatch" style="height:120px;background:#c8da42;border-radius:16px 16px 4px 4px;margin-bottom:12px;box-shadow:0 8px 30px rgba(200,218,66,0.25);"></div>
+        <p style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:2px;">Primary</p>
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(255,255,255,0.4);">#c8da42</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Amarelo-Limão</p>
+      </div>
+      <!-- #c8da42 light -->
+      <div>
+        <div class="swatch" style="height:120px;background:#daea70;border-radius:16px 16px 4px 4px;margin-bottom:12px;"></div>
+        <p style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:2px;">Primary Light</p>
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(255,255,255,0.4);">#daea70</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Hover / Focus</p>
+      </div>
+      <!-- #000000 -->
+      <div>
+        <div class="swatch" style="height:120px;background:#000000;border-radius:16px 16px 4px 4px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.08);"></div>
+        <p style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:2px;">Black</p>
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(255,255,255,0.4);">#000000</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Fundo Principal</p>
+      </div>
+      <!-- #925352 -->
+      <div>
+        <div class="swatch" style="height:120px;background:#925352;border-radius:16px 16px 4px 4px;margin-bottom:12px;box-shadow:0 8px 30px rgba(146,83,82,0.2);"></div>
+        <p style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:2px;">Accent</p>
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(255,255,255,0.4);">#925352</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Vinho-Rosado</p>
+      </div>
+      <!-- accent light -->
+      <div>
+        <div class="swatch" style="height:120px;background:#b56a69;border-radius:16px 16px 4px 4px;margin-bottom:12px;"></div>
+        <p style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:2px;">Accent Light</p>
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(255,255,255,0.4);">#b56a69</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">Hover Accent</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Surface scale -->
+  <div style="margin-bottom:48px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:20px;letter-spacing:-0.01em;">Superfícies (Dark Scale)</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;">
+      <div><div class="swatch" style="height:80px;background:#000000;margin-bottom:8px;"></div><p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">#000000<br><span style="color:rgba(255,255,255,0.3);">Surface 0</span></p></div>
+      <div><div class="swatch" style="height:80px;background:#0a0a0a;margin-bottom:8px;"></div><p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">#0a0a0a<br><span style="color:rgba(255,255,255,0.3);">Surface 1</span></p></div>
+      <div><div class="swatch" style="height:80px;background:#111111;margin-bottom:8px;"></div><p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">#111111<br><span style="color:rgba(255,255,255,0.3);">Surface 2</span></p></div>
+      <div><div class="swatch" style="height:80px;background:#1a1a1a;margin-bottom:8px;"></div><p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">#1a1a1a<br><span style="color:rgba(255,255,255,0.3);">Surface 3</span></p></div>
+      <div><div class="swatch" style="height:80px;background:#2a2a2a;margin-bottom:8px;"></div><p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">#2a2a2a<br><span style="color:rgba(255,255,255,0.3);">Surface 4</span></p></div>
+    </div>
+  </div>
+
+  <!-- Gradients -->
+  <div style="margin-bottom:48px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:20px;letter-spacing:-0.01em;">Gradientes</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+      <div>
+        <div style="height:100px;border-radius:12px;background:linear-gradient(135deg,#c8da42,#a0b030);margin-bottom:8px;"></div>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">Gradient Primary<br><span style="color:rgba(255,255,255,0.3);">#c8da42 → #a0b030</span></p>
+      </div>
+      <div>
+        <div style="height:100px;border-radius:12px;background:linear-gradient(135deg,#925352,#6e3d3c);margin-bottom:8px;"></div>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">Gradient Accent<br><span style="color:rgba(255,255,255,0.3);">#925352 → #6e3d3c</span></p>
+      </div>
+      <div>
+        <div style="height:100px;border-radius:12px;background:linear-gradient(135deg,#c8da42 0%,#925352 100%);margin-bottom:8px;"></div>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">Gradient Brand<br><span style="color:rgba(255,255,255,0.3);">Primary → Accent</span></p>
+      </div>
+      <div>
+        <div style="height:100px;border-radius:12px;background:radial-gradient(ellipse at 30% 50%,rgba(200,218,66,0.15),transparent 70%),#0a0a0a;margin-bottom:8px;border:1px solid rgba(255,255,255,0.06);"></div>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.5);font-family:'Space Mono',monospace;">Radial Glow<br><span style="color:rgba(255,255,255,0.3);">Primary 15% on dark</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Semantic roles -->
+  <div>
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:20px;letter-spacing:-0.01em;">Papéis Semânticos</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+      <div class="ds-card" style="display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(200,218,66,0.15);border:1px solid rgba(200,218,66,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8da42" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:2px;">Success</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">var(--color-primary)</p></div>
+      </div>
+      <div class="ds-card" style="display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(146,83,82,0.15);border:1px solid rgba(146,83,82,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b56a69" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:2px;">Warning / Error</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">var(--color-accent)</p></div>
+      </div>
+      <div class="ds-card" style="display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:2px;">Info / Neutral</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">rgba(255,255,255,0.5)</p></div>
+      </div>
+      <div class="ds-card" style="display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#000;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:2px;">Disabled</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">#000 + opacity 30%</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider" style="max-width:1280px;margin:0 auto;"></div>
+
+<!-- ════════════════════════════════════
+  §3 COMPONENTES
+════════════════════════════════════ -->
+<section id="components" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:96px 40px;">
+  <div style="margin-bottom:56px;">
+    <p class="section-label">03 — Componentes</p>
+    <h2 class="section-title">Biblioteca de Componentes UI</h2>
+    <p class="section-desc">Todos os elementos interativos com estados, variações e especificações de uso.</p>
+  </div>
+
+  <!-- ─── BUTTONS ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Botões</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:32px;">
+      <!-- Brand CTA button -->
+      <button class="btn-brand" id="comp-btn-brand">
+        <div class="btn-inner">
+          <div class="btn-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+          </div>
+          <span style="color:rgba(255,255,255,0.9);font-size:0.85rem;font-weight:500;">Ação Principal</span>
+          <div class="btn-arrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </button>
+      <!-- Solid Primary -->
+      <button class="btn-solid btn-solid-primary" id="comp-btn-primary">Primário &rarr;</button>
+      <!-- Solid Accent -->
+      <button class="btn-solid btn-solid-accent" id="comp-btn-accent">Accent &rarr;</button>
+      <!-- Dark -->
+      <button class="btn-solid btn-solid-dark" id="comp-btn-dark">Escuro</button>
+      <!-- Ghost -->
+      <button class="btn-solid btn-solid-ghost" id="comp-btn-ghost">Fantasma</button>
+    </div>
+    <!-- Specs table -->
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+        <thead><tr style="border-bottom:1px solid var(--color-border);">
+          <th style="text-align:left;padding:12px 16px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem;">Variante</th>
+          <th style="text-align:left;padding:12px 16px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem;">Uso</th>
+          <th style="text-align:left;padding:12px 16px;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-size:0.65rem;">Classe</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:12px 16px;color:#fff;">Brand CTA</td><td style="padding:12px 16px;color:rgba(255,255,255,0.55);">Ação principal única por página</td><td style="padding:12px 16px;font-family:'Space Mono',monospace;color:var(--color-primary);font-size:0.7rem;">.btn-brand</td></tr>
+          <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:12px 16px;color:#fff;">Solid Primary</td><td style="padding:12px 16px;color:rgba(255,255,255,0.55);">CTAs secundários importantes</td><td style="padding:12px 16px;font-family:'Space Mono',monospace;color:var(--color-primary);font-size:0.7rem;">.btn-solid-primary</td></tr>
+          <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:12px 16px;color:#fff;">Solid Accent</td><td style="padding:12px 16px;color:rgba(255,255,255,0.55);">Alertas, destaques de urgência</td><td style="padding:12px 16px;font-family:'Space Mono',monospace;color:var(--color-primary);font-size:0.7rem;">.btn-solid-accent</td></tr>
+          <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:12px 16px;color:#fff;">Dark</td><td style="padding:12px 16px;color:rgba(255,255,255,0.55);">Ações terciárias, navegação</td><td style="padding:12px 16px;font-family:'Space Mono',monospace;color:var(--color-primary);font-size:0.7rem;">.btn-solid-dark</td></tr>
+          <tr><td style="padding:12px 16px;color:#fff;">Ghost</td><td style="padding:12px 16px;color:rgba(255,255,255,0.55);">Ações opcionais, cancelamento</td><td style="padding:12px 16px;font-family:'Space Mono',monospace;color:var(--color-primary);font-size:0.7rem;">.btn-solid-ghost</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── BADGES ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Badges & Tags</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+      <span class="badge badge-primary"><span style="width:6px;height:6px;border-radius:50%;background:var(--color-primary);"></span>Novo</span>
+      <span class="badge badge-primary">Destaque</span>
+      <span class="badge badge-accent"><span style="width:6px;height:6px;border-radius:50%;background:var(--color-accent-light);animation:pulse-ring 2s infinite;"></span>Live</span>
+      <span class="badge badge-accent">Urgente</span>
+      <span class="badge badge-dark">Beta</span>
+      <span class="badge badge-dark">Em breve</span>
+      <span class="badge badge-solid">Premium</span>
+      <span class="badge" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);">Grátis</span>
+      <!-- Rotated badge from exemplo.html -->
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:#fff;color:#000;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;transform:rotate(-2deg);cursor:default;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:transform 0.3s;" onmouseenter="this.style.transform='rotate(0deg)'" onmouseleave="this.style.transform='rotate(-2deg)'">Verificado ✓</div>
+    </div>
+  </div>
+
+  <!-- ─── INPUTS ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Inputs & Formulários</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:860px;">
+      <!-- Default -->
+      <div>
+        <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">Default</label>
+        <input id="input-default" class="ds-input" type="text" placeholder="Nome da loja..."/>
+      </div>
+      <!-- Focus demo -->
+      <div>
+        <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">Focus (clique)</label>
+        <input id="input-focus" class="ds-input" type="email" placeholder="email@marca.com"/>
+      </div>
+      <!-- Error -->
+      <div>
+        <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-light);display:block;margin-bottom:8px;">Estado de Erro</label>
+        <input id="input-error" class="ds-input ds-input-error" type="text" value="URL inválida"/>
+        <p style="font-size:0.72rem;color:var(--color-accent-light);margin-top:6px;">URL não pôde ser verificada.</p>
+      </div>
+      <!-- Textarea -->
+      <div>
+        <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">Textarea</label>
+        <textarea id="input-textarea" class="ds-input" rows="3" placeholder="Descreva seu produto..." style="resize:vertical;"></textarea>
+      </div>
+      <!-- Select -->
+      <div>
+        <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">Select</label>
+        <select id="input-select" class="ds-input" style="cursor:pointer;">
+          <option value="">Selecione a categoria...</option>
+          <option>Moda</option>
+          <option>Eletrônicos</option>
+          <option>Casa & Jardim</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CARDS ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Cards</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+      <!-- Stats card -->
+      <div class="ds-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);">Receita Mensal</span>
+          <span class="badge badge-primary" style="padding:3px 8px;">▲ 24%</span>
+        </div>
+        <p style="font-size:2.2rem;font-weight:300;letter-spacing:-0.03em;color:#fff;margin-bottom:4px;">R$ 48.290</p>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.4);">vs. R$ 38.900 mês anterior</p>
+        <div style="width:100%;height:3px;background:rgba(255,255,255,0.05);border-radius:999px;margin-top:16px;overflow:hidden;">
+          <div style="width:72%;height:100%;background:linear-gradient(90deg,var(--color-primary),var(--color-primary-light));border-radius:999px;"></div>
+        </div>
+      </div>
+      <!-- Feature card -->
+      <div class="ds-card" style="border-color:rgba(200,218,66,0.15);background:rgba(200,218,66,0.03);">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(200,218,66,0.12);border:1px solid rgba(200,218,66,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8da42" stroke-width="2" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h4 style="font-size:1rem;font-weight:600;color:#fff;margin-bottom:8px;letter-spacing:-0.01em;">Crescimento de Tráfego</h4>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.6;">Estratégias de SEO e mídia paga otimizadas para o seu nicho de mercado.</p>
+      </div>
+      <!-- Accent card -->
+      <div class="ds-card" style="border-color:rgba(146,83,82,0.2);background:rgba(146,83,82,0.04);">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(146,83,82,0.15);border:1px solid rgba(146,83,82,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b56a69" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h4 style="font-size:1rem;font-weight:600;color:#fff;margin-bottom:8px;letter-spacing:-0.01em;">Fidelização de Clientes</h4>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.6;">Programas de retenção e CRM personalizados para o seu modelo de negócio.</p>
+      </div>
+      <!-- Dark glass card -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-lg);padding:24px;backdrop-filter:blur(12px);transition:all 0.3s;cursor:default;" onmouseenter="this.style.borderColor='rgba(200,218,66,0.2)'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.06)'">
+        <span class="badge badge-dark" style="margin-bottom:14px;display:inline-flex;">Glass Card</span>
+        <p style="font-size:0.9rem;color:rgba(255,255,255,0.6);line-height:1.6;">Variação glassmorphism para seções sobre fundos visuais complexos.</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:16px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-accent));"></div>
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--color-accent);margin-left:-8px;border:2px solid #000;"></div>
+          <span style="font-size:0.72rem;color:rgba(255,255,255,0.4);">+2.840 usuários</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── NAVBAR SPECIMEN ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Navbar</h3>
+    <div class="specimen-nav">
+      <!-- Logo mark -->
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:3px;">
+          <div style="width:6px;height:20px;border-radius:999px;background:var(--color-primary);"></div>
+          <div style="width:6px;height:14px;border-radius:999px;background:var(--color-accent);"></div>
+          <div style="width:6px;height:20px;border-radius:999px;background:var(--color-primary);"></div>
+        </div>
+        <span style="font-size:0.9rem;font-weight:600;color:#fff;">EcommGrowth</span>
+      </div>
+      <!-- Links -->
+      <div style="display:flex;align-items:center;gap:24px;">
+        <a href="#" class="hover-link">Recursos</a>
+        <a href="#" class="hover-link">Preços</a>
+        <a href="#" class="hover-link">Blog</a>
+        <a href="#" class="hover-link">Contato</a>
+      </div>
+      <!-- CTA -->
+      <button class="btn-solid btn-solid-primary" style="font-size:0.65rem;padding:8px 18px;">Começar grátis</button>
+    </div>
+  </div>
+
+  <!-- ─── TOOLTIP ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Tooltips</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+      <div class="tooltip-wrap">
+        <button class="btn-solid btn-solid-dark" id="tooltip-btn-1">Hover aqui</button>
+        <div class="tooltip-tip">Dica padrão de interface</div>
+      </div>
+      <div class="tooltip-wrap">
+        <span class="badge badge-primary" style="cursor:default;">Detalhes ℹ</span>
+        <div class="tooltip-tip" style="background:rgba(200,218,66,0.12);border-color:rgba(200,218,66,0.3);color:var(--color-primary);">Tooltip com cor de marca</div>
+      </div>
+      <div class="tooltip-wrap">
+        <button class="btn-solid btn-solid-accent" id="tooltip-btn-2">Urgente !</button>
+        <div class="tooltip-tip" style="background:rgba(146,83,82,0.2);border-color:rgba(146,83,82,0.4);color:#e8a0a0;">Esta ação é irreversível</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Modal</h3>
+    <button class="btn-solid btn-solid-primary" id="open-modal-btn" onclick="document.getElementById('modal-demo').classList.add('open')">Abrir Modal Demo</button>
+  </div>
+
+  <!-- ─── STEP INDICATOR ─── -->
+  <div style="margin-bottom:64px;">
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Step Indicator</h3>
+    <div style="max-width:380px;display:flex;flex-direction:column;gap:8px;" id="steps-spec">
+      <div class="step-item active" onclick="activateSpecStep(1)">
+        <div class="step-badge" style="background:var(--color-primary);color:#000;" id="spec-sb-1">01</div>
+        <span style="font-size:0.85rem;font-weight:500;color:#fff;">Configurar loja</span>
+        <svg style="margin-left:auto;color:var(--color-primary);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="step-item" onclick="activateSpecStep(2)">
+        <div class="step-badge" id="spec-sb-2">02</div>
+        <span style="font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);">Importar produtos</span>
+        <svg style="margin-left:auto;opacity:0;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="step-item" onclick="activateSpecStep(3)">
+        <div class="step-badge" id="spec-sb-3">03</div>
+        <span style="font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);">Lançar campanha</span>
+        <svg style="margin-left:auto;opacity:0;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AVATAR GROUP ─── -->
+  <div>
+    <h3 style="font-size:1.2rem;font-weight:500;color:#fff;margin-bottom:28px;letter-spacing:-0.02em;">Avatar Group</h3>
+    <div style="display:flex;align-items:center;gap:-8px;">
+      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));border:2px solid #000;margin-right:-8px;z-index:5;transition:all 0.25s;cursor:pointer;" onmouseenter="this.style.transform='translateY(-4px) scale(1.1)'" onmouseleave="this.style.transform=''"></div>
+      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));border:2px solid #000;margin-right:-8px;z-index:4;transition:all 0.25s;cursor:pointer;" onmouseenter="this.style.transform='translateY(-4px) scale(1.1)'" onmouseleave="this.style.transform=''"></div>
+      <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#3a3a3a,#1a1a1a);border:2px solid var(--color-primary);margin-right:-8px;z-index:6;transition:all 0.25s;cursor:pointer;box-shadow:0 0 15px rgba(200,218,66,0.2);" onmouseenter="this.style.transform='translateY(-4px) scale(1.1)'" onmouseleave="this.style.transform=''"></div>
+      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#5a4a8a,#3a2a6a);border:2px solid #000;margin-right:-8px;z-index:3;transition:all 0.25s;cursor:pointer;" onmouseenter="this.style.transform='translateY(-4px) scale(1.1)'" onmouseleave="this.style.transform=''"></div>
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--color-surface-3);border:2px solid #000;z-index:2;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.25s;" onmouseenter="this.style.transform='translateY(-4px) scale(1.1)'" onmouseleave="this.style.transform=''">+4k</div>
+      <span style="margin-left:20px;font-size:0.8rem;color:rgba(255,255,255,0.4);">Hover para ver interação</span>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider" style="max-width:1280px;margin:0 auto;"></div>
+
+<!-- ════════════════════════════════════
+  §4 MOTION
+════════════════════════════════════ -->
+<section id="motion" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:96px 40px;">
+  <div style="margin-bottom:56px;">
+    <p class="section-label">04 — Motion</p>
+    <h2 class="section-title">Padrões de Movimento</h2>
+    <p class="section-desc">Micro-animações e transições que comunicam intenção, hierarquia e resposta ao usuário.</p>
+  </div>
+
+  <!-- Hover effects grid -->
+  <div style="margin-bottom:56px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:16px;letter-spacing:-0.01em;">Hover Effects (passe o cursor)</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+      <div class="motion-box motion-scale">Scale 1.06</div>
+      <div class="motion-box motion-lift">Lift +8px</div>
+      <div class="motion-box motion-glow">Glow Primary</div>
+      <div class="motion-box motion-rotate">Rotate 3°</div>
+      <div class="motion-box motion-invert">Invert Fill</div>
+      <div class="motion-box motion-accent">Accent Fill</div>
+    </div>
+  </div>
+
+  <!-- Duration tokens -->
+  <div style="margin-bottom:56px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:16px;letter-spacing:-0.01em;">Durations & Easing</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+      <div class="ds-card">
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--color-primary);margin-bottom:8px;">--duration-fast: 150ms</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);">Feedback imediato — hover, focus, toggle</p>
+      </div>
+      <div class="ds-card">
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--color-primary);margin-bottom:8px;">--duration-base: 300ms</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);">Transições padrão — botões, cards, cor</p>
+      </div>
+      <div class="ds-card">
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--color-primary);margin-bottom:8px;">--duration-slow: 600ms</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);">Modals, dropdowns, paneis</p>
+      </div>
+      <div class="ds-card">
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--color-primary);margin-bottom:8px;">--duration-slower: 1000ms</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);">Scroll-reveal, animações de hero</p>
+      </div>
+      <div class="ds-card" style="grid-column:span 2 / span 2;">
+        <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--color-primary);margin-bottom:8px;">--ease-smooth: cubic-bezier(0.2,0.8,0.2,1)</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);">Curva padrão da marca — aceleração suave, desaceleração gentil. Usada em todos os elementos interativos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animations catalogue -->
+  <div>
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:16px;letter-spacing:-0.01em;">Animações Keyframe</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+      <!-- Fade slide in -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div id="demo-fadeslide" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="replayAnim('demo-fadeslide','fadeSlideIn 0.8s cubic-bezier(0.2,0.8,0.2,1)')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M12 12l4-4M12 12l-4-4"/></svg>
+        </div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">fadeSlideIn</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Click to replay</p></div>
+      </div>
+      <!-- Pulse ring -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="width:56px;height:56px;border-radius:50%;border:2px solid var(--color-primary);animation:pulse-ring 2s ease-in-out infinite;display:flex;align-items:center;justify-content:center;">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--color-primary);"></div>
+        </div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">pulse-ring</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Live indicator</p></div>
+      </div>
+      <!-- Beam fall -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;overflow:hidden;">
+        <div style="width:56px;height:80px;position:relative;border:1px solid var(--color-border);border-radius:4px;overflow:hidden;">
+          <div style="position:absolute;width:2px;height:30px;background:linear-gradient(to bottom,transparent,var(--color-primary),transparent);left:50%;animation:beam-fall-1 2s linear infinite;"></div>
+        </div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">beam-fall</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Grid decoration</p></div>
+      </div>
+      <!-- Marquee -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="width:120px;overflow:hidden;border:1px solid var(--color-border);border-radius:4px;padding:8px 0;">
+          <div style="display:flex;gap:16px;animation:marquee 4s linear infinite;width:max-content;">
+            <span style="font-size:0.65rem;color:rgba(255,255,255,0.5);white-space:nowrap;">ECOMM GROWTH</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--color-primary);flex-shrink:0;align-self:center;"></span>
+            <span style="font-size:0.65rem;color:rgba(255,255,255,0.5);white-space:nowrap;">ECOMM GROWTH</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--color-primary);flex-shrink:0;align-self:center;"></span>
+          </div>
+        </div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">marquee</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Ticker / banner</p></div>
+      </div>
+      <!-- Spin conic -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(200,218,66,0.8) 90deg,transparent 180deg);animation:spin-conic 2s linear infinite;"></div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">spin-conic</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">Button glow ring</p></div>
+      </div>
+      <!-- Scroll reveal -->
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div style="width:56px;height:56px;border-radius:12px;background:var(--color-surface-2);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;cursor:pointer;" id="demo-scroll" onclick="replayAnim('demo-scroll','fadeSlideIn 1s cubic-bezier(0.2,0.8,0.2,1)')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12l-4 4M12 12l4 4M3 6h18"/></svg>
+        </div>
+        <div style="text-align:center;"><p style="font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:4px;">scroll-reveal</p><p style="font-size:0.7rem;color:rgba(255,255,255,0.4);">On-viewport trigger</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider" style="max-width:1280px;margin:0 auto;"></div>
+
+<!-- ════════════════════════════════════
+  §5 ÍCONES
+════════════════════════════════════ -->
+<section id="icons" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:96px 40px;">
+  <div style="margin-bottom:56px;">
+    <p class="section-label">05 — Ícones</p>
+    <h2 class="section-title">Sistema de Ícones</h2>
+    <p class="section-desc">Ícones SVG inline, dimensionados com classes de largura/altura. Herdam a cor do texto do elemento pai.</p>
+  </div>
+
+  <!-- Size variants -->
+  <div style="margin-bottom:48px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:20px;letter-spacing:-0.01em;">Tamanhos</h3>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:32px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">12px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">16px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">20px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">24px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">32px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:rgba(255,255,255,0.7);"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span style="font-family:'Space Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.3);">48px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icon gallery -->
+  <div style="margin-bottom:48px;">
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:20px;letter-spacing:-0.01em;">Galeria de Ícones (hover para ver nome)</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;">
+      <!-- Row of common e-commerce / UI icons as inline SVG -->
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Trend Up</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Monitor</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>Star</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>User</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Heart</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Lock</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.64 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.55 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Phone</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Mail</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Plus Circle</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Check Box</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>File</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Grid</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>Menu</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Signal</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Coffee</div>
+      <div class="icon-cell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play</div>
+    </div>
+  </div>
+
+  <!-- Icon color variants -->
+  <div>
+    <h3 style="font-size:1rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:20px;letter-spacing:-0.01em;">Variações de Cor</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c8da42" stroke-width="1.75" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">Primary</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#925352" stroke-width="1.75" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">Accent</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.75" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">White</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.75" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">Muted</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(200,218,66,0.12);border:1px solid rgba(200,218,66,0.2);display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8da42" stroke-width="2" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        </div>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">In badge</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--color-primary);display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M12 2l3 7h7l-6 5 2 7-6-4-6 4 2-7-6-5h7z"/></svg>
+        </div>
+        <span style="font-size:0.65rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.35);">On primary</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  FOOTER
+════════════════════════════════════ -->
+<footer style="position:relative;z-index:1;border-top:1px solid var(--color-border);overflow:hidden;background:#000;">
+  <!-- Large brand watermark -->
+  <div style="position:relative;padding:80px 40px 0;max-width:1280px;margin:0 auto;">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:32px;padding-bottom:48px;border-bottom:1px solid var(--color-border);">
+      <!-- Brand + desc -->
+      <div style="max-width:280px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:3px;">
+            <div style="width:6px;height:18px;border-radius:999px;background:var(--color-primary);"></div>
+            <div style="width:6px;height:12px;border-radius:999px;background:var(--color-accent);"></div>
+            <div style="width:6px;height:18px;border-radius:999px;background:var(--color-primary);"></div>
+          </div>
+          <span style="font-size:1rem;font-weight:600;color:#fff;">Ecomm<span style="color:var(--color-primary);">Growth</span></span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);line-height:1.7;">Sistema de design oficial. Use este guia como fonte da verdade para todos os projetos visuais da marca.</p>
+      </div>
+      <!-- Quick nav -->
+      <div style="display:flex;flex-wrap:wrap;gap:32px;">
+        <div>
+          <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--color-primary);margin-bottom:16px;">Seções</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="#hero"       class="hover-link">Hero</a>
+            <a href="#typography" class="hover-link">Tipografia</a>
+            <a href="#colors"     class="hover-link">Cores</a>
+            <a href="#components" class="hover-link">Componentes</a>
+            <a href="#motion"     class="hover-link">Motion</a>
+            <a href="#icons"      class="hover-link">Ícones</a>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--color-accent-light);margin-bottom:16px;">Tokens</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <span style="font-size:0.7rem;color:rgba(255,255,255,0.35);font-family:'Space Mono',monospace;">#c8da42 — Primary</span>
+            <span style="font-size:0.7rem;color:rgba(255,255,255,0.35);font-family:'Space Mono',monospace;">#000000 — Black</span>
+            <span style="font-size:0.7rem;color:rgba(255,255,255,0.35);font-family:'Space Mono',monospace;">#925352 — Accent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom bar -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:24px 0;gap:16px;">
+      <span style="font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em;">© 2025 Ecomm Growth · Design System v1.0</span>
+      <a href="#top" style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;display:flex;align-items:center;gap:6px;" onmouseenter="this.style.color='var(--color-primary)'" onmouseleave="this.style.color='rgba(255,255,255,0.3)'">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+        Voltar ao topo
+      </a>
+    </div>
+  </div>
+  <!-- Watermark -->
+  <div style="overflow:hidden;pointer-events:none;user-select:none;margin-top:-20px;">
+    <h1 style="font-size:clamp(4rem,15vw,13rem);line-height:0.78;font-weight:700;letter-spacing:-0.04em;text-align:center;color:#fff;mix-blend-mode:overlay;opacity:0.06;">ECOMM GROWTH</h1>
+    <div style="width:100%;height:60px;background:linear-gradient(to top,#000,transparent);margin-top:-40px;"></div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════
+  MODAL (DOM)
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-demo" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <button onclick="document.getElementById('modal-demo').classList.remove('open')" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.5);transition:all 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseleave="this.style.background='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.5)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="badge badge-primary" style="margin-bottom:20px;display:inline-flex;">Modal Demo</span>
+    <h3 style="font-size:1.4rem;font-weight:500;letter-spacing:-0.02em;color:#fff;margin-bottom:12px;">Confirmar Ação</h3>
+    <p style="font-size:0.9rem;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:28px;">Este é o componente modal padrão do Design System Ecomm Growth. Fundo com blur, borda sutil e animação de entrada.</p>
+    <div style="display:flex;gap:12px;">
+      <button class="btn-solid btn-solid-primary" id="modal-confirm-btn" onclick="document.getElementById('modal-demo').classList.remove('open')">Confirmar</button>
+      <button class="btn-solid btn-solid-ghost" onclick="document.getElementById('modal-demo').classList.remove('open')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+  JAVASCRIPT
+════════════════════════════════════ -->
+<script>
+  /* ── Marquee init ── */
+  (function() {
+    const track = document.querySelector('.marquee-track');
+    const tpl = document.getElementById('marquee-tpl');
+    if(track && tpl) {
+      const html = tpl.innerHTML;
+      // Double up for seamless loop
+      track.innerHTML = html + html;
+    }
+  })();
+
+  /* ── Hero Step Activator ── */
+  function activateStep(n) {
+    for(let i=1;i<=3;i++){
+      const item = document.getElementById('step-'+i);
+      const badge = document.getElementById('sbadge-'+i);
+      const text = item?.querySelector('span');
+      if(!item) continue;
+      if(i===n){
+        item.classList.add('active');
+        if(badge){badge.style.background='var(--color-primary)';badge.style.color='#000';}
+        if(text){text.style.color='#fff';}
+      } else {
+        item.classList.remove('active');
+        if(badge){badge.style.background='var(--color-surface-3,#1a1a1a)';badge.style.color='rgba(255,255,255,0.5)';}
+        if(text){text.style.color='rgba(255,255,255,0.5)';}
+      }
+    }
+  }
+
+  /* ── Spec Step Activator ── */
+  function activateSpecStep(n) {
+    for(let i=1;i<=3;i++){
+      const item = document.getElementById('steps-spec')?.querySelectorAll('.step-item')[i-1];
+      const badge = document.getElementById('spec-sb-'+i);
+      if(!item) continue;
+      const text = item.querySelector('span');
+      const icon = item.querySelector('svg');
+      if(i===n){
+        item.classList.add('active');
+        if(badge){badge.style.background='var(--color-primary)';badge.style.color='#000';}
+        if(text){text.style.color='#fff';}
+        if(icon){icon.style.opacity='1';icon.style.color='var(--color-primary)';}
+      } else {
+        item.classList.remove('active');
+        if(badge){badge.style.background='';badge.style.color='';}
+        if(text){text.style.color='rgba(255,255,255,0.5)';}
+        if(icon){icon.style.opacity='0';}
+      }
+    }
+  }
+
+  /* ── Animation replay ── */
+  function replayAnim(id, animStr) {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = animStr;
+  }
+
+  /* ── Scroll reveal using IntersectionObserver ── */
+  (function(){
+    const sections = document.querySelectorAll('section');
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.ds-card,.spec-row,.motion-box,.icon-cell').forEach((el,i)=>{
+            el.style.animation = `fadeSlideIn 0.6s cubic-bezier(0.2,0.8,0.2,1) ${i*0.04}s both`;
+          });
+          obs.unobserve(e.target);
+        }
+      });
+    },{threshold:0.05});
+    sections.forEach(s=>obs.observe(s));
+  })();
+
+  /* ── Active nav link on scroll ── */
+  (function(){
+    const links = document.querySelectorAll('.ds-nav a[href^="#"]');
+    const sectionIds = ['hero','typography','colors','components','motion','icons'];
+    window.addEventListener('scroll',()=>{
+      let current = 'hero';
+      sectionIds.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el && window.scrollY >= el.offsetTop - 100) current = id;
+      });
+      links.forEach(a=>{
+        const href = a.getAttribute('href').replace('#','');
+        a.style.color = href === current ? 'var(--color-primary)' : 'rgba(255,255,255,0.45)';
+      });
+    },{passive:true});
+  })();
+
+  /* ── Keyboard close modal ── */
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape') document.getElementById('modal-demo')?.classList.remove('open');
+  });
+</script>
+</body>
+</html>
