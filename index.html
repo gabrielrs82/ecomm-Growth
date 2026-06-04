@@ -643,7 +643,7 @@
       padding: 0 40px;
       font-size: 0.62rem; font-weight: 700;
       letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(255,255,255,0.28); white-space: nowrap;
+      color: rgba(255,255,255,0.8); white-space: nowrap;
     }
     .m-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
@@ -979,7 +979,7 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      opacity: 0.45;
+      opacity: 0.85;
       filter: grayscale(100%) contrast(1.1);
       transition: opacity 0.4s var(--ease-smooth), filter 0.4s var(--ease-smooth);
     }
@@ -1907,7 +1907,7 @@
         display: none !important;
       }
       .h-ctas {
-        justify-content: center;
+        justify-content: flex-start !important;
         width: 100%;
       }
     }
@@ -2029,16 +2029,17 @@
       <!-- CANVAS — all video frames are painted here via drawImage() -->
       <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
-      <!-- VIDEO — hidden; used only as a decode source -->
       <video
         id="hero-video"
+        autoplay
+        loop
         muted
         preload="auto"
         playsinline
         style="position:absolute; width:1px; height:1px; opacity:0.01; pointer-events:none;"
         aria-hidden="true"
       >
-        <source src="Assets/vídeo_topo.mp4" type="video/mp4"/>
+        <source src="Assets/video_topo.mp4" type="video/mp4"/>
       </video>
 
       <!-- Atmospheric overlays -->
@@ -2805,6 +2806,10 @@
       }, 1500);
       return;
     }
+
+    // Stop autoplay on desktop to allow interactive scroll scrubbing
+    video.pause();
+    video.currentTime = 0;
 
     resizeCanvas();
 
