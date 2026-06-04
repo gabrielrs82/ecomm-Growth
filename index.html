@@ -329,6 +329,13 @@
       display: block;
       z-index: 1;
     }
+    #hero-video {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0.01;
+      pointer-events: none;
+    }
     .vid-overlay {
       position: absolute;
       inset: 0;
@@ -1906,9 +1913,23 @@
       #cta-primary {
         display: none !important;
       }
+      #cta-brand {
+        padding: 8px 14px !important;
+        font-size: 0.74rem !important;
+        margin-left: -12px !important;
+      }
+      #cta-brand .btn-icon {
+        width: 18px !important;
+        height: 18px !important;
+      }
+      #cta-brand .btn-arrow {
+        width: 18px !important;
+        height: 18px !important;
+      }
       .h-ctas {
         justify-content: flex-start !important;
         width: 100%;
+        margin-top: 12px !important;
       }
     }
   </style>
@@ -2036,7 +2057,6 @@
         muted
         preload="auto"
         playsinline
-        style="position:absolute; width:1px; height:1px; opacity:0.01; pointer-events:none;"
         aria-hidden="true"
       >
         <source src="Assets/video_topo.mp4" type="video/mp4"/>
@@ -2792,6 +2812,20 @@
       
       // Force play
       video.play().catch(e => console.log('Autoplay blocked:', e));
+
+      // Auto-play/loop fallback for aggressive mobile browsers (e.g. low-power mode, Safari)
+      const playVideo = () => {
+        if (video.paused) {
+          video.play().catch(e => console.log('Interactive play blocked:', e));
+        }
+      };
+      window.addEventListener('touchstart', playVideo, { once: true });
+      window.addEventListener('scroll', playVideo, { once: true });
+
+      video.addEventListener('ended', () => {
+        video.currentTime = 0;
+        video.play().catch(e => console.log('Loop play blocked:', e));
+      });
 
       // Hide loading overlay and trigger entrance animations immediately on mobile
       setTimeout(() => {
