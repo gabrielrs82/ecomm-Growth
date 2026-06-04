@@ -689,6 +689,26 @@
       width: 100%; height: 1px;
       background: linear-gradient(90deg, transparent, rgba(200,218,66,0.35), transparent);
     }
+
+    /* Mobile Top Video Optimization styling */
+    @media (max-width: 1024px) {
+      #scrub-section {
+        height: 100vh !important;
+      }
+      #hero-canvas {
+        display: none !important;
+      }
+      #hero-video {
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        opacity: 0.45 !important;
+        pointer-events: none !important;
+        display: block !important;
+        z-index: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1119,10 +1139,34 @@
     } catch (_) {}
   });
 
+  const isMobile = window.innerWidth < 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   /* ─────────────────────────────────────────────────────────────
      8. BOOTSTRAP
   ───────────────────────────────────────────────────────────── */
   function bootstrap() {
+    if (isMobile) {
+      // Mobile flow: Autoplay native video loop, bypassing high-cost canvas draw and scrub
+      video.loop = true;
+      video.autoplay = true;
+      video.muted = true;
+      
+      // Force play
+      video.play().catch(e => console.log('Autoplay blocked:', e));
+
+      // Hide loading overlay and trigger entrance animations immediately on mobile
+      setTimeout(() => {
+        loadingEl.classList.add('hidden');
+        runEntryAnimations();
+      }, 300);
+
+      // Safety fallback to hide loader
+      setTimeout(() => {
+        loadingEl.classList.add('hidden');
+      }, 1500);
+      return;
+    }
+
     resizeCanvas();
 
     const onVideoReady = () => {
@@ -1172,7 +1216,10 @@
     }
   }
 
-  if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+  // Mobile bypass loadedmetadata check entirely to avoid mobile preload blocks
+  if (isMobile) {
+    bootstrap();
+  } else if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
     bootstrap();
   } else {
     video.addEventListener('loadedmetadata', bootstrap, { once: true });
