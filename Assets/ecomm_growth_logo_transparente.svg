@@ -13,6 +13,6 @@
   <text x="340" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="96" font-weight="900" letter-spacing="-3" fill="none" stroke="#c8da42" stroke-width="2.5" style="fill:none;stroke:rgb(200, 218, 66);color:rgb(255, 255, 255);stroke-width:2.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:96px;font-weight:900;text-anchor:middle;dominant-baseline:auto">GROWTH</text>
 
   <!-- FOCADA EM RESULTADO -->
-  <text x="340" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" letter-spacing="6" fill="#ffffff" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Inter, sans-serif;font-size:22px;font-weight:700;text-anchor:middle;dominant-baseline:auto">FOCADA EM RESULTADO</text>
+  <text x="340" y="265" text-anchor="middle" font-family="Inter, sans-serif" font-size="34" font-weight="900" letter-spacing="5" fill="#ffffff" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(255, 255, 255);opacity:1;font-family:Inter, sans-serif;font-size:34px;font-weight:900;text-anchor:middle;dominant-baseline:auto">FOCADA EM RESULTADO</text>
 
 </svg>
