@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded Background -->
+  <rect width="480" height="480" x="16" y="16" rx="100" fill="#0a0a0a" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+
+  <!-- Stylized Letter 'E' (from E-COMM) -->
+  <path d="M 150,140 H 310 V 190 H 205 V 235 H 295 V 285 H 205 V 330 H 310 V 380 H 150 Z" fill="#ffffff"/>
+
+  <!-- Circle Checkmark (Emblem of Ecomm Growth) -->
+  <circle cx="360" cy="140" r="64" fill="#0a0a0a" stroke="#c8da42" stroke-width="12"/>
+  <path d="M 324,146 L 354,182 L 402,110" fill="none" stroke="#c8da42" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Coords</title>
+</head>
+<body>
+    <canvas id="canvas" width="1024" height="1024"></canvas>
+    <div id="output" style="font-family: monospace; font-size: 16px; padding: 20px; white-space: pre;"></div>
+    <script>
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            const imgData = ctx.getImageData(0, 0, 1024, 1024);
+            const data = imgData.data;
+            
+            let firstGreen = null;
+            let lastGreen = null;
+            let greenCount = 0;
+            
+            // Procura por pixels verdes (G > 100 e R < 80 e B < 100)
+            for (let y = 0; y < 1024; y++) {
+                for (let x = 0; x < 1024; x++) {
+                    const idx = (y * 1024 + x) * 4;
+                    const r = data[idx];
+                    const g = data[idx+1];
+                    const b = data[idx+2];
+                    const a = data[idx+3];
+                    
+                    // Verde típico do Metrô SP
+                    if (g > 100 && r < 100 && b < 120 && a > 200) {
+                        if (!firstGreen) firstGreen = { x, y };
+                        lastGreen = { x, y };
+                        greenCount++;
+                    }
+                }
+            }
+            
+            document.getElementById('output').innerText = JSON.stringify({
+                firstGreen,
+                lastGreen,
+                greenCount
+            }, null, 2);
+        };
+        img.src = '/Assets/totem_trianon_masp.png';
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  staging-db:
+    image: postgres:15-alpine
+    container_name: imob-growth-staging-db
+    restart: always
+    environment:
+      POSTGRES_USER: staging_user
+      POSTGRES_PASSWORD: staging_password_987
+      POSTGRES_DB: imob_growth_staging
+    ports:
+      - "5433:5432"
+    volumes:
+      - staging_db_data:/var/lib/postgresql/data
+      # Carregar scripts de schema automaticamente se disponíveis
+      - ./supabase-setup.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - staging-network
+
+  staging-app:
+    image: node:20-alpine
+    container_name: imob-growth-staging-app
+    restart: always
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgres://staging_user:staging_password_987@staging-db:5432/imob_growth_staging
+      - SUPABASE_URL=http://staging-db:5432
+      - SUPABASE_ANON_KEY=staging-anon-key-mock
+      - SUPABASE_SERVICE_ROLE_KEY=staging-service-role-mock
+      - PORT=3000
+    depends_on:
+      - staging-db
+    command: sh -c "npm install && npx vercel dev --listen 3000 --yes"
+    networks:
+      - staging-network
+
+volumes:
+  staging_db_data:
+
+networks:
+  staging-network:
+    driver: bridge

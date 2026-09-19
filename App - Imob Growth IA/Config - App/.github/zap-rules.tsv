@@ -1,0 +1,5 @@
+10098	IGNORE	Cross-Domain Misconfiguration (CDNs como fontawesome/unpkg devem permitir CORS wildcard para entrega de assets)
+90022	IGNORE	Application Error Disclosure (Respostas da API com status HTTP 400 ou 500 retornando JSON estruturado para entradas ruins são comportamentos esperados e sanitizados)
+10021	IGNORE	X-Content-Type-Options Header Missing (Ignorado em assets mockados estáticos do site sem risco de MIME sniffing)
+10038	IGNORE	Content Security Policy (CSP) Header Not Set (Ignorado em caminhos estáticos sem execução de scripts dinâmicos)
+10054	IGNORE	Cookie without SameSite Attribute (Ignorado para cookies de sessão mockados ou de terceiros em ambiente local/staging)

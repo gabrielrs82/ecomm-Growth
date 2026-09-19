@@ -1,0 +1,9 @@
+{
+    # Email do administrador para avisos de expiração do Let's Encrypt
+    email gabriel@imobgrowth.com.br
+}
+
+# Configura o Caddy para resolver o subdomínio e apontar para a porta interna 3000 do App
+api.imobgrowth.com.br {
+    reverse_proxy production-app:3000
+}

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  production-db:
+    image: postgres:15-alpine
+    container_name: imob-growth-prod-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${PROD_DB_USER:-imob_admin}
+      POSTGRES_PASSWORD: ${PROD_DB_PASSWORD:-imob_secure_password_1029}
+      POSTGRES_DB: ${PROD_DB_NAME:-imob_growth_production}
+    # Sem mapeamento de porta para a internet! Protegido contra varreduras de IP na VPS.
+    volumes:
+      - prod_db_data:/var/lib/postgresql/data
+    networks:
+      - prod-network
+
+  production-cache:
+    image: redis:7-alpine
+    container_name: imob-growth-prod-cache
+    restart: always
+    command: redis-server --requirepass ${PROD_REDIS_PASSWORD:-redis_secure_password_5521}
+    # Porta fechada para a internet.
+    volumes:
+      - prod_cache_data:/data
+    networks:
+      - prod-network
+
+  production-app:
+    image: node:20-alpine
+    container_name: imob-growth-prod-app
+    restart: always
+    working_dir: /app
+    volumes:
+      - ../:/app
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://${PROD_DB_USER:-imob_admin}:${PROD_DB_PASSWORD:-imob_secure_password_1029}@production-db:5432/${PROD_DB_NAME:-imob_growth_production}
+      - REDIS_URL=redis://:${PROD_REDIS_PASSWORD:-redis_secure_password_5521}@production-cache:6379/0
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - FAL_KEY=${FAL_KEY}
+      - PORT=3000
+    depends_on:
+      - production-db
+      - production-cache
+    command: sh -c "npm install && npm start"
+    networks:
+      - prod-network
+
+  reverse-proxy:
+    image: caddy:2-alpine
+    container_name: imob-growth-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - production-app
+    networks:
+      - prod-network
+
+volumes:
+  prod_db_data:
+  prod_cache_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  prod-network:
+    driver: bridge

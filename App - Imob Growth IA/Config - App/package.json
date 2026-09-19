@@ -1,0 +1,22 @@
+{
+  "name": "ecomm-growth-api",
+  "version": "1.0.0",
+  "description": "Backend API for Imob Growth AI — Vercel Serverless Functions",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.0",
+    "resend": "^6.17.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "vercel": "^54.17.3"
+  }
+}

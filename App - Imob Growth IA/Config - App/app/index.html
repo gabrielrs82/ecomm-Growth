@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Imob Growth AI — OS de Inteligência Artificial para Incorporadoras e Corretores</title>
+  <meta name="description" content="Dashboard operacional do Imob Growth AI - Espião de anúncios imobiliários, gerador de imagens e CRM com inteligência artificial."/>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/Assets/favicon.svg"/>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <!-- Extra Fonts for Brand Identity Selection -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cinzel:wght@400..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Kaushan+Script&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome / Lucide Icons via CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="/app/app.css?v=202607092218"/>
+
+  <!-- Bibliotecas JS: html2canvas para compor o overlay -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Cloudflare Turnstile Anti-Bot (disabled in dev - TURNSTILE_SECRET_KEY not set locally) -->
+  <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
+</head>
+<body>
+
+  <!-- ====================================================================
+       AUTH SCREEN — TELA DE LOGIN / REGISTRO
+       ==================================================================== -->
+  <div class="auth-screen" id="auth-screen">
+    <!-- Fundo animado -->
+    <div class="auth-bg-glow auth-bg-glow-1"></div>
+    <div class="auth-bg-glow auth-bg-glow-2"></div>
+    <div class="auth-grid-bg"></div>
+
+    <!-- Card de Login -->
+    <div class="auth-card">
+      <!-- Brand -->
+      <div class="auth-brand">
+        <div class="auth-brand-icon">I</div>
+        <div class="auth-brand-name">Imob<span>Growth</span> AI</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-btn-login">Entrar</button>
+        <button class="auth-tab-btn" id="tab-btn-register">Criar Conta</button>
+      </div>
+
+      <!-- ===== PAINEL LOGIN ===== -->
+      <div class="auth-panel active" id="panel-login">
+        <h2 class="auth-title">Bem-vindo de volta</h2>
+        <p class="auth-subtitle">Acesse sua plataforma de inteligência imobiliária.</p>
+
+        <!-- Demo Badge -->
+        <div class="auth-demo-badge">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Demo: <code>demo@imobgrowth.com.br</code> / <code>growth123</code></span>
+        </div>
+
+        <div class="auth-field">
+          <label for="login-email">E-mail</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="login-email" class="auth-input" placeholder="seu@email.com.br" autocomplete="off"/>
+          </div>
+          <span class="auth-error-msg" id="login-email-err">Informe um e-mail válido.</span>
+        </div>
+
+        <div class="auth-field">
+          <label for="login-pass">Senha</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="login-pass" class="auth-input" placeholder="••••••••" autocomplete="new-password"/>
+          </div>
+          <span class="auth-error-msg" id="login-pass-err">Senha incorreta. Tente novamente.</span>
+        </div>
+
+        <div class="auth-options">
+          <label class="auth-remember">
+            <input type="checkbox" id="login-remember"/> Lembrar de mim
+          </label>
+          <a href="#" class="auth-forgot">Esqueci a senha</a>
+        </div>
+
+        <!-- Anti-bot widget -->
+        <div class="auth-field" style="margin-top: 12px; margin-bottom: 12px; display: flex; justify-content: center;">
+          <div class="cf-turnstile" id="turnstile-login" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+        </div>
+
+        <button class="btn-auth" id="btn-login" onclick="if(typeof handleLogin === 'function') handleLogin();">
+          <div class="btn-loader"></div>
+          <span class="btn-auth-text"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar na Plataforma</span>
+        </button>
+
+        <div class="auth-divider">ou continue com</div>
+        <div class="auth-socials">
+          <button class="btn-social" id="btn-google-login">
+            <i class="fa-brands fa-google"></i> Google
+          </button>
+          <button class="btn-social" id="btn-apple-login">
+            <i class="fa-brands fa-apple"></i> Apple
+          </button>
+        </div>
+
+        <div class="auth-footer">
+          Não tem conta? <a href="#" id="go-to-register">Criar gratuitamente</a>
+        </div>
+      </div>
+
+      <!-- ===== PAINEL REGISTRO ===== -->
+      <div class="auth-panel" id="panel-register">
+        <h2 class="auth-title">Criar sua conta</h2>
+        <p class="auth-subtitle">Comece a usar o Imob Growth AI hoje mesmo.</p>
+
+        <div class="auth-field">
+          <label for="reg-name">Nome Completo</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="reg-name" class="auth-input" placeholder="Gabriel Santana"/>
+          </div>
+          <span class="auth-error-msg" id="reg-name-err">Informe seu nome completo.</span>
+        </div>
+
+        <div class="auth-field">
+          <label for="reg-email">E-mail Profissional</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="reg-email" class="auth-input" placeholder="seu@email.com.br"/>
+          </div>
+          <span class="auth-error-msg" id="reg-email-err">Informe um e-mail válido.</span>
+        </div>
+
+        <div class="auth-field">
+          <label for="reg-phone">Telefone / WhatsApp</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-phone"></i>
+            <input type="tel" id="reg-phone" class="auth-input" placeholder="(11) 99999-9999"/>
+          </div>
+          <span class="auth-error-msg" id="reg-phone-err">Informe um telefone válido.</span>
+        </div>
+
+        <div class="auth-field">
+          <label for="reg-pass">Criar Senha</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="reg-pass" class="auth-input" placeholder="Mínimo 8 caracteres"/>
+          </div>
+        </div>
+
+        <div class="auth-field" style="margin-top: 12px; margin-bottom: 8px;">
+          <label class="auth-remember" style="justify-content: flex-start; gap: 8px; font-weight: normal; font-size: 0.85rem; cursor: pointer; text-transform: none; color: #aaa;">
+            <input type="checkbox" id="reg-terms" style="margin: 0; width: 16px; height: 16px; min-width: 16px; border-radius: 4px;"/>
+            <span>Li e aceito os <a href="termos-de-uso.html" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Termos de Uso</a> e a <a href="politica-de-privacidade.html" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Política de Privacidade</a>.</span>
+          </label>
+          <span class="auth-error-msg" id="reg-terms-err">Você deve aceitar os termos de uso e política de privacidade.</span>
+        </div>
+
+        <!-- Anti-bot widget -->
+        <div class="auth-field" style="margin-top: 12px; margin-bottom: 12px; display: flex; justify-content: center;">
+          <div class="cf-turnstile" id="turnstile-register" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+        </div>
+
+        <button class="btn-auth" id="btn-register" style="margin-top: 8px;">
+          <div class="btn-loader"></div>
+          <span class="btn-auth-text"><i class="fa-solid fa-rocket"></i> Criar Conta Grátis</span>
+        </button>
+
+        <div class="auth-divider">ou cadastre-se com</div>
+        <div class="auth-socials">
+          <button class="btn-social" id="btn-google-register">
+            <i class="fa-brands fa-google"></i> Google
+          </button>
+          <button class="btn-social" id="btn-apple-register">
+            <i class="fa-brands fa-apple"></i> Apple
+          </button>
+        </div>
+
+        <div class="auth-footer">
+          Já tem conta? <a href="#" id="go-to-login">Entrar</a>
+        </div>
+      </div>
+
+      <!-- ===== PAINEL RECUPERAÇÃO DE SENHA ===== -->
+      <div class="auth-panel" id="panel-forgot">
+        <h2 class="auth-title">Recuperar Senha</h2>
+        <p class="auth-subtitle">Informe seu e-mail para receber as instruções.</p>
+
+        <div class="auth-field">
+          <label for="forgot-email">E-mail</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="forgot-email" class="auth-input" placeholder="seu@email.com.br"/>
+          </div>
+          <span class="auth-error-msg" id="forgot-email-err">Informe um e-mail válido.</span>
+        </div>
+
+        <!-- Anti-bot widget -->
+        <div class="auth-field" style="margin-top: 12px; margin-bottom: 12px; display: flex; justify-content: center;">
+          <div class="cf-turnstile" id="turnstile-forgot" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+        </div>
+
+        <button class="btn-auth" id="btn-forgot" style="margin-top: 8px;">
+          <div class="btn-loader"></div>
+          <span class="btn-auth-text"><i class="fa-solid fa-paper-plane"></i> Enviar Link de Recuperação</span>
+        </button>
+
+        <div class="auth-footer" style="margin-top: 16px;">
+          Voltar para o <a href="#" id="go-to-login-from-forgot">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container" style="display:none;">
+    <!-- Background Glow Effects -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- SIDEBAR (Navegação Desktop) -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="brand">
+        <div class="brand-icon">I</div>
+        <h2 class="brand-name">Imob<span>Growth</span> AI</h2>
+      </div>
+
+      <nav class="nav-menu">
+        <li class="nav-item active">
+          <button data-tab="dashboard" id="btn-tab-dashboard">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="adspy" id="btn-tab-adspy">
+            <i class="fa-solid fa-magnifying-glass"></i> Espião de Anúncios
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="studio" id="btn-tab-studio">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Arte Estática
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="editor-livre" id="btn-tab-editor-livre">
+            <i class="fa-solid fa-pen-nib"></i> Editor Livre
+            <span class="nav-badge-new">IA</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="reels" id="btn-tab-reels">
+            <i class="fa-solid fa-video"></i> Vídeos
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="brand" id="btn-tab-brand">
+            <i class="fa-solid fa-paint-roller"></i> Identidade da Marca
+          </button>
+        </li>
+        <li class="nav-item">
+          <button data-tab="billing" id="btn-tab-billing">
+            <i class="fa-solid fa-credit-card"></i> Planos & Faturamento
+          </button>
+        </li>
+      </nav>
+
+      <!-- Créditos Disponíveis -->
+      <div class="sidebar-credits">
+        <div class="credits-title"><i class="fa-solid fa-coins"></i> Créditos Disponíveis</div>
+        <div class="credits-row">
+          <span class="credits-label">Artes</span>
+          <span class="credits-value" id="sidebar-credits-artes">38 / 50</span>
+        </div>
+        <div class="credits-bar">
+          <div class="credits-bar-fill" id="sidebar-credits-artes-bar" style="width: 24%;"></div>
+        </div>
+        <div class="credits-row">
+          <span class="credits-label">Vídeos</span>
+          <span class="credits-value" id="sidebar-credits-videos">7 / 10</span>
+        </div>
+        <div class="credits-bar">
+          <div class="credits-bar-fill credits-bar-fill-accent" id="sidebar-credits-videos-bar" style="width: 30%;"></div>
+        </div>
+      </div>
+
+      <div class="user-profile">
+        <div class="user-avatar" id="sidebar-user-avatar">GS</div>
+        <div class="user-info">
+          <span class="user-name" id="sidebar-user-name">Gabriel Santana</span>
+          <span class="user-role">Diretor Imobiliário</span>
+        </div>
+      </div>
+      <button class="btn-logout" id="btn-logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair da Conta
+      </button>
+    </aside>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="mobile-nav" id="app-mobile-nav">
+      <button class="mobile-nav-btn active" data-tab="dashboard" id="mob-tab-dashboard">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Dash</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="adspy" id="mob-tab-adspy">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Ad Spy</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="studio" id="mob-tab-studio">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Criar</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="editor-livre" id="mob-tab-editor-livre">
+        <i class="fa-solid fa-pen-nib"></i>
+        <span>Editor IA</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="brand" id="mob-tab-brand">
+        <i class="fa-solid fa-paint-roller"></i>
+        <span>Marca</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="reels" id="mob-tab-reels">
+        <i class="fa-solid fa-video"></i>
+        <span>Vídeos</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="billing" id="mob-tab-billing">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Planos</span>
+      </button>
+    </nav>
+
+    <!-- MAIN APP CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- ====================================================================
+           MÓDULO 1: DASHBOARD
+           ==================================================================== -->
+      <section class="app-module active" id="module-dashboard">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Visão Geral do Sistema</h1>
+            <p>Monitore suas artes, vídeos e geração de conteúdo.</p>
+          </div>
+          <div class="header-actions">
+            <a href="/" class="btn btn-secondary">
+              <i class="fa-solid fa-arrow-left"></i> Voltar ao Site
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-palette"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">Artes Criadas</span>
+              <span class="stat-value" id="dash-val-artes-feitas">12</span>
+              <span class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +3 esta semana</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-image"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">Artes Restantes</span>
+              <span class="stat-value" id="dash-val-artes-restantes">38</span>
+              <span class="stat-change"><i class="fa-solid fa-circle-info"></i> de 50 no pacote</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-video"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">Vídeos Criados</span>
+              <span class="stat-value" id="dash-val-videos-feitos">3</span>
+              <span class="stat-change up"><i class="fa-solid fa-arrow-trend-up"></i> +1 esta semana</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-film"></i></div>
+            <div class="stat-info">
+              <span class="stat-title">Vídeos Restantes</span>
+              <span class="stat-value" id="dash-val-videos-restantes">7</span>
+              <span class="stat-change"><i class="fa-solid fa-circle-info"></i> de 10 no pacote</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Layout Grid -->
+        <div class="dashboard-sections">
+          <!-- Recent Leads and Activity -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Atividades Recentes</h3>
+              <i class="fa-solid fa-clock text-muted"></i>
+            </div>
+            <ul class="activity-list" id="dash-activity-list">
+              <!-- Renderizado dinamicamente pelo JS -->
+            </ul>
+          </div>
+
+          <!-- Shortcuts & Tips -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Dicas Rápidas</h3>
+              <i class="fa-solid fa-lightbulb text-muted"></i>
+            </div>
+            <div style="font-size: 0.85rem; line-height: 1.6; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 16px;">
+              <p>⚡ **Como descobrir anúncios lucrativos:** Vá no *Espião de Anúncios* e ordene por **"Criativos Mais Antigos"**. Os criativos que estão ativos por mais tempo são aqueles que continuam convertendo.</p>
+              <p>🎨 **Crie artes que vendem:** Use a *Arte Estática* e selecione o padrão do imóvel para gerar criativos profissionais em segundos. Suba uma referência de inspiração para manter a identidade visual.</p>
+              <p>📹 **Vídeos que engajam:** No módulo *Vídeos*, adicione legendas dinâmicas aos tours virtuais para aumentar a retenção e engajamento nos Reels e Stories.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MÓDULO 2: ESPIÃO DE ANÚNCIOS (AD SPY)
+           ==================================================================== -->
+      <section class="app-module" id="module-adspy">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Espião de Anúncios Imobiliários</h1>
+            <p>Monitore a concorrência, filtre criativos ativos por preço e descubra criativos validados.</p>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label for="ad-search-input">Buscar Construtora ou Termo</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="ad-search-input" class="input-control" placeholder="Ex: Apartamento, Moema, Cyrela..."/>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="ad-price-slider">Filtrar Preço do Imóvel</label>
+            <div class="slider-container">
+              <div class="slider-labels">
+                <span>R$ 200k</span>
+                <span id="ad-price-display">R$ 4.0M</span>
+              </div>
+              <input type="range" id="ad-price-slider" class="range-slider" min="200000" max="4000000" step="50000" value="4000000"/>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="ad-sort-select">Ordenar Resultados</label>
+            <select id="ad-sort-select" class="input-control select-control">
+              <option value="oldest">Criativos Mais Antigos (Validados) 🌟</option>
+              <option value="newest">Mais Recentes</option>
+              <option value="price-desc">Maior Preço</option>
+              <option value="price-asc">Menor Preço</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="meta-token-input">Token de Acesso Meta Ads <i class="fa-solid fa-key" style="margin-left:4px; color:var(--color-primary);"></i></label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="meta-token-input" class="input-control" placeholder="Inserir access_token..."/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Abas de Categorias do Espião -->
+        <div class="template-gallery-tabs" id="adspy-category-tabs" style="margin-bottom: 24px;">
+          <button class="template-tab-btn active" data-adspy-category="all">
+            <i class="fa-solid fa-border-all"></i> Todos
+          </button>
+          <button class="template-tab-btn" data-adspy-category="mcmv">
+            <i class="fa-solid fa-house-chimney"></i> Minha Casa Minha Vida
+          </button>
+          <button class="template-tab-btn" data-adspy-category="medio-padrao">
+            <i class="fa-solid fa-building"></i> Médio Padrão
+          </button>
+          <button class="template-tab-btn" data-adspy-category="alto-padrao">
+            <i class="fa-solid fa-gem"></i> Alto Padrão
+          </button>
+        </div>
+
+        <!-- Ads Grid Container -->
+        <div class="ads-grid" id="ad-grid-container">
+          <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MÓDULO 3: ARTE ESTÁTICA (com Galeria de Templates)
+           ==================================================================== -->
+      <section class="app-module" id="module-studio">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Arte Estática</h1>
+            <p>Escolha um template profissional, personalize textos e cores, e baixe sua arte em alta definição.</p>
+          </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="studio-steps-nav">
+          <button class="studio-step-btn active" id="studio-nav-gallery">
+            <span class="step-number">1</span> Templates
+          </button>
+          <button class="studio-step-btn" id="studio-nav-editor">
+            <span class="step-number">2</span> Editor
+          </button>
+          <button class="studio-step-btn" id="studio-nav-success" style="display: none;">
+            <span class="step-number">3</span> Aprovação
+          </button>
+        </div>
+
+        <!-- ===== STEP 1: GALERIA DE TEMPLATES ===== -->
+        <div class="studio-step active" id="studio-gallery-view">
+          <!-- Category Filter Tabs -->
+          <div class="template-gallery-tabs" id="template-gallery-tabs">
+            <button class="template-tab-btn active" data-category="all">
+              <i class="fa-solid fa-grid-2"></i> Todos <span class="template-tab-count">15</span>
+            </button>
+            <button class="template-tab-btn" data-category="alto-padrao">
+              <i class="fa-solid fa-gem"></i> Alto Padrão <span class="template-tab-count">4</span>
+            </button>
+            <button class="template-tab-btn" data-category="medio-padrao">
+              <i class="fa-solid fa-building"></i> Médio Padrão <span class="template-tab-count">4</span>
+            </button>
+            <button class="template-tab-btn" data-category="mcmv">
+              <i class="fa-solid fa-house-chimney"></i> MCMV <span class="template-tab-count">12</span>
+            </button>
+            <button class="template-tab-btn" data-category="editor-livre">
+              <i class="fa-solid fa-couch"></i> Editor Livre <span class="template-tab-count">1</span>
+            </button>
+          </div>
+
+          <!-- Template Cards Grid (rendered by JS) -->
+          <div class="template-gallery-grid" id="template-gallery-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: EDITOR DE ARTES ===== -->
+        <div class="studio-step" id="studio-editor-view">
+          <button class="btn-back-gallery" id="studio-back-to-gallery">
+            <i class="fa-solid fa-arrow-left"></i> Voltar à Galeria
+          </button>
+
+          <div class="studio-layout">
+            <!-- Controls Panel (LADO ESQUERDO: UPLOAD & CAMPOS DE TEXTO) -->
+            <div class="studio-panel-controls dash-panel" style="gap: 16px;">
+
+              <!-- Formato da Arte -->
+              <div class="filter-group">
+              </div>
+
+              <!-- Upload Imagens do Produto -->
+              <div class="filter-group">
+                <label><i class="fa-solid fa-images" style="margin-right: 4px;"></i> Imagem do Imóvel <span class="upload-hint" id="upload-images-hint">(máx. 1 imagem)</span></label>
+                <div class="upload-box upload-box-sm" id="studio-product-upload-box">
+                  <i class="fa-solid fa-camera"></i>
+                  <p style="font-size: 0.78rem;" id="studio-product-upload-text">Selecione a imagem do produto (.png, .jpg)</p>
+                  <input type="file" id="studio-product-input" style="display: none;" accept="image/*"/>
+                </div>
+                <div class="upload-preview-row" id="studio-product-preview" style="display: none;"></div>
+              </div>
+
+              <!-- Inputs de Texto e Elementos Criativos -->
+              <div class="filter-group" style="border-top: 1px solid var(--color-border); padding-top: 16px;">
+                <label style="color: var(--color-primary);">Elementos do Criativo (Sobreposição)</label>
+              </div>
+
+              <div id="studio-text-editor-panel" style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Inputs serão gerados dinamicamente via JS (app.js) -->
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="editor-actions-row">
+                <button class="btn-ai-generate" id="studio-ai-btn" style="flex: 1; justify-content: center; padding: 14px;">
+                  <i class="fa-solid fa-sparkles"></i> Gerar Imagens
+                </button>
+
+                <button class="btn-download-art" id="studio-download-btn" style="display: none; justify-content: center; padding: 14px; background: var(--color-primary); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-check-double"></i> Aprovar Arte Final
+                </button>
+              </div>
+
+              <!-- DEBUG BUTTON TO SAVE CREDITS -->
+              <div style="margin-top: 10px; text-align: center;">
+                <button id="debug-editor-btn" style="background: transparent; border: 1px dashed var(--color-border); color: var(--color-text-muted); font-size: 0.7rem; padding: 4px 8px; cursor: pointer;">🛠️ Testar Editor (Sem Gastar Crédito)</button>
+              </div>
+            </div>
+
+            <!-- Canvas Preview Panel (CENTRO / DIREITA: IMAGEM DE EXEMPLO & CANVAS) -->
+            <div class="canvas-preview-wrapper studio-panel-preview" id="studio-canvas-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 540px;">
+              <!-- Loader Overlay -->
+              <div class="loader-overlay" id="studio-loader-overlay">
+                <div class="spinner"></div>
+                <span class="spinner-label">Processando criativo...</span>
+              </div>
+
+              <!-- Template Preview / IMAGEM DE EXEMPLO (Centralizado no Lado Direito) -->
+              <div id="studio-template-preview-wrap" style="display: flex; width: 100%; max-width: 520px; flex-direction: column; align-items: center; gap: 14px; margin: auto;">
+                <div style="font-size: 0.8rem; letter-spacing: 0.08em; color: var(--color-primary); text-transform: uppercase; font-weight: 800; align-self: flex-start; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-image"></i> IMAGEM DE EXEMPLO
+                </div>
+                <div style="position: relative; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.7); border: 1px solid var(--color-border); background: #000;">
+                  <img id="studio-template-preview-img" src="" alt="Preview do Template" style="width: 100%; height: auto; max-height: 600px; display: block; object-fit: contain; border-radius: 12px;" />
+                  <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.85) 100%); border-radius: 12px; pointer-events: none;"></div>
+                  <div style="position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; align-items: flex-end; justify-content: space-between;">
+                    <span id="studio-template-preview-name" style="font-size: 0.95rem; font-weight: 800; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.9);"></span>
+                    <span id="studio-template-preview-badge" style="font-size: 0.7rem; font-weight: 800; background: var(--color-primary); color: #000; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;"></span>
+                  </div>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--color-text-muted); text-align: center; margin: 0; line-height: 1.5;">
+                  Preencha os campos à esquerda e clique em <strong style="color: var(--color-primary);">Gerar Imagens</strong> ou <strong style="color: #fff;">Testar Editor</strong> para personalizar.
+                </p>
+              </div>
+
+              <div class="preview-placeholder" id="studio-preview-placeholder" style="display: none; padding: 32px;">
+                <i class="fa-regular fa-image"></i>
+                <p>Selecione um template da galeria para começar, ou preencha os campos e clique em "Gerar Imagens".</p>
+              </div>
+
+              <canvas id="studio-canvas" style="display: none;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3: TELA DE SUCESSO / EDITOR PRO ===== -->
+        <div class="studio-step" id="editor-pro-view">
+          
+          <!-- TOP BAR -->
+          <header class="editor-pro-header">
+            <div class="editor-pro-header-left">
+              <button class="btn btn-secondary" id="editor-btn-back"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+              <h3 style="font-size: 0.95rem; margin: 0; font-weight: 700;">Editor Pro</h3>
+              <!-- Brand Logo Preview (carregado da Identidade da Marca) -->
+              <div id="editor-brand-logo-preview" class="editor-brand-logo-chip" style="display:none;" title="Logo da Marca configurada">
+                <img id="editor-brand-logo-img" src="" alt="Logo" />
+                <span>Marca Ativa</span>
+              </div>
+            </div>
+            <div class="editor-pro-header-right">
+              <button class="btn btn-secondary" id="editor-btn-ai-adjust" title="Pedir para a IA alterar a imagem de fundo"><i class="fa-solid fa-wand-magic-sparkles"></i> Ajuste IA</button>
+              <button class="btn" id="editor-btn-download" style="background: var(--color-primary); color: #000; font-weight: 700;"><i class="fa-solid fa-download"></i> Baixar Arte</button>
+              <div class="editor-format-toggle" style="display:flex; gap:4px; align-items:center;">
+                <button class="btn btn-secondary editor-format-btn active" id="editor-btn-feed" title="Formato Feed (1:1 ou 4:5)"><i class="fa-solid fa-square"></i> Feed</button>
+                <button class="btn btn-secondary editor-format-btn" id="editor-btn-story" title="Formato Story (9:16)"><i class="fa-solid fa-bolt"></i> Story</button>
+              </div>
+            </div>
+          </header>
+
+          <!-- PROPERTIES BAR (top, horizontal) -->
+          <div class="editor-properties-bar" id="editor-properties-bar">
+            <div class="editor-props-content" id="editor-props-panel">
+              <div class="editor-empty-props">
+                <i class="fa-solid fa-hand-pointer"></i>
+                Selecione um elemento para editá-lo.
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-pro-main">
+            
+            <!-- LEFT SIDEBAR: LAYERS APENAS -->
+            <aside class="editor-pro-sidebar">
+              <div class="editor-panel-title">
+                <i class="fa-solid fa-layer-group" style="color:var(--color-primary);margin-right:6px;font-size:0.75rem;"></i>CAMADAS
+              </div>
+              <div class="editor-layer-list" id="editor-layer-list">
+                <!-- Camadas injetadas via JS -->
+              </div>
+            </aside>
+
+            <!-- CENTER WORKSPACE -->
+            <main class="editor-pro-workspace" id="editor-workspace">
+              <div class="editor-pro-canvas-area" id="editor-canvas-area">
+                
+                <!-- Scaler Wrapper (Atualizado dinamicamente via JS) -->
+                <div id="artboard-scaler" style="width: 486px; height: 486px; flex-shrink: 0; position: relative;">
+                  <!-- Artboard (Nativo 1080x1080) -->
+                  <div class="editor-artboard" id="interactive-overlay-wrapper" style="width: 1080px; height: 1080px; min-width: 1080px; min-height: 1080px; transform: scale(0.45); transform-origin: top left; position: absolute; top: 0; left: 0; background: #000; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+                    <img id="success-preview-img" src="" class="bg-image" alt="Arte Fundo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; pointer-events: none;">
+                    <div class="editor-artboard-grid" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;"></div>
+                    <div class="editor-artboard-layers" id="text-overlay-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                      <!-- Elementos manipuláveis -->
+                    </div>
+                  </div>
+                </div>
+
+              <!-- ICON LIBRARY PANEL (flutuante, fora do artboard) -->
+              <div id="editor-icon-panel" class="editor-icon-panel" style="display:none;">
+                <div class="icon-panel-header">
+                  <span><i class="fa-solid fa-icons" style="color:var(--color-primary);margin-right:6px;"></i>Biblioteca de Ícones — Imóveis</span>
+                  <button onclick="document.getElementById('editor-icon-panel').style.display='none'" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.1rem;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <!-- Busca de Ícones -->
+                <div class="icon-panel-search">
+                  <div class="icon-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="icon-search-input" class="icon-search-input" placeholder="Buscar ícone... (ex: piscina, cama, sol)" oninput="filterIcons(this.value)" />
+                  </div>
+                </div>
+
+                <div class="icon-panel-categories" id="icon-panel-categories-root">
+
+                  <div class="icon-panel-cat-title">🏠 Tipologia do Imóvel</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-house')" title="Casa"><i class="fa-solid fa-house"></i><span>Casa</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-house-chimney')" title="Casa com Telhado"><i class="fa-solid fa-house-chimney"></i><span>Sobrado</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-house-circle-check')" title="Casa Aprovada"><i class="fa-solid fa-house-circle-check"></i><span>Aprovado</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-house-flag')" title="Casa Sinalizada"><i class="fa-solid fa-house-flag"></i><span>Sinalizada</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-building')" title="Edifício Residencial"><i class="fa-solid fa-building"></i><span>Edifício</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-buildings')" title="Condomínio"><i class="fa-solid fa-buildings"></i><span>Condomínio</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-city')" title="Cidade / Alto Padrão"><i class="fa-solid fa-city"></i><span>Alto Padrão</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-store')" title="Comercial / Loja"><i class="fa-solid fa-store"></i><span>Comercial</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-warehouse')" title="Galpão / Comercial"><i class="fa-solid fa-warehouse"></i><span>Galpão</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-hotel')" title="Apart-Hotel"><i class="fa-solid fa-hotel"></i><span>Apart-Hotel</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-igloo')" title="Casa de Campo"><i class="fa-solid fa-igloo"></i><span>Chácara</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-map-pin')" title="Lançamento"><i class="fa-solid fa-map-pin"></i><span>Lançamento</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">🛏️ Cômodos & Detalhes</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bed')" title="Dormitórios"><i class="fa-solid fa-bed"></i><span>Quartos</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bath')" title="Banheiros"><i class="fa-solid fa-bath"></i><span>Banheiros</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-shower')" title="Box / Ducha"><i class="fa-solid fa-shower"></i><span>Box</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-couch')" title="Sala / Mobiliado"><i class="fa-solid fa-couch"></i><span>Sala</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-utensils')" title="Cozinha / Gourmet"><i class="fa-solid fa-utensils"></i><span>Cozinha</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-blender')" title="Cozinha Equipada"><i class="fa-solid fa-blender"></i><span>Equipada</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-door-open')" title="Entrada / Acesso"><i class="fa-solid fa-door-open"></i><span>Entrada</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-stairs')" title="Andares"><i class="fa-solid fa-stairs"></i><span>Andares</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-ruler-combined')" title="Metragem"><i class="fa-solid fa-ruler-combined"></i><span>Metragem</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-expand')" title="Área Ampla"><i class="fa-solid fa-expand"></i><span>Área</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-window-maximize')" title="Varanda / Janelas"><i class="fa-solid fa-window-maximize"></i><span>Varanda</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-key')" title="Chaves / Entrega"><i class="fa-solid fa-key"></i><span>Entrega</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-kitchen-set')" title="Cozinha Americana"><i class="fa-solid fa-kitchen-set"></i><span>Americana</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-table-cells-large')" title="Varanda Gourmet"><i class="fa-solid fa-table-cells-large"></i><span>Gourmet</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">🏊 Lazer & Bem-Estar</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-person-swimming')" title="Piscina"><i class="fa-solid fa-person-swimming"></i><span>Piscina</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-dumbbell')" title="Academia"><i class="fa-solid fa-dumbbell"></i><span>Academia</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-spa')" title="Spa / Sauna"><i class="fa-solid fa-spa"></i><span>Spa</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-fire-burner')" title="Churrasqueira"><i class="fa-solid fa-fire-burner"></i><span>Churrasco</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-champagne-glasses')" title="Salão de Festas"><i class="fa-solid fa-champagne-glasses"></i><span>Festas</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-umbrella-beach')" title="Área de Lazer"><i class="fa-solid fa-umbrella-beach"></i><span>Lazer</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-table-tennis-paddle-ball')" title="Esportes"><i class="fa-solid fa-table-tennis-paddle-ball"></i><span>Esportes</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-gamepad')" title="Sala de Jogos"><i class="fa-solid fa-gamepad"></i><span>Jogos</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-wine-glass')" title="Adega / Vinho"><i class="fa-solid fa-wine-glass"></i><span>Adega</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-tree')" title="Área Verde / Jardim"><i class="fa-solid fa-tree"></i><span>Jardim</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-mountain-sun')" title="Vista / Natureza"><i class="fa-solid fa-mountain-sun"></i><span>Vista</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-baby')" title="Área Kids"><i class="fa-solid fa-baby"></i><span>Kids</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-paw')" title="Pet Friendly"><i class="fa-solid fa-paw"></i><span>Pet</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-heart-pulse')" title="Saúde / Bem-Estar"><i class="fa-solid fa-heart-pulse"></i><span>Saúde</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-water')" title="Espelho d'Água"><i class="fa-solid fa-water"></i><span>Espelho</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-person-running')" title="Pista de Corrida"><i class="fa-solid fa-person-running"></i><span>Pista</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">⚡ Sustentabilidade & Tech</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-solar-panel')" title="Energia Solar"><i class="fa-solid fa-solar-panel"></i><span>Solar</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-leaf')" title="Sustentável / Green"><i class="fa-solid fa-leaf"></i><span>Green</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-recycle')" title="Reciclagem"><i class="fa-solid fa-recycle"></i><span>Recicla</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bolt')" title="Energia / Eficiência"><i class="fa-solid fa-bolt"></i><span>Energia</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-wifi')" title="Wi-Fi / Smart Home"><i class="fa-solid fa-wifi"></i><span>Wi-Fi</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-charging-station')" title="Ponto de Recarga EV"><i class="fa-solid fa-charging-station"></i><span>EV</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-elevator')" title="Elevador"><i class="fa-solid fa-elevator"></i><span>Elevador</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-wind')" title="Ventilação / Ar Puro"><i class="fa-solid fa-wind"></i><span>Vento</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-snowflake')" title="Ar-Condicionado"><i class="fa-solid fa-snowflake"></i><span>Ar-Cond.</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-sun')" title="Iluminação Natural"><i class="fa-solid fa-sun"></i><span>Natural</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-mobile-screen')" title="App / Smart"><i class="fa-solid fa-mobile-screen"></i><span>Smart</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-plug')" title="Tomadas"><i class="fa-solid fa-plug"></i><span>Tomadas</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">📍 Localização & Entorno</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-location-dot')" title="Localização"><i class="fa-solid fa-location-dot"></i><span>Local</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-map')" title="Mapa"><i class="fa-solid fa-map"></i><span>Mapa</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-compass')" title="Orientação"><i class="fa-solid fa-compass"></i><span>Bússola</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-road')" title="Via / Acesso"><i class="fa-solid fa-road"></i><span>Acesso</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-car')" title="Garagem / Acesso Carro"><i class="fa-solid fa-car"></i><span>Garagem</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-car-side')" title="Vaga Coberta"><i class="fa-solid fa-car-side"></i><span>Coberta</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-square-parking')" title="Vaga de Garagem"><i class="fa-solid fa-square-parking"></i><span>Vaga</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bicycle')" title="Bicicletário"><i class="fa-solid fa-bicycle"></i><span>Bicicletário</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-train-subway')" title="Metrô Próximo"><i class="fa-solid fa-train-subway"></i><span>Metrô</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bus')" title="Ônibus Próximo"><i class="fa-solid fa-bus"></i><span>Ônibus</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-school')" title="Escola Próxima"><i class="fa-solid fa-school"></i><span>Escola</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-hospital')" title="Hospital Próximo"><i class="fa-solid fa-hospital"></i><span>Hospital</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-cart-shopping')" title="Comércio Próximo"><i class="fa-solid fa-cart-shopping"></i><span>Comércio</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-utensils')" title="Restaurantes"><i class="fa-solid fa-utensils"></i><span>Restaurante</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-plane')" title="Próx. Aeroporto"><i class="fa-solid fa-plane"></i><span>Aeroporto</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">🔒 Segurança & Serviços</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-shield-halved')" title="Segurança 24h"><i class="fa-solid fa-shield-halved"></i><span>Segurança</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-video')" title="CFTV / Câmeras"><i class="fa-solid fa-video"></i><span>CFTV</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-lock')" title="Controle de Acesso"><i class="fa-solid fa-lock"></i><span>Controle</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-bell')" title="Porteiro / Interfone"><i class="fa-solid fa-bell"></i><span>Porteiro</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-fire-extinguisher')" title="Combate a Incêndio"><i class="fa-solid fa-fire-extinguisher"></i><span>Incêndio</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-broom')" title="Zeladoria"><i class="fa-solid fa-broom"></i><span>Zeladoria</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-handshake')" title="Negociação Facilitada"><i class="fa-solid fa-handshake"></i><span>Negócio</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-percent')" title="Taxa / Financiamento"><i class="fa-solid fa-percent"></i><span>Taxa</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-receipt')" title="Documentação"><i class="fa-solid fa-receipt"></i><span>Docs</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-piggy-bank')" title="Economia / Poupança"><i class="fa-solid fa-piggy-bank"></i><span>Poupança</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-building-columns')" title="Banco / Financiamento"><i class="fa-solid fa-building-columns"></i><span>Banco</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-sack-dollar')" title="Valor / Investimento"><i class="fa-solid fa-sack-dollar"></i><span>Investir</span></div>
+                  </div>
+
+                  <div class="icon-panel-cat-title">🏆 Indicadores & Diferenciais</div>
+                  <div class="icon-panel-grid">
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-star')" title="Destaque"><i class="fa-solid fa-star"></i><span>Destaque</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-crown')" title="Premium / Luxo"><i class="fa-solid fa-crown"></i><span>Premium</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-gem')" title="Exclusivo"><i class="fa-solid fa-gem"></i><span>Exclusivo</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-trophy')" title="Premiado"><i class="fa-solid fa-trophy"></i><span>Premiado</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-medal')" title="Qualidade"><i class="fa-solid fa-medal"></i><span>Qualidade</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-certificate')" title="Certificado"><i class="fa-solid fa-certificate"></i><span>Certificado</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-circle-check')" title="Aprovado / Check"><i class="fa-solid fa-circle-check"></i><span>Aprovado</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-fire')" title="Lançamento / Hot"><i class="fa-solid fa-fire"></i><span>Hot</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-tag')" title="Oferta Especial"><i class="fa-solid fa-tag"></i><span>Oferta</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-chart-line')" title="Valorização"><i class="fa-solid fa-chart-line"></i><span>Valoriza</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-arrow-right')" title="Seta / Call to Action"><i class="fa-solid fa-arrow-right"></i><span>Seta</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-sparkles')" title="Especial / Destaque"><i class="fa-solid fa-sparkles"></i><span>Especial</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-rocket')" title="Valorização Rápida"><i class="fa-solid fa-rocket"></i><span>Rápido</span></div>
+                    <div class="icon-panel-item" onclick="addIconToArtboard('fa-thumbs-up')" title="Aprovação"><i class="fa-solid fa-thumbs-up"></i><span>OK</span></div>
+                  </div>
+
+                  <!-- Resultado da Busca -->
+                  <div id="icon-search-results" style="display:none;">
+                    <div class="icon-panel-cat-title">🔍 Resultados da Busca</div>
+                    <div class="icon-panel-grid" id="icon-search-grid"></div>
+                  </div>
+
+                </div>
+              </div>
+
+            </main>
+
+            <!-- RIGHT SIDEBAR: IMAGEM DE EXEMPLO & FERRAMENTAS -->
+            <aside class="editor-pro-sidebar right reference-sidebar" id="editor-reference-panel">
+              
+              <!-- IMAGEM DE EXEMPLO DO TEMPLATE (No lado direito) -->
+              <div class="editor-reference-container" style="border-bottom: 1px solid var(--color-border); background: rgba(0, 0, 0, 0.2);">
+                <div class="editor-panel-title" style="display: flex; align-items: center; justify-content: space-between; border-bottom: none; padding: 12px 16px 6px 16px;">
+                  <span><i class="fa-solid fa-image" style="color:var(--color-primary);margin-right:6px;font-size:0.75rem;"></i>IMAGEM DE EXEMPLO</span>
+                  <span id="editor-reference-label" style="font-size:0.65rem; color:var(--color-primary); font-weight:700; text-transform:uppercase;"></span>
+                </div>
+                <div class="editor-reference-content" style="padding: 0 16px 12px 16px;">
+                  <img id="editor-reference-img" class="editor-reference-img" src="" alt="Imagem de Exemplo do Template" style="width: 100%; max-height: 220px; object-fit: contain; border-radius: 8px; border: 1px solid var(--color-border); box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: block;" />
+                </div>
+              </div>
+
+              <!-- FERRAMENTAS -->
+              <div class="editor-panel-title">
+                <i class="fa-solid fa-toolbox" style="color:var(--color-primary);margin-right:6px;font-size:0.75rem;"></i>FERRAMENTAS
+              </div>
+              <div class="editor-reference-content" style="padding: 16px;">
+                <!-- Barra de Ferramentas no Painel Lateral -->
+                <div class="editor-pro-toolbar" style="width: 100%;">
+                  <div class="editor-toolbar-grid">
+                    <button class="editor-toolbar-btn" id="toolbar-btn-text">
+                      <i class="fa-solid fa-t"></i> Texto
+                    </button>
+                    <button class="editor-toolbar-btn" id="toolbar-btn-shape" onclick="openShapePicker(this)">
+                      <i class="fa-solid fa-square"></i> Forma
+                    </button>
+                    <button class="editor-toolbar-btn" id="toolbar-btn-icon" onclick="(function(){const p=document.getElementById('editor-icon-panel');p.style.display=p.style.display==='none'?'flex':'none';})()">
+                      <i class="fa-solid fa-icons"></i> Ícones
+                    </button>
+                    <!-- Safe Zone Guide Toggle -->
+                    <button class="editor-toolbar-btn" id="toolbar-btn-safezone" onclick="toggleSafeZoneGuides()" title="Mostrar/ocultar guias de zona segura (15% topo / 20% base)">
+                      <i class="fa-solid fa-crop-simple"></i> Safe Zone
+                    </button>
+                    <!-- Desfazer (Ctrl+Z) Button -->
+                    <button class="editor-toolbar-btn" id="toolbar-btn-undo" onclick="undoEditorState()" title="Desfazer última alteração (Ctrl+Z)">
+                      <i class="fa-solid fa-rotate-left"></i> Desfazer
+                    </button>
+                  </div>
+                  
+                  <div class="editor-toolbar-zoom-row">
+                    <button class="editor-toolbar-btn zoom-btn" id="toolbar-btn-zoom-out" title="Diminuir (-)">
+                      <i class="fa-solid fa-magnifying-glass-minus"></i>
+                    </button>
+                    <span style="font-size: 0.75rem; color: #fff; font-family: 'Space Mono', monospace; width: 44px; text-align: center; cursor:pointer;" id="editor-zoom-level" title="Clique para resetar zoom" onclick="resetEditorZoom()">45%</span>
+                    <button class="editor-toolbar-btn zoom-btn" id="toolbar-btn-zoom-in" title="Ampliar (+)">
+                      <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    </button>
+                  </div>
+
+                  <!-- Botões de Logotipos MCMV & HIS SP (Insere Imagens nos Templates) -->
+                  <div class="editor-toolbar-mcmv-row" style="display: flex; gap: 8px; margin-top: 10px; width: 100%;">
+                    <button type="button" class="editor-toolbar-btn" style="flex: 1; font-weight: 700; font-size: 0.72rem; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(212, 160, 23, 0.15); border: 1px solid #d4a017; color: #fff;" onclick="addMcmvLogoToArtboard(1)" title="Inserir Logo MCMV 1 (Vertical) no Artboard">
+                      <i class="fa-solid fa-house-chimney" style="color: #d4a017;"></i> IMG MCMV 1
+                    </button>
+                    <button type="button" class="editor-toolbar-btn" style="flex: 1; font-weight: 700; font-size: 0.72rem; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(47, 111, 179, 0.15); border: 1px solid #2f6fb3; color: #fff;" onclick="addMcmvLogoToArtboard(2)" title="Inserir Logo MCMV 2 (Horizontal) no Artboard">
+                      <i class="fa-solid fa-house" style="color: #2f6fb3;"></i> IMG MCMV 2
+                    </button>
+                  </div>
+                  <div class="editor-toolbar-his-row" style="margin-top: 8px; width: 100%;">
+                    <button type="button" class="editor-toolbar-btn" style="width: 100%; font-weight: 700; font-size: 0.75rem; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 235, 59, 0.15); border: 1px solid #fbc02d; color: #fff;" onclick="addHisSpLogoToArtboard()" title="Inserir Selo HIS SP (Habitação de Interesse Social) no Artboard">
+                      <i class="fa-solid fa-landmark" style="color: #fbc02d;"></i> HIS SP
+                    </button>
+                  </div>
+                  <!-- Botão Placa Metrô -->
+                  <div class="editor-toolbar-metro-row" style="margin-top: 8px; width: 100%;">
+                    <button type="button" class="editor-toolbar-btn" style="width: 100%; font-weight: 700; font-size: 0.75rem; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(0, 168, 204, 0.15); border: 1px solid #00a8cc; color: #fff;" onclick="addPlacaMetroToArtboard()" title="Inserir Placa / Totem Metrô no Artboard">
+                      <i class="fa-solid fa-train-subway" style="color: #00a8cc;"></i> Placa Metrô
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MÓDULO: EDITOR LIVRE (IA)
+           ==================================================================== -->
+      <section class="app-module" id="module-editor-livre">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Editor Livre <span style="background: linear-gradient(90deg, var(--color-primary), #a0e060); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">com IA</span></h1>
+            <p>Carregue uma foto do imóvel, preencha os campos e deixe a IA criar o anúncio perfeito em segundos.</p>
+          </div>
+          <div class="header-actions" id="el-credits-badge" style="display:none;">
+            <span class="el-credits-info"><i class="fa-solid fa-coins"></i> <span id="el-remaining-credits">–</span> créditos restantes</span>
+          </div>
+        </div>
+
+        <div class="el-layout">
+
+          <!-- ===== LEFT COLUMN: Formulário ===== -->
+          <div class="el-form-panel">
+
+            <!-- STEP 1: Upload -->
+            <div class="el-section">
+              <div class="el-section-header">
+                <span class="el-step-num">1</span>
+                <span class="el-section-title">Foto do Imóvel</span>
+              </div>
+              <div class="el-upload-zone" id="el-upload-zone">
+                <i class="fa-solid fa-image el-upload-icon"></i>
+                <p class="el-upload-label">Arraste a foto ou clique para escolher</p>
+                <span class="el-upload-hint">JPG, PNG, WEBP · Máx 10MB · Recomendado: mínimo 1080×1080px</span>
+                <input type="file" id="el-photo-input" accept="image/*" style="display:none;" />
+              </div>
+              <div class="el-upload-preview" id="el-upload-preview" style="display:none;">
+                <img id="el-preview-img" src="" alt="Prévia da foto" />
+                <button class="el-preview-remove" id="el-remove-photo" title="Remover foto">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Formato -->
+            <div class="el-section">
+              <div class="el-section-header">
+                <span class="el-step-num">2</span>
+                <span class="el-section-title">Formato do Anúncio</span>
+              </div>
+              <div class="el-format-selector">
+                <button class="el-format-btn active" data-format="feed" id="el-fmt-feed">
+                  <i class="fa-solid fa-square"></i>
+                  <span>Feed 1:1</span>
+                  <small>1080 × 1080</small>
+                </button>
+                <button class="el-format-btn" data-format="story" id="el-fmt-story">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                  <span>Story 9:16</span>
+                  <small>1080 × 1920</small>
+                </button>
+                <button class="el-format-btn" data-format="portrait" id="el-fmt-portrait">
+                  <i class="fa-solid fa-file-image"></i>
+                  <span>Retrato 4:5</span>
+                  <small>1080 × 1350</small>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Campos do anúncio -->
+            <div class="el-section">
+              <div class="el-section-header">
+                <span class="el-step-num">3</span>
+                <span class="el-section-title">Dados do Anúncio</span>
+                <button type="button" class="btn-gemini-suggest" id="el-btn-gemini-suggest">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Sugerir com Gemini
+                </button>
+              </div>
+
+              <div class="el-field-grid">
+                <!-- Nome do Empreendimento -->
+                <div class="el-field">
+                  <label class="el-label" for="el-nome-empreendimento">Nome do Empreendimento <span class="el-required">*</span></label>
+                  <div class="input-icon-wrap">
+                    <i class="fa-solid fa-building"></i>
+                    <input type="text" id="el-nome-empreendimento" class="input-control" placeholder="Ex: Condominio Jabuticaba" required />
+                  </div>
+                </div>
+
+                <!-- Incorporadora / Construtora -->
+                <div class="el-field">
+                  <label class="el-label" for="el-incorporadora">Incorporadora / Construtora</label>
+                  <div class="input-icon-wrap">
+                    <i class="fa-solid fa-id-card"></i>
+                    <input type="text" id="el-incorporadora" class="input-control" placeholder="Ex: Fibra Experts" />
+                  </div>
+                </div>
+
+                <!-- Tipo de Imóvel -->
+                <div class="el-field">
+                  <label class="el-label" for="el-tipo-imovel">Tipo de Imóvel <span class="el-required">*</span></label>
+                  <div class="input-icon-wrap">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <select id="el-tipo-imovel" class="input-control select-control" required>
+                      <option value="Apartamento" selected>Apartamento</option>
+                      <option value="Casa">Casa</option>
+                      <option value="Sobrado">Sobrado</option>
+                      <option value="Terreno">Terreno</option>
+                      <option value="Cobertura">Cobertura</option>
+                      <option value="Studio">Studio</option>
+                      <option value="Chácara">Chácara</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Localização -->
+                <div class="el-field">
+                  <label class="el-label" for="el-localizacao">Localização <span class="el-required">*</span></label>
+                  <div class="input-icon-wrap">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input type="text" id="el-localizacao" class="input-control" placeholder="Ex: São Paulo Brasil" required />
+                  </div>
+                </div>
+
+                <!-- Card de Atributos de Dimensão -->
+                <div class="el-dimension-card">
+                  <span class="el-dimension-title">Atributos de Dimensão</span>
+                  
+                  <div class="el-dimension-grid-4">
+                    <!-- Área Privativa -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-area-privativa">Área Privativa</label>
+                      <div class="input-group-custom has-suffix">
+                        <input type="text" id="el-area-privativa" class="input-control" placeholder="Ex: 54" />
+                        <span class="input-badge-suffix">m²</span>
+                      </div>
+                    </div>
+
+                    <!-- Dormitórios -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-dormitorios">Dormitórios</label>
+                      <select id="el-dormitorios" class="input-control select-control">
+                        <option value="1 Quarto">1 Quarto</option>
+                        <option value="2 Quartos" selected>2 Quartos</option>
+                        <option value="3 Quartos">3 Quartos</option>
+                        <option value="4+ Quartos">4+ Quartos</option>
+                        <option value="Nenhum">Nenhum</option>
+                      </select>
+                    </div>
+
+                    <!-- Suítes -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-suites">Suítes</label>
+                      <select id="el-suites" class="input-control select-control">
+                        <option value="Sem Suíte">Sem Suíte</option>
+                        <option value="1 Suíte" selected>1 Suíte</option>
+                        <option value="2 Suítes">2 Suítes</option>
+                        <option value="3+ Suítes">3+ Suítes</option>
+                      </select>
+                    </div>
+
+                    <!-- Vagas Garagem -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-vagas">Vagas Garagem</label>
+                      <select id="el-vagas" class="input-control select-control">
+                        <option value="Sem Vaga">Sem Vaga</option>
+                        <option value="1 Vaga" selected>1 Vaga</option>
+                        <option value="2 Vagas">2 Vagas</option>
+                        <option value="3+ Vagas">3+ Vagas</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="el-field-grid" style="margin-top: 4px;">
+                    <!-- Condições de Preço -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-condicoes-preco">Condições de Preço</label>
+                      <div class="input-group-custom has-prefix">
+                        <span class="input-badge-prefix">R$</span>
+                        <input type="text" id="el-condicoes-preco" class="input-control" placeholder="Ex: Entrada de R$ 50.000" />
+                      </div>
+                    </div>
+
+                    <!-- Banheiros Totais -->
+                    <div class="el-field">
+                      <label class="el-label" for="el-banheiros">Banheiros Totais</label>
+                      <select id="el-banheiros" class="input-control select-control">
+                        <option value="1 Banheiro">1 Banheiro</option>
+                        <option value="2 Banheiros" selected>2 Banheiros</option>
+                        <option value="3 Banheiros">3 Banheiros</option>
+                        <option value="4+ Banheiros">4+ Banheiros</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Público-Alvo, Tom de Voz e Objetivo -->
+                <div class="el-style-row-grid">
+                  <!-- Público-Alvo -->
+                  <div class="el-field">
+                    <label class="el-label" for="el-publico-alvo">Público-Alvo</label>
+                    <select id="el-publico-alvo" class="input-control select-control">
+                      <option value="Casais Jovens" selected>👪 Casais Jovens</option>
+                      <option value="Profissionais / Solteiros">💼 Profissionais / Solteiros</option>
+                      <option value="Famílias Grandes">🏡 Famílias Grandes</option>
+                      <option value="Investidores">📈 Investidores</option>
+                      <option value="Aposentados">👵 Aposentados</option>
+                    </select>
+                  </div>
+
+                  <!-- Tom de Voz -->
+                  <div class="el-field">
+                    <label class="el-label" for="el-tom-voz">Tom de Voz</label>
+                    <select id="el-tom-voz" class="input-control select-control">
+                      <option value="Persuasivo / Vendedor" selected>🔥 Persuasivo / Vendedor</option>
+                      <option value="Sofisticado / Luxo">✨ Sofisticado / Luxo</option>
+                      <option value="Amigável / Confiável">🤝 Amigável / Confiável</option>
+                      <option value="Urgente / Promocional">⚡ Urgente / Promocional</option>
+                    </select>
+                  </div>
+
+                  <!-- Objetivo -->
+                  <div class="el-field">
+                    <label class="el-label" for="el-objetivo">Objetivo</label>
+                    <select id="el-objetivo" class="input-control select-control">
+                      <option value="Lançamento" selected>📢 Lançamento</option>
+                      <option value="Venda Prontos">🔑 Venda Prontos</option>
+                      <option value="Condições Especiais">💰 Condições Especiais</option>
+                      <option value="Visita Decorado">🏠 Visita Decorado</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Diferenciais do Imóvel -->
+                <div class="el-field el-field-full">
+                  <label class="el-label">Diferenciais do Imóvel <span class="el-optional">(Selecione ou adicione)</span></label>
+                  <div class="el-diferenciais-container" id="el-diferenciais-container">
+                    <span class="el-diferencial-pill" data-value="Varanda Gourmet">+ Varanda Gourmet</span>
+                    <span class="el-diferencial-pill" data-value="Piscina com Borda Infinita">+ Piscina com Borda Infinita</span>
+                    <span class="el-diferencial-pill" data-value="Fechadura Eletrônica">+ Fechadura Eletrônica</span>
+                    <span class="el-diferencial-pill" data-value="Academia Equipada">+ Academia Equipada</span>
+                    <span class="el-diferencial-pill" data-value="Pet Place / Espaço Pet">+ Pet Place / Espaço Pet</span>
+                    <span class="el-diferencial-pill" data-value="Coworking / Home Office">+ Coworking / Home Office</span>
+                    <span class="el-diferencial-pill" data-value="Próximo ao Metrô">+ Próximo ao Metrô</span>
+                    <span class="el-diferencial-pill" data-value="Portaria 24h Facial">+ Portaria 24h Facial</span>
+                    <span class="el-diferencial-pill" data-value="Recarga Carro Elétrico">+ Recarga Carro Elétrico</span>
+                    <span class="el-diferencial-pill" data-value="Energia Solar">+ Energia Solar</span>
+                    <span class="el-diferencial-pill" data-value="Quadra de Beach Tennis">+ Quadra de Beach Tennis</span>
+                    <span class="el-diferencial-pill" data-value="Rooftop Gourmet">+ Rooftop Gourmet</span>
+                  </div>
+                  <div class="el-diferencial-add-row">
+                    <input type="text" id="el-novo-diferencial" class="input-control" placeholder="Ex: Varanda Ampla, Ponto de Recarga..." />
+                    <button type="button" class="el-btn-add-diferencial" id="el-btn-add-diferencial">+ Adicionar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Estilo Visual -->
+            <div class="el-section">
+              <div class="el-section-header">
+                <span class="el-step-num">4</span>
+                <span class="el-section-title">Estilo Visual</span>
+              </div>
+
+              <div class="el-style-group">
+                <label class="el-label">Tom da Arte</label>
+                <div class="el-pill-selector" id="el-tom-selector">
+                  <button class="el-pill active" data-value="moderno">✦ Moderno</button>
+                  <button class="el-pill" data-value="luxo">💎 Luxo</button>
+                  <button class="el-pill" data-value="acolhedor">🏡 Acolhedor</button>
+                  <button class="el-pill" data-value="vibrante">⚡ Vibrante</button>
+                  <button class="el-pill" data-value="minimalista">○ Minimalista</button>
+                </div>
+              </div>
+
+              <div class="el-style-group">
+                <label class="el-label">Estilo da Arte</label>
+                <div class="el-pill-selector" id="el-estilo-selector">
+                  <button class="el-pill active" data-value="fotografico">📸 Fotográfico Real</button>
+                  <button class="el-pill" data-value="bold-tipografico">🔤 Bold Tipográfico</button>
+                  <button class="el-pill" data-value="elegante">🎨 Elegante Editorial</button>
+                  <button class="el-pill" data-value="social-media">📱 Social Media Pop</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 5: Personalização Extra -->
+            <div class="el-section">
+              <div class="el-section-header">
+                <span class="el-step-num">5</span>
+                <span class="el-section-title">Personalização Extra <span class="el-optional">(opcional)</span></span>
+              </div>
+              <div class="el-field">
+                <label class="el-label" for="el-extra-prompt">Instruções adicionais para a IA</label>
+                <textarea id="el-extra-prompt" class="input-control el-textarea" rows="3"
+                  placeholder="Ex: Quero um fundo desfocado com a cidade ao entardecer. Destaque o subsídio em vermelho. Use tipografia bold sans-serif."></textarea>
+                <span class="el-hint">Quanto mais detalhe, melhor o resultado.</span>
+              </div>
+            </div>
+
+            <!-- GENERATE BUTTON -->
+            <button class="btn btn-primary el-generate-btn" id="el-generate-btn">
+              <i class="fa-solid fa-sparkles"></i>
+              Gerar Arte com IA
+              <span class="el-credit-cost">– 1 crédito</span>
+            </button>
+
+            <p class="el-disclaimer">
+              <i class="fa-solid fa-circle-info"></i>
+              A geração é processada por nossa Inteligência Artificial exclusiva de alto desempenho.
+            </p>
+
+          </div><!-- end el-form-panel -->
+
+          <!-- ===== RIGHT COLUMN: Preview & Resultado ===== -->
+          <div class="el-result-panel">
+
+            <!-- Estado idle -->
+            <div class="el-result-idle" id="el-result-idle">
+              <div class="el-result-idle-inner">
+                <div class="el-idle-icon">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h3>Seu anúncio aparecerá aqui</h3>
+                <p>Preencha as informações ao lado e clique em <strong>Gerar Arte com IA</strong></p>
+                <div class="el-idle-chips">
+                  <span><i class="fa-solid fa-bolt"></i> Resultado em ~15 seg</span>
+                  <span><i class="fa-solid fa-image"></i> Alta resolução</span>
+                  <span><i class="fa-solid fa-repeat"></i> Gere quantas versões quiser</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estado gerando -->
+            <div class="el-result-loading" id="el-result-loading" style="display:none;">
+              <div class="el-loading-orb"></div>
+              <h3>Gerando sua arte...</h3>
+              <p id="el-loading-msg">Enviando instruções para a IA...</p>
+              <div class="el-loading-steps" id="el-loading-steps">
+                <div class="el-load-step active" id="el-lstep-1"><i class="fa-solid fa-upload"></i> Enviando imagem</div>
+                <div class="el-load-step" id="el-lstep-2"><i class="fa-solid fa-brain"></i> Interpretando prompt</div>
+                <div class="el-load-step" id="el-lstep-3"><i class="fa-solid fa-paint-roller"></i> Compondo a arte</div>
+                <div class="el-load-step" id="el-lstep-4"><i class="fa-solid fa-cloud-arrow-down"></i> Finalizando resultado</div>
+              </div>
+            </div>
+
+            <!-- Estado resultado -->
+            <div class="el-result-output" id="el-result-output" style="display:none;">
+              <div class="el-result-toolbar">
+                <span class="el-result-badge"><i class="fa-solid fa-check-circle"></i> Arte gerada</span>
+                <div class="el-result-actions">
+                  <button class="btn btn-secondary el-action-btn" id="el-btn-regenerate">
+                    <i class="fa-solid fa-rotate-right"></i> Regerar
+                  </button>
+                  <button class="btn btn-primary el-action-btn" id="el-btn-download">
+                    <i class="fa-solid fa-download"></i> Baixar
+                  </button>
+                </div>
+              </div>
+              <div class="el-result-img-wrap">
+                <img id="el-result-img" src="" alt="Arte gerada pela IA" class="el-result-img" />
+              </div>
+              <div class="el-result-meta" id="el-result-meta"></div>
+            </div>
+
+            <!-- Estado erro -->
+            <div class="el-result-error" id="el-result-error" style="display:none;">
+              <i class="fa-solid fa-triangle-exclamation el-error-icon"></i>
+              <h3>Oops! Algo deu errado.</h3>
+              <p id="el-error-msg">Erro desconhecido. Tente novamente.</p>
+              <button class="btn btn-primary" id="el-btn-retry">
+                <i class="fa-solid fa-rotate-right"></i> Tentar novamente
+              </button>
+            </div>
+
+          </div><!-- end el-result-panel -->
+
+        </div><!-- end el-layout -->
+      </section>
+
+      <!-- ====================================================================
+           MÓDULO 4: VÍDEOS (com Galeria de Templates)
+           ==================================================================== -->
+
+      <section class="app-module" id="module-reels">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Vídeos</h1>
+            <p>Escolha um template de vídeo profissional, personalize textos e mídias, e exporte seus Reels.</p>
+          </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="studio-steps-nav">
+          <button class="studio-step-btn active" id="video-nav-gallery">
+            <span class="step-number">1</span> Templates de Vídeo
+          </button>
+          <button class="studio-step-btn" id="video-nav-editor">
+            <span class="step-number">2</span> Editor
+          </button>
+        </div>
+
+        <!-- ===== STEP 1: GALERIA DE TEMPLATES DE VÍDEO ===== -->
+        <div class="video-step active" id="video-gallery-view">
+          <div class="video-template-grid" id="video-template-grid">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: EDITOR DE VÍDEO ===== -->
+        <div class="video-step" id="video-editor-view">
+          <button class="btn-back-gallery" id="video-back-to-gallery">
+            <i class="fa-solid fa-arrow-left"></i> Voltar aos Templates
+          </button>
+
+          <div class="video-layout">
+            <!-- Controls Panel -->
+            <div class="dash-panel" style="gap: 20px;">
+              <div style="padding: 12px; background: rgba(200, 218, 66, 0.06); border: 1px solid rgba(200, 218, 66, 0.15); border-radius: var(--radius-md); font-size: 0.78rem; color: var(--color-primary); display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Template selecionado: <strong id="video-selected-template-name">—</strong></span>
+              </div>
+
+              <div class="filter-group">
+                <label>Selecione o Vídeo ou Fotos do Imóvel</label>
+                <div class="upload-box" id="reels-upload-box">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p>Clique para carregar arquivo de vídeo (.mp4) ou fotos</p>
+                  <span>Formatos aceitos: MP4, JPG, PNG · Máx. 50MB</span>
+                  <input type="file" id="reels-file-input" style="display: none;" accept="video/*,image/*" multiple/>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label for="reels-headline-input">Título do Vídeo</label>
+                <input type="text" id="reels-headline-input" class="input-control" placeholder="Ex: Conheça o Residencial Moema"/>
+              </div>
+
+              <div class="filter-group">
+                <label for="reels-subtitle-input">Subtítulo / CTA</label>
+                <input type="text" id="reels-subtitle-input" class="input-control" placeholder="Ex: Agende sua visita no link da bio!"/>
+              </div>
+
+              <div class="filter-group">
+                <label for="reels-captions-style">Estilo de Legenda</label>
+                <select id="reels-captions-style" class="input-control select-control">
+                  <option value="neon">Glow Neon (Verde/Espaço) ⚡</option>
+                  <option value="yellow">TikTok Impact (Amarelo) 🔥</option>
+                  <option value="white">Reels Classic (Branco) 🎬</option>
+                </select>
+              </div>
+
+              <div class="editor-actions-row">
+                <button class="btn btn-primary" style="justify-content: center; padding: 14px;" id="reels-render-btn">
+                  <i class="fa-solid fa-film"></i> Renderizar Vídeo
+                </button>
+
+                <button class="btn-ai-generate disabled" title="Em breve disponível">
+                  <i class="fa-solid fa-sparkles"></i> Geração Avançada
+                  <span class="badge-coming-soon">Em Breve</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Phone Mockup Preview -->
+            <div class="phone-mockup-container">
+              <div class="phone-mockup">
+                <div class="phone-screen">
+                  <div class="phone-overlay-watermark">
+                    <i class="fa-solid fa-house-chimney"></i> Imob Growth AI
+                  </div>
+                  <video id="mockup-reels-video" loop muted style="display: none;">
+                    <source src="" type="video/mp4"/>
+                  </video>
+                  <!-- Caption Text Overlay -->
+                  <div class="phone-caption-overlay">
+                    <div class="phone-caption-text" id="reels-caption-text">
+                      Selecione um template para começar...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ====================================================================
+           MÓDULO 6: PLANOS & FATURAMENTO
+           ==================================================================== -->
+      <section class="app-module" id="module-billing">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Planos &amp; Faturamento</h1>
+            <p>Gerencie sua assinatura, métodos de pagamento e histórico de cobranças.</p>
+          </div>
+        </div>
+
+        <div class="billing-layout">
+
+          <!-- ── Plano Atual ── -->
+          <div class="current-plan-card">
+            <div class="plan-info-block">
+              <span class="plan-info-label">Plano Atual</span>
+              <span class="plan-info-value" id="current-plan-name">Pro AI</span>
+              <span class="plan-info-sub" id="current-plan-billing">R$ 299/mês · Renovação em 08/07/2026</span>
+            </div>
+            <div class="plan-info-block">
+              <span class="plan-info-label">Status</span>
+              <span class="plan-status-badge active">
+                <span class="status-dot"></span> Ativo
+              </span>
+            </div>
+            <div class="plan-info-block">
+              <span class="plan-info-label">Uso de IA (imagens)</span>
+              <div class="plan-usage-bar-wrap">
+                <span class="plan-usage-label" id="usage-label">124 / 300 geradas</span>
+                <div class="plan-usage-track">
+                  <div class="plan-usage-fill" id="usage-fill" style="width: 41%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-info-block">
+              <span class="plan-info-label">Ação</span>
+              <button class="btn btn-secondary" onclick="switchTab('billing')" style="font-size:0.8rem; padding: 8px 16px;">
+                <i class="fa-solid fa-arrows-up-down"></i> Alterar Plano
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Grid: Cartões + Faturas ── -->
+          <div class="billing-grid-2">
+
+            <!-- Cartões de Crédito -->
+            <div class="dash-panel cards-section">
+              <div class="panel-header">
+                <h3>Métodos de Pagamento</h3>
+                <i class="fa-solid fa-shield-halved text-muted" style="color: var(--color-text-muted);"></i>
+              </div>
+
+              <!-- Cartão Virtual Principal -->
+              <div class="virtual-card dark-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div class="vc-chip"></div>
+                  <div class="vc-brand">Imob Pro</div>
+                </div>
+                <div class="vc-number">•••• •••• •••• 4821</div>
+                <div class="vc-footer">
+                  <div>
+                    <div class="vc-field-label">Titular</div>
+                    <div class="vc-field-value" id="card-holder-name">Gabriel Santana</div>
+                  </div>
+                  <div>
+                    <div class="vc-field-label">Válido até</div>
+                    <div class="vc-field-value">09/28</div>
+                  </div>
+                  <div class="vc-logo-mark">
+                    <div class="vc-circle vc-circle-1"></div>
+                    <div class="vc-circle vc-circle-2"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botão Adicionar Cartão -->
+              <button class="btn-add-card" id="btn-open-card-modal">
+                <i class="fa-solid fa-plus"></i> Adicionar novo cartão
+              </button>
+            </div>
+
+            <!-- Histórico de Faturas -->
+            <div class="dash-panel invoice-section">
+              <div class="panel-header">
+                <h3>Histórico de Faturas</h3>
+                <i class="fa-solid fa-file-invoice text-muted" style="color: var(--color-text-muted);"></i>
+              </div>
+              <table class="invoice-table" id="invoice-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-tbody">
+                  <!-- Preenchido pelo JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── Escolha de Plano ── -->
+          <div class="plans-section">
+            <div class="plans-header">
+              <div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700;">Escolha seu Plano</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-secondary); margin-top: 4px;">Faça upgrade ou downgrade a qualquer momento.</p>
+              </div>
+              <!-- Toggle Mensal / Anual -->
+              <div class="billing-toggle">
+                <span class="toggle-label active" id="toggle-lbl-monthly">Mensal</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="billing-period-toggle"/>
+                  <div class="toggle-track"></div>
+                  <div class="toggle-thumb"></div>
+                </label>
+                <span class="toggle-label" id="toggle-lbl-annual">Anual</span>
+                <span class="annual-badge">-20%</span>
+              </div>
+            </div>
+
+            <div class="plans-grid">
+
+              <!-- Starter -->
+              <div class="plan-card" id="plan-card-starter">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price-wrap">
+                  <span class="plan-currency">R$</span>
+                  <span class="plan-price" id="price-starter">149</span>
+                  <span class="plan-period">/mês</span>
+                </div>
+                <p class="plan-desc">Ideal para corretores autônomos que estão começando com inteligência artificial.</p>
+                <div class="plan-features">
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> 50 imagens AI/mês</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Espião de Anúncios</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> CRM até 25 leads</div>
+                  <div class="plan-feature disabled"><i class="fa-solid fa-xmark"></i> Reel Maker</div>
+                  <div class="plan-feature disabled"><i class="fa-solid fa-xmark"></i> Suporte prioritário</div>
+                </div>
+                <button class="btn-subscribe btn-subscribe-secondary" data-plan="Starter" data-price-monthly="149" data-price-annual="119" id="btn-sub-starter">
+                  <i class="fa-solid fa-arrow-up"></i> Selecionar Starter
+                </button>
+              </div>
+
+              <!-- Pro AI (Featured) -->
+              <div class="plan-card featured current-active" id="plan-card-pro">
+                <span class="plan-popular-badge">⭐ Mais Vendido</span>
+                <div class="plan-name">Pro AI</div>
+                <div class="plan-price-wrap">
+                  <span class="plan-currency">R$</span>
+                  <span class="plan-price" id="price-pro">299</span>
+                  <span class="plan-period">/mês</span>
+                </div>
+                <p class="plan-desc">Para equipes e corretores que querem máxima produtividade com IA avançada.</p>
+                <div class="plan-features">
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> 300 imagens AI/mês</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Espião de Anúncios ilimitado</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> CRM ilimitado</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Reel Maker com legendas</div>
+                  <div class="plan-feature disabled"><i class="fa-solid fa-xmark"></i> API de integração</div>
+                </div>
+                <button class="btn-subscribe btn-subscribe-primary is-current" data-plan="Pro AI" data-price-monthly="299" data-price-annual="239" id="btn-sub-pro">
+                  <i class="fa-solid fa-circle-check"></i> Plano Atual
+                </button>
+              </div>
+
+              <!-- Enterprise -->
+              <div class="plan-card" id="plan-card-enterprise">
+                <div class="plan-name">Enterprise AI</div>
+                <div class="plan-price-wrap">
+                  <span class="plan-currency">R$</span>
+                  <span class="plan-price" id="price-enterprise">599</span>
+                  <span class="plan-period">/mês</span>
+                </div>
+                <p class="plan-desc">Para incorporadoras e grandes equipes com volume e integrações avançadas.</p>
+                <div class="plan-features">
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Imagens AI ilimitadas</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Todos os módulos Pro</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> CRM avançado &amp; automação</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> API REST de integração</div>
+                  <div class="plan-feature"><i class="fa-solid fa-check"></i> Suporte dedicado 24/7</div>
+                </div>
+                <button class="btn-subscribe btn-subscribe-secondary" data-plan="Enterprise AI" data-price-monthly="599" data-price-annual="479" id="btn-sub-enterprise">
+                  <i class="fa-solid fa-arrow-up"></i> Selecionar Enterprise
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MÓDULO 5: IDENTIDADE DA MARCA
+           ==================================================================== -->
+      <section class="app-module" id="module-brand">
+        <div class="app-header">
+          <div class="header-title">
+            <h1>Identidade da Marca</h1>
+            <p>Configure a essência visual da sua empresa. A IA utilizará estes dados como base para todas as suas criações futuras.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-sections" style="grid-template-columns: 1fr;">
+          <div class="dash-panel" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; padding-bottom: 100px;">
+            
+            <!-- Upload da Logo Principal -->
+            <div class="brand-setting-group">
+              <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-star" style="color: var(--color-primary); margin-right: 8px;"></i> Logo Oficial (Fundo Transparente)</h3>
+              <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 16px;">Faça upload da versão em PNG ou SVG sem fundo. Ela será aplicada em todas as artes automaticamente.</p>
+              <div class="upload-box" id="brand-logo-upload-box" style="height: 120px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer;">
+                <input type="file" id="brand-logo-upload" accept="image/png, image/jpeg, image/jpg, image/svg+xml" style="position: absolute; opacity: 0.001; width: 1px; height: 1px; pointer-events: none;"/>
+                <div style="text-align: center;" id="brand-logo-placeholder">
+                  <i class="fa-solid fa-upload" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                  <p>Clique ou arraste a logo (.PNG, .JPG, .SVG)</p>
+                </div>
+                <img id="brand-logo-preview" src="" style="display: none; max-height: 80px; object-fit: contain; pointer-events: none;" />
+              </div>
+            </div>
+
+            <!-- Cores Oficiais -->
+            <div class="brand-setting-group">
+              <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-palette" style="color: var(--color-primary); margin-right: 8px;"></i> Cores da Marca</h3>
+              <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 16px;">Selecione a paleta oficial. A IA priorizará essas cores em botões, textos e fundos.</p>
+              
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                <div class="color-picker-box" style="display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); position: relative;" data-color-id="brand-color-primary">
+                  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <label style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Cor Primária</label>
+                    <button type="button" class="btn-clear-color" data-color-target="brand-color-primary" style="background: transparent; border: 1px solid var(--color-border); border-radius: 4px; padding: 2px 6px; font-size: 0.68rem; color: var(--color-text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: var(--transition-fast);">
+                      <i class="fa-solid fa-ban"></i> Remover
+                    </button>
+                  </div>
+                  <div class="color-picker-wrapper" style="position: relative; width: 100%; height: 40px; border-radius: 4px; overflow: hidden; cursor: pointer;">
+                    <input type="color" id="brand-color-primary" class="input-control" value="#c8da42" style="padding: 2px; width: 100%; height: 100%; cursor: pointer; border: none; background: transparent;"/>
+                    <div id="overlay-brand-color-primary" class="color-disabled-overlay" style="position: absolute; inset: 0; background: rgba(10, 10, 10, 0.88); display: none; align-items: center; justify-content: center; border: 1px dashed var(--color-border); border-radius: 4px; pointer-events: none;">
+                      <i class="fa-solid fa-ban" style="color: var(--color-accent-light); font-size: 1rem; margin-right: 6px;"></i>
+                      <span style="font-size: 0.72rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Nenhuma</span>
+                    </div>
+                  </div>
+                  <span id="label-color-primary" style="font-family: 'Space Mono', monospace; font-size: 0.8rem; text-align: center; color: var(--color-text-secondary);">#C8DA42</span>
+                </div>
+
+                <div class="color-picker-box" style="display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); position: relative;" data-color-id="brand-color-secondary">
+                  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <label style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Cor Secundária</label>
+                    <button type="button" class="btn-clear-color" data-color-target="brand-color-secondary" style="background: transparent; border: 1px solid var(--color-border); border-radius: 4px; padding: 2px 6px; font-size: 0.68rem; color: var(--color-text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: var(--transition-fast);">
+                      <i class="fa-solid fa-ban"></i> Remover
+                    </button>
+                  </div>
+                  <div class="color-picker-wrapper" style="position: relative; width: 100%; height: 40px; border-radius: 4px; overflow: hidden; cursor: pointer;">
+                    <input type="color" id="brand-color-secondary" class="input-control" value="#ffffff" style="padding: 2px; width: 100%; height: 100%; cursor: pointer; border: none; background: transparent;"/>
+                    <div id="overlay-brand-color-secondary" class="color-disabled-overlay" style="position: absolute; inset: 0; background: rgba(10, 10, 10, 0.88); display: none; align-items: center; justify-content: center; border: 1px dashed var(--color-border); border-radius: 4px; pointer-events: none;">
+                      <i class="fa-solid fa-ban" style="color: var(--color-accent-light); font-size: 1rem; margin-right: 6px;"></i>
+                      <span style="font-size: 0.72rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Nenhuma</span>
+                    </div>
+                  </div>
+                  <span id="label-color-secondary" style="font-family: 'Space Mono', monospace; font-size: 0.8rem; text-align: center; color: var(--color-text-secondary);">#FFFFFF</span>
+                </div>
+
+                <div class="color-picker-box" style="display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); position: relative;" data-color-id="brand-color-tertiary">
+                  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <label style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Cor Terciária</label>
+                    <button type="button" class="btn-clear-color" data-color-target="brand-color-tertiary" style="background: transparent; border: 1px solid var(--color-border); border-radius: 4px; padding: 2px 6px; font-size: 0.68rem; color: var(--color-text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: var(--transition-fast);">
+                      <i class="fa-solid fa-ban"></i> Remover
+                    </button>
+                  </div>
+                  <div class="color-picker-wrapper" style="position: relative; width: 100%; height: 40px; border-radius: 4px; overflow: hidden; cursor: pointer;">
+                    <input type="color" id="brand-color-tertiary" class="input-control" value="#000000" style="padding: 2px; width: 100%; height: 100%; cursor: pointer; border: none; background: transparent;"/>
+                    <div id="overlay-brand-color-tertiary" class="color-disabled-overlay" style="position: absolute; inset: 0; background: rgba(10, 10, 10, 0.88); display: none; align-items: center; justify-content: center; border: 1px dashed var(--color-border); border-radius: 4px; pointer-events: none;">
+                      <i class="fa-solid fa-ban" style="color: var(--color-accent-light); font-size: 1rem; margin-right: 6px;"></i>
+                      <span style="font-size: 0.72rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Nenhuma</span>
+                    </div>
+                  </div>
+                  <span id="label-color-tertiary" style="font-family: 'Space Mono', monospace; font-size: 0.8rem; text-align: center; color: var(--color-text-secondary);">#000000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fontes Oficiais -->
+            <div class="brand-setting-group">
+              <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-font" style="color: var(--color-primary); margin-right: 8px;"></i> Tipografia Principal</h3>
+              <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 16px;">Selecione a família de fontes utilizada na identidade da sua marca.</p>
+              <select id="brand-fonts-input" class="input-control" style="width: 100%; padding: 16px; cursor: pointer; appearance: auto; font-size: 1.1rem; color: #fff; background-color: #0f172a;">
+                <option value="" disabled selected style="background-color: #0f172a; font-family: 'Inter', sans-serif;">Selecione uma fonte...</option>
+                <option value="Montserrat, sans-serif" style="background-color: #0f172a; font-family: 'Montserrat', sans-serif;">Montserrat (Moderna / Elegante)</option>
+                <option value="Roboto, sans-serif" style="background-color: #0f172a; font-family: 'Roboto', sans-serif;">Roboto (Neutra / Limpa)</option>
+                <option value="Playfair Display, serif" style="background-color: #0f172a; font-family: 'Playfair Display', serif;">Playfair Display (Clássica / Luxo)</option>
+                <option value="Lato, sans-serif" style="background-color: #0f172a; font-family: 'Lato', sans-serif;">Lato (Amigável / Corporativa)</option>
+                <option value="Inter, sans-serif" style="background-color: #0f172a; font-family: 'Inter', sans-serif;">Inter (Tech / Minimalista)</option>
+                <option value="Oswald, sans-serif" style="background-color: #0f172a; font-family: 'Oswald', sans-serif;">Oswald (Impactante / Forte)</option>
+                <option value="Open Sans, sans-serif" style="background-color: #0f172a; font-family: 'Open Sans', sans-serif;">Open Sans (Legível / Versátil)</option>
+                <option value="Cinzel, serif" style="background-color: #0f172a; font-family: 'Cinzel', serif;">Cinzel (Alto Padrão / Sofisticada)</option>
+                <option value="Poppins, sans-serif" style="background-color: #0f172a; font-family: 'Poppins', sans-serif;">Poppins (Arredondada / Jovem)</option>
+                <option value="Nunito, sans-serif" style="background-color: #0f172a; font-family: 'Nunito', sans-serif;">Nunito (Suave / Acessível)</option>
+                <option value="Raleway, sans-serif" style="background-color: #0f172a; font-family: 'Raleway', sans-serif;">Raleway (Elegante / Fina)</option>
+                <option value="Merriweather, serif" style="background-color: #0f172a; font-family: 'Merriweather', serif;">Merriweather (Clássica / Editorial)</option>
+                <option value="Lora, serif" style="background-color: #0f172a; font-family: 'Lora', serif;">Lora (Premium / Artística)</option>
+                <option value="PT Sans, sans-serif" style="background-color: #0f172a; font-family: 'PT Sans', sans-serif;">PT Sans (Neutra / Eficiente)</option>
+                <option value="Bebas Neue, sans-serif" style="background-color: #0f172a; font-family: 'Bebas Neue', sans-serif;">Bebas Neue (Cartaz / Impactante)</option>
+                <option value="Bodoni Moda, serif" style="background-color: #0f172a; font-family: 'Bodoni Moda', serif;">Bodoni Moda (Luxo / Tradicional)</option>
+              </select>
+            </div>
+
+            <!-- Upload PDF Inteligência -->
+            <div class="brand-setting-group" style="opacity: 0.5; pointer-events: none;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <h3 style="margin: 0;"><i class="fa-solid fa-file-pdf" style="color: var(--color-primary); margin-right: 8px;"></i> Manual / Perspectivas</h3>
+                <span class="badge" style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">Em breve</span>
+              </div>
+              <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 16px;">Faça o upload do Manual da Marca ou perspectivas de empreendimentos para injetar como contexto na Inteligência Artificial.</p>
+              <div class="upload-box" style="height: 100px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); border: 2px dashed rgba(255,255,255,0.1); border-radius: 8px;">
+                <div style="text-align: center; color: rgba(255,255,255,0.5);">
+                  <i class="fa-solid fa-lock" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+                  <p>Funcionalidade em desenvolvimento</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 16px;">
+              <button class="btn btn-secondary" id="btn-clear-brand-identity" style="flex: 1; padding: 16px; font-size: 1.1rem; justify-content: center;">
+                <i class="fa-solid fa-trash"></i> Apagar Informações
+              </button>
+              <button class="btn btn-primary" id="btn-save-brand-identity" style="flex: 2; padding: 16px; font-size: 1.1rem; justify-content: center;">
+                <i class="fa-solid fa-check"></i> Salvar Identidade da Marca
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: CHECKOUT DE ASSINATURA
+       ==================================================================== -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="checkout-modal-close"><i class="fa-solid fa-xmark"></i></button>
+
+      <!-- Conteúdo do formulário -->
+      <div id="checkout-form-content">
+        <h2 class="modal-title">Confirmar Assinatura</h2>
+        <p class="modal-subtitle">Insira os dados do cartão para ativar seu plano recorrente.</p>
+
+        <div class="checkout-summary">
+          <div>
+            <div class="checkout-plan-name" id="co-plan-name">Pro AI</div>
+            <div class="checkout-plan-detail" id="co-plan-detail">Assinatura mensal · Renovação automática</div>
+          </div>
+          <div class="checkout-plan-price" id="co-plan-price">R$ 299/mês</div>
+        </div>
+
+        <div class="modal-field">
+          <label for="co-card-name">Nome no Cartão</label>
+          <input type="text" id="co-card-name" class="modal-input" placeholder="GABRIEL SANTANA"/>
+        </div>
+        <div class="modal-field">
+          <label for="co-card-number">Número do Cartão</label>
+          <input type="text" id="co-card-number" class="modal-input" placeholder="•••• •••• •••• ••••" maxlength="19"/>
+        </div>
+        <div class="modal-field-row">
+          <div class="modal-field">
+            <label for="co-card-expiry">Vencimento</label>
+            <input type="text" id="co-card-expiry" class="modal-input" placeholder="MM/AA" maxlength="5"/>
+          </div>
+          <div class="modal-field">
+            <label for="co-card-cvv">CVV</label>
+            <input type="text" id="co-card-cvv" class="modal-input" placeholder="•••" maxlength="3"/>
+          </div>
+        </div>
+
+        <div class="modal-secure-note">
+          <i class="fa-solid fa-lock"></i>
+          Pagamento processado com segurança via criptografia SSL 256-bit. Seus dados estão protegidos.
+        </div>
+
+        <button class="btn-checkout" id="btn-confirm-payment">
+          <div class="btn-loader"></div>
+          <span class="btn-checkout-text"><i class="fa-solid fa-shield-halved"></i> Confirmar Pagamento Seguro</span>
+        </button>
+      </div>
+
+      <!-- Estado de Sucesso -->
+      <div class="checkout-success" id="checkout-success">
+        <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+        <h3 class="success-title">Assinatura Ativada! 🎉</h3>
+        <p class="success-msg" id="success-plan-msg">Seu plano Pro AI foi ativado com sucesso. Aproveite todos os recursos de inteligência artificial!</p>
+        <button class="btn btn-primary" id="btn-close-success" style="margin-top: 8px; justify-content: center; padding: 12px 28px;">
+          <i class="fa-solid fa-rocket"></i> Continuar usando a plataforma
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: ADICIONAR CARTÃO
+       ==================================================================== -->
+  <div class="modal-overlay" id="card-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="card-modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="modal-title">Adicionar Cartão</h2>
+      <p class="modal-subtitle">O novo cartão será salvo como método de pagamento principal.</p>
+
+      <div class="modal-field">
+        <label for="nc-holder">Nome do Titular</label>
+        <input type="text" id="nc-holder" class="modal-input" placeholder="NOME COMO NO CARTÃO"/>
+        <span class="auth-error-msg" id="nc-holder-err">Informe o nome do titular.</span>
+      </div>
+      <div class="modal-field">
+        <label for="nc-number">Número do Cartão</label>
+        <input type="text" id="nc-number" class="modal-input" placeholder="•••• •••• •••• ••••" maxlength="19"/>
+        <span class="auth-error-msg" id="nc-number-err">Número de cartão inválido (16 dígitos).</span>
+      </div>
+      <div class="modal-field-row">
+        <div class="modal-field">
+          <label for="nc-expiry">Vencimento</label>
+          <input type="text" id="nc-expiry" class="modal-input" placeholder="MM/AA" maxlength="5"/>
+          <span class="auth-error-msg" id="nc-expiry-err">Formato MM/AA inválido.</span>
+        </div>
+        <div class="modal-field">
+          <label for="nc-cvv">CVV</label>
+          <input type="text" id="nc-cvv" class="modal-input" placeholder="•••" maxlength="3"/>
+          <span class="auth-error-msg" id="nc-cvv-err">CVV deve ter 3 dígitos.</span>
+        </div>
+      </div>
+
+      <div class="modal-secure-note">
+        <i class="fa-solid fa-lock"></i>
+        Seus dados de cartão são criptografados e nunca armazenados em texto puro.
+      </div>
+
+      <button class="btn-checkout" id="btn-save-card">
+        <div class="btn-loader"></div>
+        <span class="btn-checkout-text"><i class="fa-solid fa-plus"></i> Salvar Cartão</span>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: ESCOLHA DE IMAGEM DA IA
+       ==================================================================== -->
+  <div class="modal-overlay" id="ai-selection-modal">
+    <div class="modal-box" style="width: 800px; max-width: 95vw;">
+      <button class="modal-close" id="ai-selection-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header" style="margin-bottom: 24px; text-align: center;">
+        <h2 class="modal-title" style="font-size: 1.5rem;"><i class="fa-solid fa-sparkles" style="color: var(--color-primary); margin-right: 8px;"></i> Escolha o Fundo Ideal</h2>
+        <p class="modal-subtitle" style="margin-top: 8px;">Nossa IA gerou 3 opções incríveis para você. Clique na sua favorita para enviá-la ao editor.</p>
+      </div>
+      
+      <div class="ai-options-grid" id="ai-options-grid">
+        <!-- Opções injetadas dinamicamente -->
+      </div>
+      
+      <div class="modal-actions" style="margin-top: 32px; display: flex; justify-content: space-between; gap: 16px;">
+        <button class="btn btn-secondary" id="ai-selection-cancel" style="flex: 1; justify-content: center;">Cancelar</button>
+        <button class="btn btn-primary" id="ai-selection-confirm" style="flex: 1; justify-content: center;" disabled>
+          <i class="fa-solid fa-check"></i> Usar Imagem Selecionada
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Verificação de E-mail / Spam Warning -->
+  <div class="email-verify-modal" id="email-verify-modal">
+    <div class="email-verify-modal-content">
+      <div class="email-verify-header">
+        <div class="email-verify-icon-container">
+          <i class="fa-solid fa-envelope-open-text animated-envelope"></i>
+        </div>
+        <h2>Ative sua conta!</h2>
+        <p>Enviamos um e-mail de ativação para você.</p>
+      </div>
+      
+      <div class="email-verify-steps">
+        <div class="email-verify-step">
+          <div class="step-badge">1</div>
+          <div class="step-text">Abra seu leitor de e-mail e procure pela mensagem de <strong>Imob Growth AI</strong>.</div>
+        </div>
+        
+        <div class="email-verify-step warning-step">
+          <div class="step-badge warning-badge">2</div>
+          <div class="step-text">
+            Se a mensagem estiver na pasta de <strong>Spam</strong> ou <strong>Lixo Eletrônico</strong>, abra o e-mail e clique em <strong class="highlight-button">"Não é spam" (Report not spam)</strong>.
+          </div>
+        </div>
+
+        <div class="email-verify-step">
+          <div class="step-badge">3</div>
+          <div class="step-text">Clique no botão <strong>"Ativar Minha Conta"</strong> dentro do e-mail para habilitar seu acesso.</div>
+        </div>
+      </div>
+
+      <div class="email-verify-footer">
+        <button class="email-verify-close-btn" id="btn-close-verify-modal">Entendi, vou verificar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/app/app.js?v=202607311915" defer></script>
+</body>
+</html>
+
