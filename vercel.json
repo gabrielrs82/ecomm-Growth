@@ -1,9 +1,10 @@
-﻿{
+{
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/incorporadora", "destination": "/app/index.html" },
-    { "source": "/incorporadora/(.*)", "destination": "/app/$1" }
+    { "source": "/incorporadora/(.*)", "destination": "/app/$1" },
+    { "source": "/imovel", "destination": "/index.html" }
   ],
   "headers": [
     {
