@@ -1,0 +1,16 @@
+{
+  "name": "ecomm-growth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ecomm Growth — Marketing Digital para Imobiliárias e Incorporadoras",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "resend": "^4.0.0"
+  },
+  "optionalDependencies": {
+    "@sentry/node": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
