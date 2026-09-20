@@ -2,6 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/imoveis", "destination": "/index.html" },
     { "source": "/incorporadora", "destination": "/app/index.html" },
     { "source": "/incorporadora/(.*)", "destination": "/app/$1" },
     { "source": "/imovel", "destination": "/imovel/app/index.html" },
