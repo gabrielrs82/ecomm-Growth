@@ -9,11 +9,6 @@
     { "source": "/imovel/app/(.*)", "destination": "/imovel/app/$1" },
     { "source": "/imovel/Assets/(.*)", "destination": "/imovel/Assets/$1" }
   ],
-  "functions": {
-    "imovel/api/**/*.js": {
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
