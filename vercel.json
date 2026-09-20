@@ -7,8 +7,7 @@
     { "source": "/incorporadora/(.*)", "destination": "/app/$1" },
     { "source": "/imovel", "destination": "/imovel/app/index.html" },
     { "source": "/imovel/app/(.*)", "destination": "/imovel/app/$1" },
-    { "source": "/imovel/Assets/(.*)", "destination": "/imovel/Assets/$1" },
-    { "source": "/imovel/api/(.*)", "destination": "/imovel/api/$1" }
+    { "source": "/imovel/Assets/(.*)", "destination": "/imovel/Assets/$1" }
   ],
   "functions": {
     "imovel/api/**/*.js": {
