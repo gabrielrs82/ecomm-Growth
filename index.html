@@ -254,6 +254,80 @@
     .nav-link:hover { color: var(--color-primary); }
     .nav-link:hover::after { width: 100%; }
 
+    /* Service switcher link (E-commerce / Imobiliária) */
+    .nav-link-switch {
+      display: inline-flex;
+      align-items: center;
+      padding-bottom: 0 !important;
+    }
+    .nav-link-switch::after { display: none !important; }
+    .switch-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(200, 218, 66, 0.1);
+      border: 1px solid rgba(200, 218, 66, 0.35);
+      border-radius: var(--radius-full);
+      color: var(--color-primary);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      box-shadow: 0 0 16px rgba(200, 218, 66, 0.12);
+      transition: all 0.3s var(--ease-smooth);
+    }
+    .nav-link-switch:hover .switch-pill {
+      background: var(--color-primary);
+      color: var(--color-black);
+      box-shadow: 0 0 24px rgba(200, 218, 66, 0.45);
+      transform: translateY(-1px) scale(1.02);
+    }
+    .switch-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.25s ease;
+      line-height: 1;
+    }
+    .nav-link-switch:hover .switch-arrow {
+      transform: translate(2px, -2px);
+    }
+
+    .mobile-service-highlight {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px;
+      background: rgba(200, 218, 66, 0.08);
+      border: 1px solid rgba(200, 218, 66, 0.28);
+      border-radius: var(--radius-md);
+      padding: 14px 18px !important;
+      margin-bottom: 8px;
+      color: var(--color-primary) !important;
+      text-decoration: none;
+    }
+    .mobile-service-highlight:hover {
+      background: rgba(200, 218, 66, 0.16);
+      border-color: var(--color-primary);
+    }
+    .mobile-service-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .mobile-service-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mobile-service-highlight:hover .mobile-service-title {
+      color: var(--color-primary);
+    }
+
     /* ── BTN BRAND ── */
     @keyframes spin-conic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .btn-brand {
@@ -1976,6 +2050,9 @@
       </a>
 
       <div class="nav-links" role="list">
+        <a href="ecommerce.html" class="nav-link nav-link-switch" role="listitem" title="Conheça nossa Assessoria para E-commerce">
+          <span class="switch-pill">E-commerce <span class="switch-arrow">↗</span></span>
+        </a>
         <a href="#projetos" class="nav-link" role="listitem">Projetos</a>
         <a href="#servicos" class="nav-link" role="listitem">Serviços</a>
         <a href="#nos" class="nav-link" role="listitem">Sobre Nós</a>
@@ -2022,6 +2099,10 @@
     </button>
   </div>
   <div class="mobile-menu-links">
+    <a href="ecommerce.html" class="mobile-menu-link mobile-service-highlight">
+      <span class="mobile-service-badge">Outro Serviço Especializado</span>
+      <span class="mobile-service-title">Aceleração para E-commerce ↗</span>
+    </a>
     <a href="#projetos" class="mobile-menu-link">Projetos</a>
     <a href="#servicos" class="mobile-menu-link">Serviços</a>
     <a href="#nos" class="mobile-menu-link">Sobre Nós</a>
@@ -2635,6 +2716,7 @@
         <div class="footer-col">
           <h4>Navegação</h4>
           <div class="footer-links">
+            <a href="ecommerce.html" class="footer-link" style="color:var(--color-primary); font-weight:600;">E-commerce (Aceleração) ↗</a>
             <a href="#servicos" class="footer-link">Serviços</a>
             <a href="#projetos" class="footer-link">Projetos</a>
             <a href="#nos" class="footer-link">Sobre nós</a>

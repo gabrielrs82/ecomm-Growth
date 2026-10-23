@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70" fill="none">
+  <path d="M46 35 C46 25 55 22 62 27 C68 22 78 25 78 35 C78 45 62 52 62 52 C62 52 46 45 46 35 Z" fill="rgba(200,218,66,0.25)" stroke="#c8da42" stroke-width="1.5"/>
+  <text x="145" y="34" font-family="'Inter', sans-serif" font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.02em" text-anchor="middle">Pequenos</text>
+  <text x="145" y="49" font-family="'Space Grotesk', sans-serif" font-size="12" font-weight="600" fill="#c8da42" letter-spacing="0.12em" text-anchor="middle">BRINCANTES</text>
+</svg>
