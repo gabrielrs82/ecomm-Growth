@@ -820,99 +820,277 @@
     ════════════════════════════════════════════════════════════ */
     .brands-section {
       background: #040404;
-      padding: clamp(60px, 8vh, 100px) clamp(24px, 5vw, 72px);
+      padding: clamp(70px, 9vh, 120px) 0;
       border-top: 1px solid var(--color-border);
       position: relative;
+      overflow: hidden;
     }
     .brands-inner {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 48px);
     }
     .brands-header {
       text-align: center;
-      max-width: 640px;
-      margin: 0 auto 48px;
+      max-width: 760px;
+      margin: 0 auto 40px;
+    }
+    .brands-subtitle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: rgba(200, 218, 66, 0.08);
+      border: 1px solid rgba(200, 218, 66, 0.2);
+    }
+    .brands-subtitle-wrap .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      box-shadow: 0 0 8px var(--color-primary);
+      animation: pulse-dot 2s infinite ease-in-out;
     }
     .brands-subtitle {
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--color-primary); margin-bottom: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-primary);
     }
     .brands-title {
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      font-weight: 700; letter-spacing: -0.02em; color: #fff;
+      font-size: clamp(2rem, 3.4vw, 2.85rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
-    .brands-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+    .brands-desc {
+      font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      max-width: 620px;
+      margin: 0 auto;
     }
-    @media (max-width: 900px) {
-      .brands-grid { grid-template-columns: repeat(2, 1fr); }
+    .carousel-control-strip {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
     }
-    @media (max-width: 480px) {
-      .brands-grid { grid-template-columns: 1fr; }
+    .carousel-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
     }
+    .carousel-status-pill .pulse-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary);
+      animation: pulse-dot 1.8s infinite;
+    }
+
+    /* ── CARROSSEL CONTÍNUO & VIEWPORT COM MÁSCARA ── */
+    .brands-carousel-viewport {
+      width: 100%;
+      overflow: hidden;
+      padding: 30px 0 40px;
+      position: relative;
+      cursor: grab;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 6%, rgba(0,0,0,1) 94%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 6%, rgba(0,0,0,1) 94%, transparent 100%);
+    }
+    .brands-carousel-viewport:active {
+      cursor: grabbing;
+    }
+    .brands-carousel-track {
+      display: flex;
+      gap: 28px;
+      width: max-content;
+      animation: brands-infinite-slide 48s linear infinite;
+      will-change: transform;
+    }
+    .brands-carousel-viewport:hover .brands-carousel-track {
+      animation-play-state: paused;
+    }
+    @keyframes brands-infinite-slide {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(calc(-50% - 14px)); }
+    }
+
+    /* ── CARD DO E-COMMERCE (TAMANHO 2X MAIOR) ── */
     .brand-card {
-      background: rgba(14, 14, 14, 0.45);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: 24px;
+      width: 360px;
+      min-width: 360px;
+      min-height: 275px;
+      background: rgba(14, 14, 14, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 22px;
+      padding: 34px 28px 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      min-height: 140px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      justify-content: space-between;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       position: relative;
       overflow: hidden;
-      cursor: default;
-      transition: all 0.35s var(--ease-smooth);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  border-color 0.4s ease, 
+                  box-shadow 0.4s ease, 
+                  background 0.4s ease;
     }
     .brand-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(200, 218, 66, 0.08) 0%, transparent 100%);
+      background: radial-gradient(circle at 50% 20%, rgba(200, 218, 66, 0.12), transparent 70%);
       opacity: 0;
-      transition: opacity 0.35s var(--ease-smooth);
+      transition: opacity 0.4s ease;
       pointer-events: none;
     }
-    .brand-card:hover {
-      border-color: rgba(200, 218, 66, 0.35);
-      box-shadow: 0 8px 30px rgba(200, 218, 66, 0.12);
-      transform: translateY(-5px);
+
+    /* ── LOGOS 2X MAIORES ── */
+    .brand-logo-container {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 8px;
     }
-    .brand-card:hover::before { opacity: 1; }
     .brand-card img {
-      max-width: 180px;
-      max-height: 52px;
+      max-width: 250px;
+      max-height: 84px;
       object-fit: contain;
-      opacity: 0.88;
-      filter: grayscale(80%) contrast(1.1);
-      transition: all 0.35s var(--ease-smooth);
+      opacity: 0.9;
+      filter: contrast(1.05) brightness(0.95);
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  filter 0.45s ease, 
+                  opacity 0.45s ease;
     }
-    .brand-card:hover img {
-      opacity: 1;
-      filter: grayscale(0%) contrast(1);
-      transform: scale(1.05);
+
+    /* ── NOMES & TAGS 2X MAIORES ── */
+    .brand-card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .brand-name {
+      font-size: 1.42rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: #ffffff;
+      margin: 0;
+      line-height: 1.25;
+      transition: color 0.35s ease, text-shadow 0.35s ease;
     }
     .brand-niche-tag {
       font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
+      font-size: 0.74rem;
+      font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      padding: 2px 8px;
+      color: rgba(255, 255, 255, 0.6);
+      padding: 6px 14px;
       border-radius: var(--radius-full);
-      background: rgba(255,255,255,0.04);
-      transition: color 0.3s ease;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.35s ease;
+      white-space: nowrap;
     }
-    .brand-card:hover .brand-niche-tag {
+
+    /* ── EFEITO BRILHO / MOUSE SPOTLIGHT (SIMULADO E REAL) ── */
+    .card-shimmer-sweep {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 15%, rgba(200, 218, 66, 0.3) 45%, rgba(255, 255, 255, 0.8) 50%, rgba(200, 218, 66, 0.3) 55%, transparent 85%);
+      transform: translateX(-160%) skewX(-20deg);
+      pointer-events: none;
+      border-radius: 22px;
+      opacity: 0;
+    }
+    .brand-card.is-spotlight .card-shimmer-sweep,
+    .brand-card:hover .card-shimmer-sweep {
+      opacity: 1;
+      animation: shimmer-light-sweep 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes shimmer-light-sweep {
+      0%   { transform: translateX(-160%) skewX(-20deg); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateX(180%) skewX(-20deg); opacity: 0; }
+    }
+
+    /* ESTADO ATIVO DO SPOTLIGHT (PASSO A PASSO SEQUENCIAL) & HOVER MANUAL */
+    .brand-card:hover,
+    .brand-card.is-spotlight {
+      border-color: rgba(200, 218, 66, 0.85);
+      background: rgba(20, 23, 14, 0.82);
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 18px 45px rgba(200, 218, 66, 0.26), 
+                  0 0 25px rgba(200, 218, 66, 0.22), 
+                  inset 0 0 25px rgba(200, 218, 66, 0.08);
+    }
+    .brand-card:hover::before,
+    .brand-card.is-spotlight::before {
+      opacity: 1;
+    }
+    .brand-card:hover img,
+    .brand-card.is-spotlight img {
+      opacity: 1;
+      filter: contrast(1.15) brightness(1.15) drop-shadow(0 0 14px rgba(200, 218, 66, 0.45));
+      transform: scale(1.08);
+    }
+    .brand-card:hover .brand-name,
+    .brand-card.is-spotlight .brand-name {
+      color: #ffffff;
+      text-shadow: 0 0 22px rgba(200, 218, 66, 0.65);
+    }
+    .brand-card:hover .brand-niche-tag,
+    .brand-card.is-spotlight .brand-niche-tag {
       color: var(--color-primary);
-      background: rgba(200,218,66,0.1);
+      background: rgba(200, 218, 66, 0.16);
+      border-color: rgba(200, 218, 66, 0.5);
+      box-shadow: 0 0 14px rgba(200, 218, 66, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .brand-card {
+        width: 300px;
+        min-width: 300px;
+        min-height: 250px;
+        padding: 26px 20px 22px;
+      }
+      .brand-logo-container {
+        height: 85px;
+      }
+      .brand-card img {
+        max-width: 210px;
+        max-height: 72px;
+      }
+      .brand-name {
+        font-size: 1.25rem;
+      }
+      .brand-niche-tag {
+        font-size: 0.68rem;
+      }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -1794,49 +1972,205 @@
   </section>
 
   <!-- ════════════════════════════════════════
-       DOBRA 2.5: MARCAS E CLIENTES (GRID ANIMATED)
+       DOBRA 2.5: MARCAS E CLIENTES (CARROSSEL DINÂMICO 2X COM BRILHO SEQUENCIAL)
   ════════════════════════════════════════ -->
   <section class="brands-section" id="projetos" aria-label="Grandes marcas que aceleramos no e-commerce">
     <div class="brands-inner">
       <div class="brands-header">
-        <p class="brands-subtitle">Portfólio de Sucesso</p>
+        <div class="brands-subtitle-wrap">
+          <span class="live-dot" aria-hidden="true"></span>
+          <p class="brands-subtitle">Portfólio de Sucesso</p>
+        </div>
         <h2 class="brands-title">Marcas que Aceleramos no E-commerce</h2>
-      </div>
-      
-      <div class="brands-grid">
-        <div class="brand-card" title="Aunt Jackie's Curls & Coils">
-          <img src="Assets/ecomm/aunt_jackies.svg" alt="Aunt Jackie's" />
-          <span class="brand-niche-tag">Cosméticos & Cabelos</span>
-        </div>
-        <div class="brand-card" title="Embryolisse Laboratoires Paris">
-          <img src="Assets/ecomm/embryolisse.svg" alt="Embryolisse" />
-          <span class="brand-niche-tag">Skincare & Dermocosméticos</span>
-        </div>
-        <div class="brand-card" title="Avince Moda Feminina">
-          <img src="Assets/ecomm/avince.svg" alt="Avince" />
-          <span class="brand-niche-tag">Moda & Vestuário</span>
-        </div>
-        <div class="brand-card" title="Pequenos Brincantes">
-          <img src="Assets/ecomm/pequenos_brincantes.svg" alt="Pequenos Brincantes" />
-          <span class="brand-niche-tag">Moda & Brinquedos Infantis</span>
-        </div>
-        <div class="brand-card" title="Makeup Atelier Paris Oficial">
-          <img src="Assets/ecomm/makeup_atelier.svg" alt="Makeup Atelier Paris" />
-          <span class="brand-niche-tag">Beleza & Make Profissional</span>
-        </div>
-        <div class="brand-card" title="Karina Pratas">
-          <img src="Assets/ecomm/karina_pratas.svg" alt="Karina Pratas" />
-          <span class="brand-niche-tag">Joias & Prata 925</span>
-        </div>
-        <div class="brand-card" title="Looke Moda & Calçados">
-          <img src="Assets/ecomm/looke.jpg" alt="Looke" style="border-radius:6px;" />
-          <span class="brand-niche-tag">Moda & Calçados</span>
-        </div>
-        <div class="brand-card" title="Momy Decor">
-          <img src="Assets/ecomm/logo_momy_decor.jpg" alt="Momy Decor" style="border-radius:6px;" />
-          <span class="brand-niche-tag">Decoração & Lar</span>
+        <p class="brands-desc">Lojas virtuais e marcas consagradas aceleradas através de inteligência de dados, tráfego escalável e otimização cirúrgica de conversão.</p>
+        
+        <div class="carousel-control-strip">
+          <span class="carousel-status-pill">
+            <span class="pulse-indicator"></span>
+            Destaque Automático Ativo • Passe o cursor para inspecionar
+          </span>
         </div>
       </div>
+    </div>
+
+    <!-- CARROSSEL CONTÍNUO (FULL WIDTH COM MÁSCARAS LATERAIS) -->
+    <div class="brands-carousel-viewport" id="brandsCarouselViewport" role="region" aria-label="Carrossel de marcas atendidas">
+      <div class="brands-carousel-track" id="brandsCarouselTrack">
+        
+        <!-- ITEM 1: CASA VALDUGA -->
+        <div class="brand-card" data-index="0" data-brand="casa-valduga" title="Casa Valduga — Desde 1875">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/casa_valduga.png" alt="Casa Valduga Desde 1875" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Casa Valduga</h3>
+            <span class="brand-niche-tag">Vinhos &amp; Espumantes Desde 1875</span>
+          </div>
+        </div>
+
+        <!-- ITEM 2: EMBRYOLISSE -->
+        <div class="brand-card" data-index="1" data-brand="embryolisse" title="Embryolisse Laboratoires Paris">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/embryolisse.svg" alt="Embryolisse Paris" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Embryolisse Paris</h3>
+            <span class="brand-niche-tag">Skincare &amp; Dermocosméticos</span>
+          </div>
+        </div>
+
+        <!-- ITEM 3: PAPAI QUE FEZ -->
+        <div class="brand-card" data-index="2" data-brand="papai-que-fez" title="Papai Que Fez">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/papai_que_fez.png" alt="Papai Que Fez" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Papai Que Fez</h3>
+            <span class="brand-niche-tag">Alimentação Infantil &amp; Saudável</span>
+          </div>
+        </div>
+
+        <!-- ITEM 4: AVINCE -->
+        <div class="brand-card" data-index="3" data-brand="avince" title="Avince Moda Feminina">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/avince.svg" alt="Avince Moda" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Avince Moda</h3>
+            <span class="brand-niche-tag">Moda Feminina &amp; Vestuário</span>
+          </div>
+        </div>
+
+        <!-- ITEM 5: FA DEFUMADOS -->
+        <div class="brand-card" data-index="4" data-brand="fa-defumados" title="FA Defumados">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/fa_defumados.png" alt="FA Defumados" style="width: 86px; height: 86px; border-radius: 50%;" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">FA Defumados</h3>
+            <span class="brand-niche-tag">Charcutaria &amp; Defumados Nobres</span>
+          </div>
+        </div>
+
+        <!-- ITEM 6: KARINA PRATAS -->
+        <div class="brand-card" data-index="5" data-brand="karina-pratas" title="Karina Pratas">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/karina_pratas.svg" alt="Karina Pratas" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Karina Pratas</h3>
+            <span class="brand-niche-tag">Joias &amp; Prata 925</span>
+          </div>
+        </div>
+
+        <!-- ITEM 7: MOMY DECOR -->
+        <div class="brand-card" data-index="6" data-brand="momy-decor" title="Momy Decor">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/momy_decor.png" alt="Momy Decor" style="max-height: 86px;" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Momy Decor</h3>
+            <span class="brand-niche-tag">Decoração Infantil &amp; Lar</span>
+          </div>
+        </div>
+
+        <!-- ═════════ DUPLICAÇÃO PARA LOOP INFINITO ═════════ -->
+
+        <!-- ITEM 1 DUP -->
+        <div class="brand-card" data-index="7" data-brand="casa-valduga" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/casa_valduga.png" alt="Casa Valduga Desde 1875" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Casa Valduga</h3>
+            <span class="brand-niche-tag">Vinhos &amp; Espumantes Desde 1875</span>
+          </div>
+        </div>
+
+        <!-- ITEM 2 DUP -->
+        <div class="brand-card" data-index="8" data-brand="embryolisse" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/embryolisse.svg" alt="Embryolisse Paris" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Embryolisse Paris</h3>
+            <span class="brand-niche-tag">Skincare &amp; Dermocosméticos</span>
+          </div>
+        </div>
+
+        <!-- ITEM 3 DUP -->
+        <div class="brand-card" data-index="9" data-brand="papai-que-fez" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/papai_que_fez.png" alt="Papai Que Fez" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Papai Que Fez</h3>
+            <span class="brand-niche-tag">Alimentação Infantil &amp; Saudável</span>
+          </div>
+        </div>
+
+        <!-- ITEM 4 DUP -->
+        <div class="brand-card" data-index="10" data-brand="avince" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/avince.svg" alt="Avince Moda" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Avince Moda</h3>
+            <span class="brand-niche-tag">Moda Feminina &amp; Vestuário</span>
+          </div>
+        </div>
+
+        <!-- ITEM 5 DUP -->
+        <div class="brand-card" data-index="11" data-brand="fa-defumados" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/fa_defumados.png" alt="FA Defumados" style="width: 86px; height: 86px; border-radius: 50%;" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">FA Defumados</h3>
+            <span class="brand-niche-tag">Charcutaria &amp; Defumados Nobres</span>
+          </div>
+        </div>
+
+        <!-- ITEM 6 DUP -->
+        <div class="brand-card" data-index="12" data-brand="karina-pratas" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/karina_pratas.svg" alt="Karina Pratas" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Karina Pratas</h3>
+            <span class="brand-niche-tag">Joias &amp; Prata 925</span>
+          </div>
+        </div>
+
+        <!-- ITEM 7 DUP -->
+        <div class="brand-card" data-index="13" data-brand="momy-decor" aria-hidden="true">
+          <div class="card-shimmer-sweep" aria-hidden="true"></div>
+          <div class="brand-logo-container">
+            <img src="Assets/ecomm/momy_decor.png" alt="Momy Decor" style="max-height: 86px;" />
+          </div>
+          <div class="brand-card-content">
+            <h3 class="brand-name">Momy Decor</h3>
+            <span class="brand-niche-tag">Decoração Infantil &amp; Lar</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="brands-inner">
 
       <div class="dobra-cta-container">
         <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
@@ -2534,22 +2868,89 @@
     scrollTrigger: { trigger: '.profile-section', start: 'top 85%' }
   });
 
-  // Brands Grid
-  const brandCards = document.querySelectorAll('.brand-card');
-  gsap.set(brandCards, { opacity: 0, y: 24, scale: 0.96 });
-  const brandObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const index = Array.from(brandCards).indexOf(entry.target);
-        gsap.to(entry.target, { 
-          opacity: 1, y: 0, scale: 1, duration: 0.8, 
-          delay: index * 0.08, ease: 'power3.out', clearProps: 'all'
-        });
-        brandObserver.unobserve(entry.target);
+  // ==========================================
+  // BRANDS CAROUSEL & SEQUENTIAL SPOTLIGHT
+  // (Brilho e varredura de luz simulando passagem de cursor, um por um)
+  // ==========================================
+  (function initBrandsCarouselSpotlight() {
+    const track = document.getElementById('brandsCarouselTrack');
+    const viewport = document.getElementById('brandsCarouselViewport');
+    if (!track || !viewport) return;
+
+    const cards = Array.from(track.querySelectorAll('.brand-card'));
+    if (!cards.length) return;
+
+    let currentIndex = 0;
+    let isUserHovering = false;
+    let resumeTimeout = null;
+
+    // Entrance fade-in with GSAP
+    gsap.from(viewport, {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.brands-section',
+        start: 'top 80%'
       }
     });
-  }, { threshold: 0.1 });
-  brandCards.forEach(card => brandObserver.observe(card));
+
+    function applySpotlight(targetCard) {
+      cards.forEach(card => {
+        if (card === targetCard) {
+          card.classList.add('is-spotlight');
+          const shimmer = card.querySelector('.card-shimmer-sweep');
+          if (shimmer) {
+            shimmer.style.animation = 'none';
+            void shimmer.offsetWidth; // Force CSS reflow
+            shimmer.style.animation = '';
+          }
+        } else {
+          card.classList.remove('is-spotlight');
+        }
+      });
+    }
+
+    function advanceSequentialSpotlight() {
+      if (isUserHovering) return;
+      // Cycle through 0..cards.length-1
+      applySpotlight(cards[currentIndex]);
+      currentIndex = (currentIndex + 1) % cards.length;
+    }
+
+    // Start auto sequential spotlight cycle (every 2.2 seconds)
+    let spotlightInterval = setInterval(advanceSequentialSpotlight, 2200);
+    // Trigger first card immediately
+    advanceSequentialSpotlight();
+
+    // Priority for user's actual mouse hover
+    cards.forEach((card, idx) => {
+      card.addEventListener('mouseenter', () => {
+        isUserHovering = true;
+        clearTimeout(resumeTimeout);
+        applySpotlight(card);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        resumeTimeout = setTimeout(() => {
+          isUserHovering = false;
+          currentIndex = (idx + 1) % cards.length;
+        }, 800);
+      });
+    });
+
+    viewport.addEventListener('mouseenter', () => {
+      isUserHovering = true;
+      clearTimeout(resumeTimeout);
+    });
+
+    viewport.addEventListener('mouseleave', () => {
+      resumeTimeout = setTimeout(() => {
+        isUserHovering = false;
+      }, 1000);
+    });
+  })();
 
   // Parallax Scroll Text Reveal
   const words = document.querySelectorAll('.reveal-word');
