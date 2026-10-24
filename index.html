@@ -394,29 +394,32 @@
     ════════════════════════════════════════════════════════════ */
     #scrub-section {
       position: relative;
-      height: 600vh;
+      height: 100vh;
+      min-height: 600px;
     }
     .sticky-frame {
-      position: sticky;
-      top: 0;
-      height: 100vh;
+      position: relative;
+      height: 100%;
+      min-height: 600px;
       overflow: hidden;
       background: var(--color-surface);
     }
     #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: 1;
+      display: none !important;
     }
     #hero-video {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0.01;
-      pointer-events: none;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      opacity: 0.45 !important;
+      pointer-events: none !important;
+      display: block !important;
+      z-index: 1 !important;
+    }
+    .chapter-counter, .vid-progress, .scroll-hint {
+      display: none !important;
     }
     .vid-overlay {
       position: absolute;
@@ -1872,12 +1875,20 @@
     @media (max-width: 1024px) {
       #scrub-section {
         height: 100vh !important;
+        height: 100svh !important;
+        min-height: 560px !important;
+      }
+      .sticky-frame {
+        position: relative !important;
+        height: 100% !important;
+        min-height: 560px !important;
       }
       #hero-canvas {
         display: none !important;
       }
       #hero-video {
         position: absolute !important;
+        inset: 0 !important;
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
@@ -1885,6 +1896,12 @@
         pointer-events: none !important;
         display: block !important;
         z-index: 1 !important;
+      }
+      .vid-strip, .vid-progress, .scroll-hint, .chapter-counter {
+        display: none !important;
+      }
+      .hero-layer {
+        margin-top: 50px;
       }
     }
 
@@ -2155,6 +2172,7 @@
         muted
         preload="auto"
         playsinline
+        webkit-playsinline="true"
         aria-hidden="true"
       >
         <source src="Assets/video_topo.mp4" type="video/mp4"/>
@@ -2341,7 +2359,7 @@
       <div class="pitch-video-wrap">
         <!-- Styled, high-performance, responsive video preview wrapper -->
         <iframe
-          src="https://www.youtube.com/embed/ZlZl0c-FxgA?rel=0&modestbranding=1"
+          src="https://www.youtube.com/embed/1L21B0oM2tQ?rel=0&modestbranding=1"
           title="Gabriel Santana Pitch Video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
@@ -2799,121 +2817,7 @@
   });
 
   /* ─────────────────────────────────────────────────────────────
-     4. CANVAS — cover-fit drawImage
-  ───────────────────────────────────────────────────────────── */
-  function resizeCanvas() {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width  = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    drawFrame();
-  }
-  window.addEventListener('resize', resizeCanvas, { passive: true });
-
-  function drawFrame() {
-    if (video.readyState < 2) return;
-
-    const vw = canvas.width,  vh = canvas.height;
-    const iw = video.videoWidth, ih = video.videoHeight;
-    if (!iw || !ih) return;
-
-    const scale  = Math.max(vw / iw, vh / ih);
-    const dw     = iw * scale;
-    const dh     = ih * scale;
-    const dx     = (vw - dw) / 2;
-    const dy     = (vh - dh) / 2;
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(video, dx, dy, dw, dh);
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     5. SEEK QUEUE
-  ───────────────────────────────────────────────────────────── */
-  let seekInProgress = false;
-  let pendingTime    = null;
-
-  const supportsRVFC = ('requestVideoFrameCallback' in video);
-
-  function processSeek() {
-    if (pendingTime === null) {
-      seekInProgress = false;
-      return;
-    }
-
-    const time  = pendingTime;
-    pendingTime = null;
-
-    video.currentTime = time;
-
-    if (supportsRVFC) {
-      video.requestVideoFrameCallback(() => {
-        drawFrame();
-        processSeek();
-      });
-    } else {
-      video.addEventListener('seeked', function onSeeked() {
-        video.removeEventListener('seeked', onSeeked);
-        drawFrame();
-        processSeek();
-      });
-    }
-  }
-
-  function seekTo(time) {
-    pendingTime = time;
-    if (!seekInProgress) {
-      seekInProgress = true;
-      processSeek();
-    }
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     6. VIDEO SCRUB INIT
-  ───────────────────────────────────────────────────────────── */
-  function initScrub() {
-    const duration = video.duration;
-    if (!duration || isNaN(duration)) return;
-
-    resizeCanvas();
-    drawFrame();
-
-    const playhead = { time: 0 };
-
-    const scrollTL = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#scrub-section',
-        start:   'top top',
-        end:     'bottom bottom',
-        scrub:   1.2,
-        onUpdate(self) {
-          const pct = self.progress;
-          const pctInt = Math.round(pct * 100);
-          vpFill.style.height   = pctInt + '%';
-          chapFill.style.width  = pctInt + '%';
-          chapPct.textContent   = pctInt + '%';
-
-          if (pct > 0 || entryFinished) {
-            scrollHint.style.opacity = Math.max(0, 1 - (pct / 0.05));
-          }
-        }
-      }
-    });
-
-    scrollTL.to(playhead, {
-      time: duration,
-      ease: 'none',
-      duration: 1,
-      onUpdate() {
-        seekTo(playhead.time);
-      }
-    }, 0);
-
-    runEntryAnimations();
-  }
-
-  /* ─────────────────────────────────────────────────────────────
-     7. VIDEO BUFFERING PROGRESS
+     4. VIDEO BUFFERING PROGRESS
   ───────────────────────────────────────────────────────────── */
   video.addEventListener('progress', () => {
     if (!video.duration) return;
@@ -2927,124 +2831,65 @@
     } catch (_) {}
   });
 
-  const isMobile = window.innerWidth < 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
   /* ─────────────────────────────────────────────────────────────
-     8. BOOTSTRAP
+     5. BOOTSTRAP — CONTINUOUS LOOPING HERO VIDEO
   ───────────────────────────────────────────────────────────── */
   function bootstrap() {
-    if (isMobile) {
-      // Mobile flow: Autoplay native video loop, bypassing high-cost canvas draw and scrub
-      video.loop = true;
-      video.autoplay = true;
-      video.muted = true;
-      
-      // Force play
-      video.play().catch(e => console.log('Autoplay blocked:', e));
+    video.loop = true;
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
 
-      // Auto-play/loop fallback for aggressive mobile browsers (e.g. low-power mode, Safari)
-      const playVideo = () => {
-        if (video.paused) {
-          video.play().catch(e => console.log('Interactive play blocked:', e));
-        }
-      };
-      window.addEventListener('touchstart', playVideo, { once: true });
-      window.addEventListener('scroll', playVideo, { once: true });
+    // Force play
+    video.play().catch(e => console.log('Autoplay blocked:', e));
 
-      video.addEventListener('ended', () => {
-        video.currentTime = 0;
-        video.play().catch(e => console.log('Loop play blocked:', e));
-      });
-
-      // While user is in the first section, keep video playing in loop; pause when scrolled away
-      const scrubSection = document.getElementById('scrub-section');
-      if ('IntersectionObserver' in window && scrubSection) {
-        const heroObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              if (video.paused) video.play().catch(() => {});
-            } else {
-              if (!video.paused) video.pause();
-            }
-          });
-        }, { threshold: 0.1 });
-        heroObserver.observe(scrubSection);
+    // Interactive fallback for mobile or desktop autoplay policies
+    const playVideo = () => {
+      if (video.paused) {
+        video.play().catch(e => console.log('Interactive play blocked:', e));
       }
-
-      // Hide loading overlay and trigger entrance animations immediately on mobile
-      setTimeout(() => {
-        loadingEl.classList.add('hidden');
-        runEntryAnimations();
-        ScrollTrigger.refresh();
-      }, 300);
-
-      // Safety fallback to hide loader
-      setTimeout(() => {
-        loadingEl.classList.add('hidden');
-      }, 1500);
-      return;
-    }
-
-    // Stop autoplay on desktop to allow interactive scroll scrubbing
-    video.pause();
-    video.currentTime = 0;
-
-    resizeCanvas();
-
-    const onVideoReady = () => {
-      if (video.readyState >= 2) {
-        drawFrame();
-      }
-
-      video.currentTime = 0;
-
-      let firstFrameDrawn = false;
-      const onFirstFrame = () => {
-        if (firstFrameDrawn) return;
-        firstFrameDrawn = true;
-        drawFrame();
-        setTimeout(() => {
-          loadingEl.classList.add('hidden');
-          gsap.fromTo('#hero-canvas',
-            { opacity: 0, scale: 1.05 },
-            { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }
-          );
-          initScrub();
-          ScrollTrigger.refresh();
-        }, 150);
-      };
-
-      if (supportsRVFC) {
-        video.requestVideoFrameCallback(onFirstFrame);
-      } else {
-        video.addEventListener('seeked', onFirstFrame, { once: true });
-      }
-
-      setTimeout(() => {
-        if (!firstFrameDrawn) {
-          onFirstFrame();
-        }
-      }, 1000);
     };
+    window.addEventListener('touchstart', playVideo, { once: true, passive: true });
+    window.addEventListener('scroll', playVideo, { once: true, passive: true });
+    window.addEventListener('click', playVideo, { once: true, passive: true });
 
-    if (video.readyState >= 2) {
-      onVideoReady();
-    } else {
-      video.addEventListener('loadeddata', onVideoReady, { once: true });
+    video.addEventListener('ended', () => {
+      video.currentTime = 0;
+      video.play().catch(e => console.log('Loop play blocked:', e));
+    });
+
+    // While user is in the hero section, keep video playing in loop; pause when scrolled away
+    const scrubSection = document.getElementById('scrub-section');
+    if ('IntersectionObserver' in window && scrubSection) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (video.paused) video.play().catch(() => {});
+          } else {
+            if (!video.paused) video.pause();
+          }
+        });
+      }, { threshold: 0.1 });
+      heroObserver.observe(scrubSection);
     }
+
+    // Hide loading overlay and trigger entrance animations
+    setTimeout(() => {
+      loadingEl.classList.add('hidden');
+      runEntryAnimations();
+      ScrollTrigger.refresh();
+    }, 250);
+
+    // Safety fallback to hide loader
+    setTimeout(() => {
+      loadingEl.classList.add('hidden');
+    }, 1200);
   }
 
-  // Mobile bypass loadedmetadata check entirely to avoid mobile preload blocks
-  if (isMobile) {
-    bootstrap();
-  } else if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
-    bootstrap();
-  } else {
-    video.addEventListener('loadedmetadata', bootstrap, { once: true });
-  }
+  bootstrap();
 
   /* ─────────────────────────────────────────────────────────────
-     9. ENTRY ANIMATIONS
+     6. ENTRY ANIMATIONS
   ───────────────────────────────────────────────────────────── */
   function runEntryAnimations() {
     gsap.timeline({ defaults: { ease: 'power3.out' } })
@@ -3053,9 +2898,6 @@
       .fromTo('#h-sub',           { opacity:0, y:24 }, { opacity:1, y:0, duration:0.9 }, 0.75)
       .fromTo('#h-ctas',          { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8 }, 0.95)
       .fromTo('#vid-strip',       { opacity:0 },       { opacity:1, duration:1.0 },       1.10)
-      .fromTo('#vid-progress',    { opacity:0 },       { opacity:1, duration:0.9 },       1.25)
-      .fromTo('#chapter-counter', { opacity:0 },       { opacity:1, duration:0.9 },       1.30)
-      .fromTo('#scroll-hint',     { opacity:0 },       { opacity:1, duration:0.9 },       1.55)
       .call(() => {
         entryFinished = true;
         lucide.createIcons(); // Initialize Lucide icons on bootstrap
