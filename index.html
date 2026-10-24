@@ -2956,6 +2956,21 @@
         video.play().catch(e => console.log('Loop play blocked:', e));
       });
 
+      // While user is in the first section, keep video playing in loop; pause when scrolled away
+      const scrubSection = document.getElementById('scrub-section');
+      if ('IntersectionObserver' in window && scrubSection) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (video.paused) video.play().catch(() => {});
+            } else {
+              if (!video.paused) video.pause();
+            }
+          });
+        }, { threshold: 0.1 });
+        heroObserver.observe(scrubSection);
+      }
+
       // Hide loading overlay and trigger entrance animations immediately on mobile
       setTimeout(() => {
         loadingEl.classList.add('hidden');

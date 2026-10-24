@@ -331,10 +331,36 @@
       height: 480vh;
       background: var(--color-black);
     }
-    @media (max-width: 860px) {
+    @media (max-width: 1024px) {
       #scrub-section {
-        height: 100vh;
-        min-height: 580px;
+        height: 100vh !important;
+        height: 100svh !important;
+        min-height: 560px !important;
+      }
+      .sticky-frame {
+        position: relative !important;
+        height: 100% !important;
+        min-height: 560px !important;
+      }
+      #hero-canvas {
+        display: none !important;
+      }
+      #hero-video {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        opacity: 0.50 !important;
+        pointer-events: none !important;
+        display: block !important;
+        z-index: 1 !important;
+      }
+      .vid-strip, .vid-progress, .scroll-hint, .chapter-counter {
+        display: none !important;
+      }
+      .hero-layer {
+        margin-top: 50px;
       }
     }
     .sticky-frame {
@@ -635,10 +661,6 @@
       100% { transform: translateY(200%); }
     }
 
-    @media (max-width: 860px) {
-      .vid-strip, .vid-progress, .scroll-hint, .chapter-counter { display: none !important; }
-      .hero-layer { margin-top: 60px; }
-    }
 
     /* ════════════════════════════════════════════════════════════
        MARQUEE STRIP
@@ -1762,6 +1784,7 @@
         muted
         preload="auto"
         playsinline
+        webkit-playsinline="true"
         aria-hidden="true"
       >
         <source src="Assets/ecomm/Clipe_Ecomm_sem-som.mp4" type="video/mp4"/>
@@ -2683,6 +2706,7 @@
      4. CANVAS — cover-fit drawImage
   ───────────────────────────────────────────────────────────── */
   function resizeCanvas() {
+    if (isMobile) return;
     const dpr = window.devicePixelRatio || 1;
     canvas.width  = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
@@ -2777,9 +2801,64 @@
   /* ─────────────────────────────────────────────────────────────
      7. VIDEO BOOTSTRAP
   ───────────────────────────────────────────────────────────── */
-  const isMobile = window.innerWidth <= 860;
+  const isMobile = window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   function bootstrap() {
+    if (isMobile) {
+      // Mobile flow: Autoplay native video loop, bypassing high-cost canvas draw and scroll scrub
+      video.loop = true;
+      video.autoplay = true;
+      video.muted = true;
+      video.playsInline = true;
+
+      // Force play
+      video.play().catch(e => console.log('Autoplay blocked:', e));
+
+      // Auto-play/loop fallback for mobile browser policies (e.g. low-power mode, iOS Safari)
+      const playVideo = () => {
+        if (video.paused) {
+          video.play().catch(e => console.log('Interactive play blocked:', e));
+        }
+      };
+      window.addEventListener('touchstart', playVideo, { once: true, passive: true });
+      window.addEventListener('scroll', playVideo, { once: true, passive: true });
+
+      video.addEventListener('ended', () => {
+        video.currentTime = 0;
+        video.play().catch(e => console.log('Loop play blocked:', e));
+      });
+
+      // While user is in the first section, keep video playing in loop; pause when scrolled away
+      const scrubSection = document.getElementById('scrub-section');
+      if ('IntersectionObserver' in window && scrubSection) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (video.paused) video.play().catch(() => {});
+            } else {
+              if (!video.paused) video.pause();
+            }
+          });
+        }, { threshold: 0.1 });
+        heroObserver.observe(scrubSection);
+      }
+
+      // Hide loading overlay and trigger entrance animations immediately on mobile
+      setTimeout(() => {
+        loadingEl.classList.add('hidden');
+        runEntryAnimations();
+        ScrollTrigger.refresh();
+      }, 300);
+
+      // Safety fallback to hide loader
+      setTimeout(() => {
+        loadingEl.classList.add('hidden');
+      }, 1200);
+
+      return;
+    }
+
+    // Desktop flow: Canvas scroll-scrub
     resizeCanvas();
     runEntryAnimations();
 
