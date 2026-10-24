@@ -27,6 +27,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- LEAD CAPTURE MODAL -->
+  <link rel="stylesheet" href="lead-modal.css"/>
 
   <style>
     /* ════════════════════════════════════════════════════════════
@@ -1686,7 +1688,7 @@
         <a href="blog.html" class="nav-link" role="listitem" target="_blank" rel="noopener">Blog</a>
       </div>
 
-      <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+      <a href="#contato" data-open-modal="lead-form" style="text-decoration:none;">
         <button class="btn-brand" id="nav-cta" type="button" aria-label="Vamos Juntos">
           <span class="btn-inner">
             <span class="btn-icon" aria-hidden="true">
@@ -1738,7 +1740,7 @@
     <a href="blog.html" class="mobile-menu-link" target="_blank" rel="noopener">Blog</a>
   </div>
   <div class="mobile-menu-footer">
-    <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+    <a href="#contato" data-open-modal="lead-form" style="text-decoration:none;">
       <button class="btn-brand" style="width:100%;">
         <span class="btn-inner" style="justify-content:center;">
           <span class="btn-icon" aria-hidden="true">
@@ -1812,7 +1814,7 @@
         </p>
 
         <div class="h-ctas" id="h-ctas">
-          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration: none;">
+          <a href="#contato" data-open-modal="lead-form" style="text-decoration: none;">
             <button class="btn-solid btn-primary" id="cta-primary" type="button">
               Vamos Juntos
             </button>
@@ -1981,7 +1983,7 @@
     </div>
     
     <div class="dobra-cta-container">
-      <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
+      <a href="#contato" data-open-modal="lead-form" class="btn-brand" style="text-decoration: none;">
         <span class="btn-inner">
           <span class="btn-icon" aria-hidden="true">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2196,7 +2198,7 @@
     <div class="brands-inner">
 
       <div class="dobra-cta-container">
-        <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
+        <a href="#contato" data-open-modal="lead-form" class="btn-brand" style="text-decoration: none;">
           <span class="btn-inner">
             <span class="btn-icon" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2254,7 +2256,7 @@
           </p>
 
           <div class="dobra-cta-container" style="justify-content: flex-start; margin-top: 32px;">
-            <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
+            <a href="#contato" data-open-modal="lead-form" class="btn-brand" style="text-decoration: none;">
               <span class="btn-inner">
                 <span class="btn-icon" aria-hidden="true">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2337,7 +2339,7 @@
       </div>
 
       <div class="dobra-cta-container">
-        <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
+        <a href="#contato" data-open-modal="lead-form" class="btn-brand" style="text-decoration: none;">
           <span class="btn-inner">
             <span class="btn-icon" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2417,7 +2419,7 @@
       </div>
 
       <div class="dobra-cta-container">
-        <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-brand" style="text-decoration: none;">
+        <a href="#contato" data-open-modal="lead-form" class="btn-brand" style="text-decoration: none;">
           <span class="btn-inner">
             <span class="btn-icon" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
@@ -2481,7 +2483,7 @@
             <div class="res-item-val" id="res-roas">4.8x de Retorno</div>
           </div>
 
-          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none; margin-top:12px;">
+          <a href="#contato" data-open-modal="lead-form" style="text-decoration:none; margin-top:12px;">
             <button class="btn-solid btn-primary" style="width:100%; justify-content:center; padding:14px;" type="button">
               Quero Esse Resultado na Minha Loja
             </button>
@@ -2573,7 +2575,7 @@
       <div class="cta-box">
         <span class="cta-badge">Aceleração de E-commerce</span>
         <h2>Pronto para acelerar as vendas da sua <br><em>loja virtual?</em></h2>
-        <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" class="btn-giant">
+        <a href="#contato" data-open-modal="lead-form" class="btn-giant">
           <span class="btn-inner">
             <span class="btn-icon">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -3184,6 +3186,9 @@
     }, 200);
   });
 </script>
+
+  <!-- Lead Capture Modal Script -->
+  <script src="lead-modal.js" defer></script>
 
 </body>
 </html>

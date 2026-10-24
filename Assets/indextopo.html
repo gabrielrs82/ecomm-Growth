@@ -36,6 +36,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <!-- LEAD CAPTURE MODAL -->
+  <link rel="stylesheet" href="/lead-modal.css"/>
 
   <style>
     /* ════════════════════════════════════════════════════════════
@@ -882,7 +884,7 @@
         <a href="../blog.html" class="nav-link" role="listitem" target="_blank" rel="noopener">Blog</a>
       </div>
 
-      <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+      <a href="#contato" data-open-modal="lead-form" style="text-decoration:none;">
         <button class="btn-brand" id="nav-cta" type="button" aria-label="Vamos Juntos">
           <span class="btn-inner">
             <span class="btn-icon" aria-hidden="true">
@@ -928,7 +930,7 @@
     <a href="../blog.html" class="mobile-menu-link" target="_blank" rel="noopener">Blog</a>
   </div>
   <div class="mobile-menu-footer">
-    <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration:none;">
+    <a href="#contato" data-open-modal="lead-form" style="text-decoration:none;">
       <button class="btn-brand" style="width:100%;">
         <span class="btn-inner" style="justify-content:center;">
           <span class="btn-icon" aria-hidden="true">
@@ -1014,12 +1016,12 @@
         </p>
 
         <div class="h-ctas" id="h-ctas">
-          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration: none;">
+          <a href="#contato" data-open-modal="lead-form" style="text-decoration: none;">
             <button class="btn-solid btn-primary" id="cta-primary" type="button">
               Vamos Juntos
             </button>
           </a>
-          <a href="https://vwsvvari.formester.com/f/eJBtig90L" target="_blank" rel="noopener" style="text-decoration: none;">
+          <a href="#contato" data-open-modal="lead-form" style="text-decoration: none;">
             <button class="btn-brand" id="cta-brand" type="button">
               <span class="btn-inner">
                 <span class="btn-icon" aria-hidden="true">
@@ -1479,6 +1481,9 @@
       }
     });
   </script>
+
+  <!-- Lead Capture Modal Script -->
+  <script src="/lead-modal.js" defer></script>
 
 </body>
 </html>
