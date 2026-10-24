@@ -19,3 +19,4 @@ Thumbs.db
 # Internal config folders (not deployed)
 App - Imob Growth IA/
 imovel/node_modules/
+.vercel
