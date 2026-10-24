@@ -793,20 +793,42 @@
     });
 
     // Interceptar cliques em todos os botões CTA do site
-    document.addEventListener('click', function (e) {
-      const target = e.target.closest('a, button');
-      if (!target) return;
+    function handleCtaClick(e) {
+      // 1. Procura elemento ou qualquer ancestral com marcação explícita
+      const trigger = e.target.closest(
+        '[data-open-modal], .open-lead-modal, a[href="#contato"], a[href*="formester.com"], button#nav-cta, button#cta-primary, button#cta-brand'
+      );
 
-      const isModalTrigger =
-        target.hasAttribute('data-open-modal') ||
-        target.classList.contains('open-lead-modal') ||
-        (target.getAttribute('href') && target.getAttribute('href').includes('formester.com'));
-
-      if (isModalTrigger) {
+      if (trigger) {
         e.preventDefault();
-        openModal(target);
+        e.stopPropagation();
+        openModal(trigger);
+        return;
       }
-    });
+
+      // 2. Fallback inteligente: verifica qualquer botão ou link clicado pelo texto
+      const interactiveEl = e.target.closest('a, button');
+      if (interactiveEl) {
+        const text = (interactiveEl.textContent || '').trim().toLowerCase();
+        const isCtaText =
+          text.includes('vamos juntos') ||
+          text.includes('quero esse resultado') ||
+          text.includes('quero acelerar');
+
+        if (isCtaText) {
+          const href = interactiveEl.getAttribute('href') || '';
+          if (!href || href === '#contato' || href.startsWith('#contato') || href.includes('formester') || interactiveEl.tagName === 'BUTTON') {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal(interactiveEl);
+          }
+        }
+      }
+    }
+
+    // Registra tanto no capture phase quanto no bubble phase
+    document.addEventListener('click', handleCtaClick, true);
+    document.addEventListener('click', handleCtaClick, false);
   }
 
   // Expor API global caso necessário
