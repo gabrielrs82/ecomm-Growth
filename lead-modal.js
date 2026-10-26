@@ -52,7 +52,8 @@
     try {
       const d = new Date();
       d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-      let cookieStr = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; path=/; SameSite=Lax`;
+      const maxAge = days * 24 * 60 * 60;
+      let cookieStr = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; max-age=${maxAge}; path=/; SameSite=Lax`;
       
       const host = window.location.hostname;
       if (host && host.includes('ecommgrowth.online')) {
@@ -60,6 +61,24 @@
       }
       document.cookie = cookieStr;
     } catch (e) {}
+  }
+
+  async function hashSHA256(str) {
+    if (!str || typeof str !== 'string') return '';
+    const val = str.trim();
+    if (!val) return '';
+    try {
+      if (window.crypto && window.crypto.subtle) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(val);
+        const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+    } catch (e) {
+      console.warn('[Lead Modal] Erro ao calcular hash SHA-256:', e);
+    }
+    return '';
   }
 
   function generateUUID() {
@@ -714,6 +733,36 @@
                 country: 'br'
               }
             }
+          });
+
+          // Logo após o push do generate_lead:
+          // Salva num cookie primário "_lead_ud" (validade de 180 dias, path=/, SameSite=Lax)
+          // um JSON com os dados JÁ EM HASH SHA-256 (via crypto.subtle),
+          // a partir dos mesmos valores normalizados do user_data:
+          // em, ph (só números, com 55), fn, ln, ct (sem espaços), st, zp, country.
+          // Nunca salve os dados em texto puro.
+          let phNorm = phoneDigits;
+          if (!phNorm.startsWith('55')) {
+            phNorm = '55' + phNorm;
+          }
+
+          const userHashed = {
+            em: await hashSHA256(cleanEmail),
+            ph: await hashSHA256(phNorm),
+            fn: await hashSHA256(firstName.toLowerCase()),
+            ln: lastName ? await hashSHA256(lastName.toLowerCase()) : '',
+            ct: await hashSHA256(cleanCity.toLowerCase().replace(/\s+/g, '')),
+            st: await hashSHA256(cleanRegion),
+            zp: cleanCep ? await hashSHA256(cleanCep) : '',
+            country: await hashSHA256('br')
+          };
+
+          setCookie('_lead_ud', JSON.stringify(userHashed), 180);
+
+          // Disponibiliza imediatamente no dataLayer na sessão atual
+          window.dataLayer.push({
+            is_lead: true,
+            user_hashed: userHashed
           });
 
           // Transição suave para mensagem de sucesso
