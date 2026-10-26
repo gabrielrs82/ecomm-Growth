@@ -225,7 +225,7 @@
             <!-- Formulário -->
             <form class="lead-modal-form" id="lead-modal-form" novalidate>
               <!-- Anti-spam Honeypot -->
-              <input type="text" name="website_url_hp" id="lm-hp" class="lead-hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <input type="text" name="website_url_hp" id="lm-hp" class="lead-hp-field" tabindex="-1" autocomplete="new-password" aria-hidden="true" style="display:none !important; position:absolute !important; left:-9999px !important; pointer-events:none !important;">
 
               <div class="lead-form-grid">
                 <!-- Nome Completo -->
@@ -409,6 +409,24 @@
     // Travar scroll da página
     document.body.style.overflow = 'hidden';
 
+    // Contextualização visual entre E-commerce e Imóveis
+    const isEcomm = window.location.pathname.toLowerCase().includes('ecommerce') ||
+      window.location.href.toLowerCase().includes('ecommerce');
+
+    const badgeEl = document.querySelector('.lead-modal-badge');
+    const empresaLabelEl = document.querySelector('label[for="lm-empresa"]');
+    const empresaInputEl = document.getElementById('lm-empresa');
+
+    if (isEcomm) {
+      if (badgeEl) badgeEl.innerHTML = '<span class="lead-modal-badge-dot"></span>Aceleração de Vendas';
+      if (empresaLabelEl) empresaLabelEl.innerHTML = 'Empresa / Loja <span class="lead-form-req">*</span>';
+      if (empresaInputEl) empresaInputEl.placeholder = 'Nome da sua loja ou marca';
+    } else {
+      if (badgeEl) badgeEl.innerHTML = '<span class="lead-modal-badge-dot"></span>Incorporadoras & Lançamentos';
+      if (empresaLabelEl) empresaLabelEl.innerHTML = 'Incorporadora / Empresa <span class="lead-form-req">*</span>';
+      if (empresaInputEl) empresaInputEl.placeholder = 'Nome da sua incorporadora ou empresa';
+    }
+
     // Abrir modal com animação
     backdrop.classList.add('is-active');
     backdrop.setAttribute('aria-hidden', 'false');
@@ -516,6 +534,12 @@
     const successEl = document.getElementById('lead-modal-success');
 
     if (!form) return;
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -843,6 +867,11 @@
 
     // Interceptar cliques em todos os botões CTA do site
     function handleCtaClick(e) {
+      // 0. NUNCA interceptar cliques vindos de dentro do próprio modal/backdrop
+      if (e.target.closest('#lead-modal-backdrop') || e.target.closest('.lead-modal-dialog')) {
+        return;
+      }
+
       // 1. Procura elemento ou qualquer ancestral com marcação explícita
       const trigger = e.target.closest(
         '[data-open-modal], .open-lead-modal, a[href="#contato"], a[href*="formester.com"], button#nav-cta, button#cta-primary, button#cta-brand'
@@ -855,14 +884,17 @@
         return;
       }
 
-      // 2. Fallback inteligente: verifica qualquer botão ou link clicado pelo texto
+      // 2. Fallback inteligente: verifica qualquer botão ou link externo clicado pelo texto
       const interactiveEl = e.target.closest('a, button');
       if (interactiveEl) {
+        if (interactiveEl.closest('#lead-modal-backdrop') || interactiveEl.form) {
+          return;
+        }
+
         const text = (interactiveEl.textContent || '').trim().toLowerCase();
         const isCtaText =
           text.includes('vamos juntos') ||
-          text.includes('quero esse resultado') ||
-          text.includes('quero acelerar');
+          text.includes('quero esse resultado');
 
         if (isCtaText) {
           const href = interactiveEl.getAttribute('href') || '';
