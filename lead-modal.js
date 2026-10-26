@@ -13,7 +13,7 @@
   // CONFIGURAÇÃO DO WEBHOOK
   // ==========================================================================
   // URL do Webhook do Google Apps Script integrado ao Google Sheets (Multi-aba Ecommerce / Imóveis)
-  const WEBHOOK_URL = window.LEAD_MODAL_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbxwGTk0VFDktuvrQ-YWQ0NcktTZ8Xnj2zoHqPdaSFRYSI3smswQJW40xyqWrAMHxznB/exec';
+  const WEBHOOK_URL = window.LEAD_MODAL_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwHBxPHMsRXJUEYoBCN7nFU3M7KpvMp5YiyoD8aO3KB67fx5yV2mTHfCtiA_NnbLRymCQ/exec';
 
   // ==========================================================================
   // UTILITÁRIOS: STORAGE, COOKIES & UUID
