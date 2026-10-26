@@ -12,8 +12,8 @@
   // ==========================================================================
   // CONFIGURAÇÃO DO WEBHOOK
   // ==========================================================================
-  // Defina a URL do seu webhook do n8n ou Google Apps Script aqui ou via window.LEAD_MODAL_WEBHOOK_URL
-  const WEBHOOK_URL = window.LEAD_MODAL_WEBHOOK_URL || 'https://webhook.site/placeholder-lead-webhook';
+  // URL do Webhook do Google Apps Script integrado ao Google Sheets (Multi-aba Ecommerce / Imóveis)
+  const WEBHOOK_URL = window.LEAD_MODAL_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbxwGTk0VFDktuvrQ-YWQ0NcktTZ8Xnj2zoHqPdaSFRYSI3smswQJW40xyqWrAMHxznB/exec';
 
   // ==========================================================================
   // UTILITÁRIOS: STORAGE, COOKIES & UUID
