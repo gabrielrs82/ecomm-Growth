@@ -81,37 +81,121 @@
   function selectFor(input) { return document.getElementById((input.id || "whatsapp") + "-pais"); }
   function selected(input) { var s = selectFor(input); return s ? s.value : "BR"; }
 
+  // Bandeiras em SVG (aparecem iguais em qualquer aparelho, inclusive Windows)
+  var FLAGS = {
+    BR: '<svg viewBox="0 0 20 14" width="22" height="15" aria-hidden="true" style="border-radius:2px;display:block">' +
+        '<rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.4 7 10 12.4 1.6 7z" fill="#FFDF00"/>' +
+        '<circle cx="10" cy="7" r="3.1" fill="#002776"/><path d="M7.1 6.2c2-.7 4.2-.5 5.9.6" stroke="#fff" stroke-width=".55" fill="none"/></svg>',
+    US: '<svg viewBox="0 0 20 14" width="22" height="15" aria-hidden="true" style="border-radius:2px;display:block">' +
+        '<rect width="20" height="14" fill="#fff"/>' +
+        [0, 2, 4, 6, 8, 10, 12].map(function (i) { return '<rect y="' + (i * 14 / 13).toFixed(2) + '" width="20" height="1.08" fill="#B22234"/>'; }).join("") +
+        '<rect width="8.6" height="7.54" fill="#3C3B6E"/>' +
+        [[1.4,1.2],[3.5,1.2],[5.6,1.2],[7.4,1.2],[2.45,2.6],[4.55,2.6],[6.6,2.6],[1.4,4],[3.5,4],[5.6,4],[7.4,4],[2.45,5.4],[4.55,5.4],[6.6,5.4],[1.4,6.6],[3.5,6.6],[5.6,6.6],[7.4,6.6]]
+          .map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r=".42" fill="#fff"/>'; }).join("") +
+        '</svg>'
+  };
+
+  var THEME = {
+    bg: "#141414", bgHover: "#232323", border: "rgba(255,255,255,.14)", text: "#f5f5f5", muted: "#a3a3a3",
+    accent: "#c8e04a"
+  };
+
   function setup(input) {
     if (input.dataset.egPhone) return;
     input.dataset.egPhone = "1";
+    var base = input.id || "whatsapp";
 
     var wrap = document.createElement("div");
-    wrap.style.cssText = "display:flex;gap:8px;align-items:stretch";
+    wrap.style.cssText = "display:flex;gap:8px;align-items:stretch;position:relative";
     input.parentNode.insertBefore(wrap, input);
 
+    // seletor "de verdade" (escondido): guarda o país escolhido
     var sel = document.createElement("select");
-    sel.id = (input.id || "whatsapp") + "-pais";
-    sel.setAttribute("aria-label", "País do WhatsApp");
-    sel.className = input.className;          // mesmo visual do campo
-    sel.style.cssText = "flex:0 0 92px;width:92px;min-width:0;padding-left:10px;padding-right:6px;cursor:pointer";
+    sel.id = base + "-pais";
+    sel.setAttribute("aria-hidden", "true");
+    sel.tabIndex = -1;
+    sel.style.display = "none";
     COUNTRIES.forEach(function (c) {
       var o = document.createElement("option");
       o.value = c.code;
-      o.textContent = c.flag + " +" + c.dial;
-      o.title = c.name;
+      o.textContent = c.name + " +" + c.dial;
       sel.appendChild(o);
     });
+
+    // botão visível: bandeira + código
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = base + "-pais-btn";
+    btn.className = input.className;          // mesmo visual do campo
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", "País do WhatsApp");
+    btn.style.cssText = "flex:0 0 96px;width:96px;min-width:0;display:flex;align-items:center;gap:6px;" +
+      "padding-left:10px;padding-right:8px;cursor:pointer;text-align:left;color:" + THEME.text;
+
+    // lista de países (tema escuro, legível)
+    var menu = document.createElement("div");
+    menu.setAttribute("role", "listbox");
+    menu.style.cssText = "position:absolute;top:calc(100% + 6px);left:0;z-index:99999;min-width:210px;display:none;" +
+      "background:" + THEME.bg + ";border:1px solid " + THEME.border + ";border-radius:12px;padding:6px;" +
+      "box-shadow:0 12px 32px rgba(0,0,0,.45)";
+    COUNTRIES.forEach(function (c) {
+      var item = document.createElement("div");
+      item.setAttribute("role", "option");
+      item.dataset.code = c.code;
+      item.tabIndex = 0;
+      item.style.cssText = "display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;" +
+        "color:" + THEME.text + ";font-size:14px;line-height:1.2";
+      item.innerHTML = (FLAGS[c.code] || c.flag) + '<span style="flex:1">' + c.name + '</span>' +
+        '<span style="color:' + THEME.muted + '">+' + c.dial + '</span>';
+      item.addEventListener("mouseenter", function () { item.style.background = THEME.bgHover; });
+      item.addEventListener("mouseleave", function () { item.style.background = item.dataset.on ? THEME.bgHover : "transparent"; });
+      function pick() {
+        sel.value = c.code;
+        close();
+        paint();
+        applyCountry(input, true);
+        input.focus();
+      }
+      item.addEventListener("click", pick);
+      item.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+      menu.appendChild(item);
+    });
+
+    function paint() {
+      var c = country(sel.value);
+      btn.innerHTML = (FLAGS[c.code] || c.flag) + '<span>+' + c.dial + '</span>' +
+        '<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" style="margin-left:auto;opacity:.6">' +
+        '<path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>';
+      btn.title = c.name;
+      [].forEach.call(menu.children, function (it) {
+        var on = it.dataset.code === c.code;
+        it.dataset.on = on ? "1" : "";
+        it.style.background = on ? THEME.bgHover : "transparent";
+        it.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+    function open() { menu.style.display = "block"; btn.setAttribute("aria-expanded", "true"); }
+    function close() { menu.style.display = "none"; btn.setAttribute("aria-expanded", "false"); }
+
+    btn.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); menu.style.display === "block" ? close() : open(); });
+    document.addEventListener("click", function (e) { if (!wrap.contains(e.target)) close(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+    sel.addEventListener("change", function () { paint(); applyCountry(input, true); });
+
     wrap.appendChild(sel);
+    wrap.appendChild(btn);
     wrap.appendChild(input);
+    wrap.appendChild(menu);
     input.style.flex = "1 1 auto";
     input.style.minWidth = "0";
 
     var hint = document.createElement("div");
-    hint.id = (input.id || "whatsapp") + "-dica";
+    hint.id = base + "-dica";
     hint.style.cssText = "font-size:12px;opacity:.7;margin-top:4px";
     wrap.insertAdjacentElement("afterend", hint);
 
-    sel.addEventListener("change", function () { applyCountry(input, true); input.focus(); });
+    paint();
     applyCountry(input, false);
   }
 
@@ -182,7 +266,7 @@
     else if (d.indexOf("55") === 0 && d.length >= 12) { code = "BR"; d = d.slice(2); }
     if (code || d.length >= 10) {
       e.preventDefault();
-      if (code && sel) sel.value = code;
+      if (code && sel && sel.value !== code) { sel.value = code; sel.dispatchEvent(new Event("change")); }
       applyCountry(e.target, false);
       e.target.value = selected(e.target) === "US" ? formatUS(d) : formatBR(d);
       validate(e.target, true);
