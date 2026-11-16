@@ -93,7 +93,7 @@
     sel.id = (input.id || "whatsapp") + "-pais";
     sel.setAttribute("aria-label", "País do WhatsApp");
     sel.className = input.className;          // mesmo visual do campo
-    sel.style.cssText = "flex:0 0 auto;width:auto;min-width:96px;padding-right:8px;cursor:pointer";
+    sel.style.cssText = "flex:0 0 92px;width:92px;min-width:0;padding-left:10px;padding-right:6px;cursor:pointer";
     COUNTRIES.forEach(function (c) {
       var o = document.createElement("option");
       o.value = c.code;
