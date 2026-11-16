@@ -924,3 +924,7 @@
     initLeadModal();
   }
 })();
+
+
+// Seletor de país (Brasil / EUA) e validação do WhatsApp: ver phone-fix.js
+(function () { var s = document.createElement("script"); s.src = "/phone-fix.js"; s.defer = true; document.head.appendChild(s); })();
